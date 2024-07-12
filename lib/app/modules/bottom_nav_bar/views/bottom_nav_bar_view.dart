@@ -329,23 +329,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   onTap: () => onTap(0),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9.0),
+                    padding: const EdgeInsets.symmetric(vertical: 0.0),
                     child: Column(
-                      // mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
                           "assets/ic_getComponents.svg",
-                          allowDrawingOutsideViewBox: true,
-
-                          // width: 24,
-                          // height: 24,
-                          // color: currentIndex == 0 ? Colors.black : Colors.grey,
+                          width: 34,
+                          height: 34,
+                          color: currentIndex == 0 ? Colors.black : Colors.grey,
                         ),
                         Expanded(
                           child: Text(
-                            'Ambil Komponen',
+                            'Ambil Komponen ',
                             overflow: TextOverflow.clip,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -374,9 +372,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       children: [
                         SvgPicture.asset(
                           'assets/icons/ic_borrowTools.svg',
-                          // width: 24,
-                          // height: 24,
-                          // color: currentIndex == 0 ? Colors.black : Colors.grey,
+                          width: 24,
+                          height: 24,
+                          color: currentIndex == 0 ? Colors.black : Colors.grey,
                         ),
                         Expanded(
                           child: Text(
