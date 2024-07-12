@@ -100,7 +100,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return InkWell(
+        return GestureDetector(
           // onTap: onDrawerClicked,
           onTap: () {
             Get.to(
@@ -110,7 +110,9 @@ class GetComponentsView extends GetView<GetComponentsController> {
               },
             );
           },
-          borderRadius: BorderRadius.circular(20),
+          // width: MediaQuery.sizeOf(context).width / 2,
+
+          // borderRadius: BorderRadius.circular(20),
           child: UnconstrainedBox(
             child: Container(
               // padding: const EdgeInsets.symmetric(
