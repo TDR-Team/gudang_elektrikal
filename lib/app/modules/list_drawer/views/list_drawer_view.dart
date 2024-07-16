@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/list_drawer_controller.dart';
 
@@ -12,6 +14,8 @@ class ListDrawerView extends GetView<ListDrawerController> {
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => ListDrawerController());
+    var sizeHeight = MediaQuery.sizeOf(context).height;
+    var sizeWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -51,10 +55,8 @@ class ListDrawerView extends GetView<ListDrawerController> {
                             splashFactory: NoSplash.splashFactory,
                           ),
                           child: TextField(
-                            
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
-                              
                               fillColor: Colors.white,
                               filled: true,
                               border: OutlineInputBorder(
@@ -70,12 +72,12 @@ class ListDrawerView extends GetView<ListDrawerController> {
                               //     Radius.circular(50),
                               //   ),
                               // ),
-                              
+
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
                               // enabled: false,
                               hintText: 'Search',
-                              
+
                               hintStyle: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 18,
@@ -95,12 +97,95 @@ class ListDrawerView extends GetView<ListDrawerController> {
                 ],
               ),
             ),
+            Container(
+              width: double.infinity,
+              height: sizeHeight * 0.1,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      'https://picsum.photos/200/300',
+                      height: sizeHeight * 0.06,
+                      width: sizeHeight * 0.06,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Nama Barang',
+                          overflow: TextOverflow.ellipsis,
+                          // style: boldText20,
+
+                          style: boldText20.copyWith(
+                            // fontSize:
+                            //     (sizeHeight * 0.03 + sizeWidth * 0.03) / 2,
+                            fontSize: 20.dp,
+                          ),
+                        ),
+                        Text(
+                          'Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla ....',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: regularText12.copyWith(
+                            fontSize:
+                                (sizeHeight * 0.015 + sizeWidth * 0.015) / 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 9,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'Stok : 20',
+                          style: semiBoldText14.copyWith(
+                            fontSize:
+                                (sizeHeight * 0.02 + sizeWidth * 0.02) / 2,
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.edit,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
             // Obx(
             //   () {
-            //     return _buildRackContent(
-            //       context: context,
-            //       rackName: controller.rackName.value,
-            //       onDrawerClicked: controller.onDrawerClicked,
+            //     return Container(
+            //       width: double.infinity,
+            //       height: 30,
+            //       decoration: const BoxDecoration(
+            //         color: Colors.amber,
+            //       ),
             //     );
             //   },
             // ),
