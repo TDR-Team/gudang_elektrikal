@@ -405,17 +405,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Image.asset(
-                        //   'assets/img/transaction.png',
-                        //   width: 24,
-                        //   height: 24,
-                        //   color: currentIndex == 2 ? Colors.black : Colors.grey,
-                        // ),
-                        Text(
-                          'Aktivitas',
-                          style: TextStyle(
-                            color:
-                                currentIndex == 2 ? Colors.black : Colors.grey,
+                        SvgPicture.asset(
+                          'assets/icons/ic_activity.svg',
+                          width: 24,
+                          height: 24,
+                          color: currentIndex == 0 ? Colors.black : Colors.grey,
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Aktivitas',
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: currentIndex == 0
+                                  ? Colors.black
+                                  : Colors.grey,
+                            ),
                           ),
                         )
                       ],
@@ -433,17 +439,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Image.asset(
-                        //   'assets/img/profile.png',
-                        //   width: 24,
-                        //   height: 24,
-                        //   color: currentIndex == 3 ? Colors.black : Colors.grey,
-                        // ),
-                        Text(
-                          'Profil',
-                          style: TextStyle(
-                            color:
-                                currentIndex == 3 ? Colors.black : Colors.grey,
+                        SvgPicture.asset(
+                          'assets/icons/ic_profile.svg',
+                          width: 24,
+                          height: 24,
+                          color: currentIndex == 0 ? Colors.black : Colors.grey,
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Profil',
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: currentIndex == 0
+                                  ? Colors.black
+                                  : Colors.grey,
+                            ),
                           ),
                         )
                       ],

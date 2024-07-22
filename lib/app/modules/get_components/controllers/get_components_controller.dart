@@ -5,7 +5,7 @@ class GetComponentsController extends GetxController {
   //TODO: Implement GetComponentsController
 
   final count = 0.obs;
-  final rackName = ''.obs;
+  final rackName = 'Rak 1'.obs;
   // final Drawer listDummyDrawer = ;
   final listRack = [
     'Rak 1',
