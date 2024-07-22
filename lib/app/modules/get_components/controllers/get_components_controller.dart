@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/data/model/drawer.dart';
 import 'package:gudang_elektrikal/app/modules/list_drawer/views/list_drawer_view.dart';
 
 class GetComponentsController extends GetxController {

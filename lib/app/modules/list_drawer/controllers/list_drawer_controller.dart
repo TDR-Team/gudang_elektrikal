@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/data/model/drawer.dart';
 
 class ListDrawerController extends GetxController {
   //TODO: Implement ListDrawerController

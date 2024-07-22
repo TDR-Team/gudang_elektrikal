@@ -4,7 +4,6 @@ import 'package:gudang_elektrikal/app/modules/activity/views/activity_view.dart'
 import 'package:gudang_elektrikal/app/modules/borrow_tools/views/borrow_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/get_components/views/get_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/profile/views/profile_view.dart';
-import '../../home/views/home_view.dart';
 
 class BottomNavBarController extends GetxController {
   var currentIndex = 0.obs;
