@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_app_bar.dart';
 
 import '../controllers/list_drawer_controller.dart';
 
@@ -15,15 +16,16 @@ class ListDrawerView extends GetView<ListDrawerController> {
     var sizeHeight = MediaQuery.sizeOf(context).height;
     var sizeWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 233, 231, 231),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 207,
+              height: 207.h,
               child: Stack(
                 children: [
                   Container(
-                    height: 187,
+                    height: 187.h,
                     decoration: const BoxDecoration(
                       color: Colors.lightBlue,
                       borderRadius: BorderRadius.vertical(
@@ -31,20 +33,22 @@ class ListDrawerView extends GetView<ListDrawerController> {
                       ),
                     ),
                   ),
-                  // _buildDropDown(
-                  //   listRack: controller.listRack,
-                  //   rackName: controller.rackName.value,
-                  //   onChangedRackName: controller.onChangedRackName,
-                  // ),
+                  SafeArea(
+                    child: IconButton(
+                      onPressed: () => Get.back(),
+                      icon: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 24.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: 0,
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      // onTap: () {
-                      //   Get.to(()=> ListJobPage());
-                      // },
                       onTap: () {},
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -61,21 +65,11 @@ class ListDrawerView extends GetView<ListDrawerController> {
                                 borderRadius: BorderRadius.circular(50),
                                 borderSide: BorderSide.none,
                               ),
-                              // disabledBorder: OutlineInputBorder(
-                              //   borderSide: BorderSide(
-                              //     width: 1,
-                              //     color: AppColors.neutralColors[2],
-                              //   ),
-                              //   borderRadius: const BorderRadius.all(
-                              //     Radius.circular(50),
-                              //   ),
-                              // ),
-
                               contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                              // enabled: false,
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
                               hintText: 'Search',
-
                               hintStyle: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 18,
@@ -95,99 +89,82 @@ class ListDrawerView extends GetView<ListDrawerController> {
                 ],
               ),
             ),
-            Container(
-              width: double.infinity,
-              // height: sizeHeight * 0.1,
-              // padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      'https://picsum.photos/200/300',
-                      height: sizeHeight * 0.06,
-                      width: sizeHeight * 0.06,
-                      fit: BoxFit.cover,
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        'https://picsum.photos/200/300',
+                        height: 60.h,
+                        width: 60.w,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Nama Barang',
+                            overflow: TextOverflow.ellipsis,
+                            style: boldText20.copyWith(
+                              fontSize: 20.sp,
+                            ),
+                            textScaler: const TextScaler.linear(1),
+                          ),
+                          Text(
+                            'Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla ....',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: regularText12.copyWith(
+                              fontSize: 12.sp,
+                            ),
+                            textScaler: const TextScaler.linear(1),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(
-                          'Nama Barang',
-                          overflow: TextOverflow.ellipsis,
-                          // style: boldText20,
-
-                          style: boldText20.copyWith(
-                            // fontSize:
-                            //     (sizeHeight * 0.03 + sizeWidth * 0.03) / 2,
-                            fontSize: 20.sp,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 3,
                           ),
-                          // textScaler: 1.0,
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Stok : 20',
+                            style: semiBoldText14.copyWith(
+                              fontSize: 14.sp,
+                            ),
+                            textScaler: const TextScaler.linear(1),
+                          ),
                         ),
-                        Text(
-                          'Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla ....',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: regularText12.copyWith(
-                            // fontSize:
-                            //     (sizeHeight * 0.015 + sizeWidth * 0.015) / 2,
-                            fontSize: 12.sp,
-                          ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.edit),
                         ),
                       ],
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 9,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          'Stok : 20',
-                          style: semiBoldText14.copyWith(
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.edit,
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
-            // Obx(
-            //   () {
-            //     return Container(
-            //       width: double.infinity,
-            //       height: 30,
-            //       decoration: const BoxDecoration(
-            //         color: Colors.amber,
-            //       ),
-            //     );
-            //   },
-            // ),
           ],
         ),
       ),
