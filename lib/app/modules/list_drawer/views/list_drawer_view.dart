@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/list_drawer_controller.dart';
 
@@ -97,8 +97,8 @@ class ListDrawerView extends GetView<ListDrawerController> {
             ),
             Container(
               width: double.infinity,
-              height: sizeHeight * 0.1,
-              padding: const EdgeInsets.all(12),
+              // height: sizeHeight * 0.1,
+              // padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(20),
@@ -128,16 +128,18 @@ class ListDrawerView extends GetView<ListDrawerController> {
                           style: boldText20.copyWith(
                             // fontSize:
                             //     (sizeHeight * 0.03 + sizeWidth * 0.03) / 2,
-                            fontSize: 20.dp,
+                            fontSize: 20.sp,
                           ),
+                          // textScaler: 1.0,
                         ),
                         Text(
                           'Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla Lorem ipsum dolore sir amet bla bla bla bla bla bla bla bla ....',
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: regularText12.copyWith(
-                            fontSize:
-                                (sizeHeight * 0.015 + sizeWidth * 0.015) / 2,
+                            // fontSize:
+                            //     (sizeHeight * 0.015 + sizeWidth * 0.015) / 2,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ],
@@ -158,8 +160,7 @@ class ListDrawerView extends GetView<ListDrawerController> {
                         child: Text(
                           'Stok : 20',
                           style: semiBoldText14.copyWith(
-                            fontSize:
-                                (sizeHeight * 0.02 + sizeWidth * 0.02) / 2,
+                            fontSize: 14.sp,
                           ),
                         ),
                       ),
@@ -189,7 +190,6 @@ class ListDrawerView extends GetView<ListDrawerController> {
             // ),
           ],
         ),
-        // Widget yang berubah sesuai dengan pilihan rak
       ),
     );
   }
