@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/data/model/drawer.dart';
 import 'package:gudang_elektrikal/app/modules/list_drawer/views/list_drawer_view.dart';
@@ -13,31 +15,49 @@ class GetComponentsView extends GetView<GetComponentsController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => GetComponentsController());
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 207,
-              child: Stack(
-                children: [
-                  Container(
-                    height: 187,
-                    decoration: const BoxDecoration(
-                      color: Colors.lightBlue,
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(30),
+      backgroundColor: kColorScheme.surface,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          'Ambil Komponen',
+          style: semiBoldText20,
+        ),
+        surfaceTintColor: Colors.transparent,
+        // backgroundColor: kColorScheme.primary,
+        backgroundColor: Colors.transparent,
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 150.h,
+            child: Stack(
+              children: [
+                Container(
+                  height: 130.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: kColorScheme.primary,
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(30),
+                    ),
+                    image: const DecorationImage(
+                      image: AssetImage(
+                        'assets/images/img_bgAppbar.png',
                       ),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  _buildDropDown(
-                    listRack: controller.listRack,
-                    rackName: controller.rackName.value,
-                    onChangedRackName: controller.onChangedRackName,
-                  ),
-                ],
-              ),
+                ),
+                _buildDropDown(
+                  listRack: controller.listRack,
+                  rackName: controller.rackName.value,
+                  onChangedRackName: controller.onChangedRackName,
+                ),
+              ],
             ),
-            Obx(
+          ),
+          Expanded(
+            child: Obx(
               () {
                 return _buildRackContent(
                   context: context,
@@ -46,9 +66,8 @@ class GetComponentsView extends GetView<GetComponentsController> {
                 );
               },
             ),
-          ],
-        ),
-        // Widget yang berubah sesuai dengan pilihan rak
+          ),
+        ],
       ),
     );
   }
@@ -83,10 +102,8 @@ class GetComponentsView extends GetView<GetComponentsController> {
     switch (rackName) {
       case 'Rak 1':
         return _buildContentForRack1(onDrawerClicked: onDrawerClicked);
-
       case 'Rak 2':
         return _buildContentForRack2();
-      // Tambahkan case lainnya sesuai dengan jumlah rak
       default:
         return const SizedBox.shrink();
     }
@@ -98,7 +115,12 @@ class GetComponentsView extends GetView<GetComponentsController> {
   }) {
     return ListView.separated(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(
+        top: 12,
+        right: 0,
+        left: 0,
+        bottom: 0,
+      ),
       itemBuilder: (context, index) {
         return GestureDetector(
           // onTap: onDrawerClicked,
@@ -110,26 +132,19 @@ class GetComponentsView extends GetView<GetComponentsController> {
               },
             );
           },
-          // width: MediaQuery.sizeOf(context).width / 2,
-
-          // borderRadius: BorderRadius.circular(20),
           child: UnconstrainedBox(
             child: Container(
-              // padding: const EdgeInsets.symmetric(
-              //     vertical: 50,
-              //     // horizontal: 50,
-              //     ),
               alignment: Alignment.center,
               width: MediaQuery.sizeOf(context).width / 2,
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: kColorScheme.primary,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 listDummyDrawer[index].numberDrawer.toString(),
                 style: boldText28.copyWith(
                   color: Colors.white,
-                  fontSize: 96,
+                  fontSize: 96.sp,
                 ),
               ),
             ),
