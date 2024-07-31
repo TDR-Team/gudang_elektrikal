@@ -19,28 +19,12 @@ class BottomNavBarView extends GetView<BottomNavBarController> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // body: controller.pages.elementAt(controller.currentIndex.value),
       body: Obx(() => controller.pages[controller.currentIndex.value]),
-
+      extendBody: true,
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: controller.currentIndex.value,
         onTap: controller.changePage,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   shape: const CircleBorder(),
-      //   backgroundColor: secondaryShade3,
-      //   child: Center(
-      //     child: Image.asset(
-      //       'assets/img/plus.png',
-      //       width: 24,
-      //       height: 24,
-      //     ),
-      //   ),
-      //   onPressed: () {
-      //     Get.toNamed(Routes.ADD_PRODUCT)
-      //         ?.then((value) => permintaan.fetchAllPermintaan());
-      //   },
-      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(
