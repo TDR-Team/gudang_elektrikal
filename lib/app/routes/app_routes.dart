@@ -13,7 +13,7 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const BORROW_TOOLS = _Paths.BORROW_TOOLS;
   static const ACTIVITY = _Paths.ACTIVITY;
-  static const LIST_DRAWER = _Paths.LIST_DRAWER;
+  static const COMPONENTS = _Paths.COMPONENTS;
 }
 
 abstract class _Paths {
@@ -26,5 +26,6 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const BORROW_TOOLS = '/borrow-tools';
   static const ACTIVITY = '/activity';
-  static const LIST_DRAWER = '/list-drawer';
+  static const COMPONENTS = '/components';
+  static const LIST_COMPONENTS = '/list-components';
 }

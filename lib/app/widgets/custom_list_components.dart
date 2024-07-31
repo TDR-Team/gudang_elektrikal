@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CustomListDrawer extends StatelessWidget {
+class CustomListComponents extends StatelessWidget {
   final String id;
   final String name;
   final String imgUrl;
@@ -13,7 +13,7 @@ class CustomListDrawer extends StatelessWidget {
   final void Function()? onTapDetail;
   final void Function()? onTapEdit;
 
-  const CustomListDrawer({
+  const CustomListComponents({
     super.key,
     required this.id,
     required this.name,

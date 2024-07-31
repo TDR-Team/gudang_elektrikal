@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/data/model/drawer.dart';
-import 'package:gudang_elektrikal/app/modules/list_drawer/views/list_drawer_view.dart';
+import 'package:gudang_elektrikal/app/data/model/component.dart';
+import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
 import 'package:gudang_elektrikal/app/widgets/dropdown_button.dart';
-import '../controllers/get_components_controller.dart';
 
-class GetComponentsView extends GetView<GetComponentsController> {
-  const GetComponentsView({super.key});
+import '../controllers/components_controller.dart';
 
+class ComponentsView extends GetView<ComponentsController> {
+  const ComponentsView({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => GetComponentsController());
+    Get.lazyPut(() => ComponentsController());
     return Scaffold(
       backgroundColor: kColorScheme.surface,
       extendBodyBehindAppBar: true,
@@ -126,9 +127,9 @@ class GetComponentsView extends GetView<GetComponentsController> {
           // onTap: onDrawerClicked,
           onTap: () {
             Get.to(
-              () => const ListDrawerView(),
+              () => const ListComponentsView(),
               arguments: {
-                "numberDrawer": listDummyDrawer[index].numberDrawer,
+                "numberDrawer": listDummyComponents[index].numberDrawer,
               },
             );
           },
@@ -141,7 +142,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                listDummyDrawer[index].numberDrawer.toString(),
+                listDummyComponents[index].numberDrawer.toString(),
                 style: boldText28.copyWith(
                   color: Colors.white,
                   fontSize: 96.sp,
@@ -152,7 +153,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
         );
       },
       separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemCount: listDummyDrawer.length,
+      itemCount: listDummyComponents.length,
     );
   }
 

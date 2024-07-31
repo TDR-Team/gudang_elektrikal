@@ -1,17 +1,15 @@
 import 'package:get/get.dart';
-
+import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
 import '../modules/activity/bindings/activity_binding.dart';
 import '../modules/activity/views/activity_view.dart';
 import '../modules/borrow_tools/bindings/borrow_tools_binding.dart';
 import '../modules/borrow_tools/views/borrow_tools_view.dart';
 import '../modules/bottom_nav_bar/bindings/bottom_nav_bar_binding.dart';
 import '../modules/bottom_nav_bar/views/bottom_nav_bar_view.dart';
-import '../modules/get_components/bindings/get_components_binding.dart';
-import '../modules/get_components/views/get_components_view.dart';
+import '../modules/components/bindings/components_binding.dart';
+import '../modules/components/views/components_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/list_drawer/bindings/list_drawer_binding.dart';
-import '../modules/list_drawer/views/list_drawer_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -51,11 +49,6 @@ class AppPages {
       binding: BottomNavBarBinding(),
     ),
     GetPage(
-      name: _Paths.GET_COMPONENTS,
-      page: () => const GetComponentsView(),
-      binding: GetComponentsBinding(),
-    ),
-    GetPage(
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
@@ -71,9 +64,14 @@ class AppPages {
       binding: ActivityBinding(),
     ),
     GetPage(
-      name: _Paths.LIST_DRAWER,
-      page: () => const ListDrawerView(),
-      binding: ListDrawerBinding(),
+      name: _Paths.COMPONENTS,
+      page: () => const ComponentsView(),
+      binding: ComponentsBinding(),
+    ),
+    GetPage(
+      name: _Paths.LIST_COMPONENTS,
+      page: () => const ListComponentsView(),
+      binding: ComponentsBinding(),
     ),
   ];
 }

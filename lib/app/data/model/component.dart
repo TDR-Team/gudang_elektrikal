@@ -1,4 +1,4 @@
-class Drawer {
+class Component {
   final int id;
   final int numberRack;
   final int numberDrawer;
@@ -7,7 +7,8 @@ class Drawer {
   final String description;
   final int stock;
 
-  Drawer({
+  
+  Component({
     required this.id,
     required this.numberRack,
     required this.numberDrawer,
@@ -18,8 +19,8 @@ class Drawer {
   });
 }
 
-final listDummyDrawer = [
-  Drawer(
+final listDummyComponents = [
+  Component(
     id: 1,
     numberRack: 1,
     numberDrawer: 1,
@@ -28,7 +29,7 @@ final listDummyDrawer = [
     description: 'description',
     stock: 20,
   ),
-  Drawer(
+  Component(
     id: 2,
     numberRack: 1,
     numberDrawer: 2,
@@ -37,7 +38,7 @@ final listDummyDrawer = [
     description: 'description',
     stock: 20,
   ),
-  Drawer(
+  Component(
     id: 3,
     numberRack: 1,
     numberDrawer: 3,
@@ -46,7 +47,7 @@ final listDummyDrawer = [
     description: 'description',
     stock: 20,
   ),
-  Drawer(
+  Component(
     id: 4,
     numberRack: 1,
     numberDrawer: 4,
@@ -55,7 +56,7 @@ final listDummyDrawer = [
     description: 'description',
     stock: 20,
   ),
-  Drawer(
+  Component(
     id: 5,
     numberRack: 1,
     numberDrawer: 5,
@@ -64,7 +65,7 @@ final listDummyDrawer = [
     description: 'description',
     stock: 20,
   ),
-  Drawer(
+  Component(
     id: 6,
     numberRack: 1,
     numberDrawer: 6,

@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/common/styles/button_styles.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/widgets/custom_elevated_button.dart';
-import 'package:gudang_elektrikal/app/widgets/custom_list_drawer.dart';
+import 'package:gudang_elektrikal/app/modules/components/controllers/list_components_controller.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_list_components.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
-import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
 import 'package:shimmer/shimmer.dart';
-import '../controllers/list_drawer_controller.dart';
 
-class ListDrawerView extends GetView<ListDrawerController> {
-  const ListDrawerView({super.key});
+class ListComponentsView extends GetView<ListComponentsController> {
+  const ListComponentsView({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => ListDrawerController());
-    var sizeHeight = MediaQuery.sizeOf(context).height;
-    var sizeWidth = MediaQuery.sizeOf(context).width;
+    Get.lazyPut(() => ListComponentsController());
+    // var sizeHeight = MediaQuery.sizeOf(context).height;
+    // var sizeWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 233, 231, 231),
       body: Column(
@@ -96,7 +94,7 @@ class ListDrawerView extends GetView<ListDrawerController> {
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemCount: 10,
               itemBuilder: (context, index) {
-                return CustomListDrawer(
+                return CustomListComponents(
                   id: '1',
                   name: 'Kabel Gorong',
                   imgUrl: 'https://picsum.photos/200/300',
@@ -233,55 +231,74 @@ class ListDrawerView extends GetView<ListDrawerController> {
                                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut pretium metus. Donec viverra magna mi, ac semper diam condimentum ac. Pellentesque ac aliquam nulla. Fusce feugiat aliquet lectus, vel pretium velit fringilla sit amet. Maecenas id congue ex. Aenean leo ligula, malesuada quis tempor eu, aliquet in mauris. Integer eget gravida elit, dignissim condimentum nulla. Vivamus pellentesque dignissim feugiat. Sed cursus tortor a risus aliquam tempus. Sed commodo sit amet justo non efficitur.',
                                     style: regularText10,
                                   ),
+                                  const SizedBox(height: 10),
+
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Flexible(
-                                        flex: 5,
-                                        child: CustomElevatedButton(
-                                          onPressed: () {},
-                                          text: 'Ubah',
-                                          // buttonStyle:
-                                          //     primary300Button.copyWith(
-                                          //   padding:
-                                          //       const WidgetStatePropertyAll(
-                                          //     EdgeInsets.symmetric(vertical: 2),
-                                          //   ),
-                                          // ),
-                                          buttonStyle: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                const Color.fromRGBO(
-                                                    100, 201, 212, 1.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
+                                      // CustomElevatedButton(
+                                      //   onPressed: () {},
+                                      //   text: 'Ubah',
+                                      //   // buttonStyle:
+                                      //   //     primary300Button.copyWith(
+                                      //   //   padding:
+                                      //   //       const WidgetStatePropertyAll(
+                                      //   //     EdgeInsets.symmetric(vertical: 2),
+                                      //   //   ),
+                                      //   // ),
+                                      //   buttonStyle: ElevatedButton.styleFrom(
+                                      //     backgroundColor:
+                                      //         const Color.fromRGBO(
+                                      //             100, 201, 212, 1.0),
+                                      //     shape: RoundedRectangleBorder(
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(10.0),
+                                      //     ),
+                                      //     padding: const EdgeInsets.symmetric(
+                                      //       vertical: 8,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () {},
+                                          child: Container(
+                                            alignment: Alignment.center,
                                             padding: const EdgeInsets.symmetric(
-                                              vertical: 8,
+                                              vertical: 12,
+                                            ),
+                                            margin: const EdgeInsets.only(
+                                                right: 8.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.amber,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Text(
+                                              'Ubah',
+                                              style: semiBoldText16,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Flexible(
-                                        flex: 1,
-                                        child: InkWell(
-                                          child: Container(
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                              size: 24.sp,
-                                            ),
+                                      // const SizedBox(width: 10),
+                                      InkWell(
+                                        onTap: () {},
+                                        child: Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                            size: 24.sp,
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   )
                                 ],

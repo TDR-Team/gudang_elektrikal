@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/modules/list_drawer/views/list_drawer_view.dart';
+import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
 
-class GetComponentsController extends GetxController {
-  //TODO: Implement GetComponentsController
+class ComponentsController extends GetxController {
+  //TODO: Implement ComponentsController
 
-  final count = 0.obs;
   final rackName = 'Rak 1'.obs;
   // final Drawer listDummyDrawer = ;
   final listRack = [
@@ -28,7 +27,7 @@ class GetComponentsController extends GetxController {
 
   void onDrawerClicked() {
     Get.to(
-      () => const ListDrawerView(),
+      () => const ListComponentsView(),
       arguments: {
         // "drawer": listDummyDrawer,
       },
