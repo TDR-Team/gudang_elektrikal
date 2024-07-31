@@ -2,7 +2,6 @@ class Drawer {
   final int id;
   final int numberRack;
   final int numberDrawer;
-
   final String name;
   final String photo;
   final String description;
@@ -49,6 +48,15 @@ final listDummyDrawer = [
   ),
   Drawer(
     id: 4,
+    numberRack: 1,
+    numberDrawer: 4,
+    name: 'Obeng',
+    photo: 'photo',
+    description: 'description',
+    stock: 20,
+  ),
+  Drawer(
+    id: 5,
     numberRack: 1,
     numberDrawer: 5,
     name: 'Obeng',

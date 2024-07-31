@@ -2,7 +2,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import '../common/theme/font.dart';
 
-
 class DropDown<T> extends StatelessWidget {
   final String hintText;
   final List<T>? listElement;
@@ -32,11 +31,13 @@ class DropDown<T> extends StatelessWidget {
       onChanged: onChange,
       validator: validator,
       autoValidateMode: AutovalidateMode.always,
+      
       dropdownDecoratorProps: DropDownDecoratorProps(
         baseStyle: regularText12,
         dropdownSearchDecoration: InputDecoration(
           fillColor: Colors.grey[200], // Warna latar belakang abu-abu
           filled: true,
+        
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
@@ -45,6 +46,7 @@ class DropDown<T> extends StatelessWidget {
         ),
       ),
       popupProps: PopupProps.menu(
+        
         menuProps: MenuProps(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -88,13 +90,14 @@ class DropDown<T> extends StatelessWidget {
               );
             },
         listViewProps: const ListViewProps(
+          
           padding: EdgeInsets.only(bottom: 8),
         ),
       ),
-      clearButtonProps: const ClearButtonProps(
-        icon: Icon(Icons.clear, size: 22),
-        isVisible: true,
-      ),
+      // clearButtonProps: const ClearButtonProps(
+      //   icon: Icon(Icons.clear, size: 22),
+      //   isVisible: true,
+      // ),
     );
   }
 }

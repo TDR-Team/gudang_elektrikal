@@ -7,7 +7,7 @@ final transparentButtonBlackBorder = ElevatedButton.styleFrom(
   side: const BorderSide(width: 0.8, color: Colors.black),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(0, 0, 0, 0.1)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(0, 0, 0, 0.1)),
 ));
 
 final transparentButton = ElevatedButton.styleFrom(
@@ -15,7 +15,7 @@ final transparentButton = ElevatedButton.styleFrom(
   side: const BorderSide(width: 0.8, color: Color.fromRGBO(58, 151, 169, 1.0)),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(58, 151, 169, 1)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(58, 151, 169, 1)),
 ));
 
 final blackButton = ElevatedButton.styleFrom(
@@ -23,7 +23,7 @@ final blackButton = ElevatedButton.styleFrom(
   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(58, 151, 169, 1)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(58, 151, 169, 1)),
 ));
 
 final primary500BorderButton = ElevatedButton.styleFrom(
@@ -32,7 +32,7 @@ final primary500BorderButton = ElevatedButton.styleFrom(
   side: BorderSide(width: 1, color: kColorScheme.primary),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(0, 0, 0, 0.1)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(0, 0, 0, 0.1)),
 ));
 
 final primary500Button = ElevatedButton.styleFrom(
@@ -43,7 +43,7 @@ final primary500Button = ElevatedButton.styleFrom(
   ),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(0, 0, 0, 0.1)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(0, 0, 0, 0.1)),
 ));
 
 final primary400Button = ElevatedButton.styleFrom(
@@ -53,7 +53,7 @@ final primary400Button = ElevatedButton.styleFrom(
   ),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(14, 89, 112, 1.0)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(14, 89, 112, 1.0)),
 ));
 
 final primary300Button = ElevatedButton.styleFrom(
@@ -61,9 +61,10 @@ final primary300Button = ElevatedButton.styleFrom(
   shape: RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(20.0),
   ),
+  padding: const EdgeInsets.symmetric(vertical: 20),
 ).merge(ButtonStyle(
   overlayColor:
-      MaterialStateProperty.all<Color>(const Color.fromRGBO(14, 89, 112, 1.0)),
+      WidgetStateProperty.all<Color>(const Color.fromRGBO(14, 89, 112, 1.0)),
 ));
 
 final warning300Button = ElevatedButton.styleFrom(
