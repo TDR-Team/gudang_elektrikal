@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/data/model/activity.dart';
+import 'package:gudang_elektrikal/app/data/model/borrowed.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
 
 class ActivityController extends GetxController
@@ -13,8 +14,9 @@ class ActivityController extends GetxController
   // final isLoadingOffering = true.obs;
   // final isLoadingHistory = true.obs;
 
-  final dataBorrowed = <Activity>[].obs;
-  final dataHistory = <Activity>[].obs;
+  // final dataBorrowed = <Activity>[].obs;
+  final dataBorrowed = listDummyBorrowed.obs;
+  final dataHistory = listDummyBorrowed.obs;
 
   // final jobDataActive = <JobData>[].obs;
   // final jobDataWaiting = <JobData>[].obs;
@@ -29,7 +31,7 @@ class ActivityController extends GetxController
 
   @override
   void onInit() {
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     tabController.addListener(_handleTabChange);
     // checkLoginStatus();
     super.onInit();
@@ -79,7 +81,7 @@ class ActivityController extends GetxController
   Future<void> fetchActivity({
     required String status,
     required RxBool isLoading,
-    required RxList<Activity> dataList,
+    required RxList<Borrowed> dataList,
     String statusFilter = '',
   }) async {
     isLoading.value = true;
