@@ -17,6 +17,9 @@ dependencies:
   logger: ^2.3.0
   dropdown_search: ^5.0.6
   flutter_screenutil: ^5.9.3
+  flutter_image_compress: ^2.3.0
+  image_cropper: ^8.0.1
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_lints: 4.0.0
