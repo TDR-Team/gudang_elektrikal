@@ -57,14 +57,31 @@ final primary400Button = ElevatedButton.styleFrom(
 ));
 
 final primary300Button = ElevatedButton.styleFrom(
-  backgroundColor: const Color.fromRGBO(100, 201, 212, 1.0),
+  backgroundColor: kColorScheme.primary,
   shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20.0),
+    borderRadius: BorderRadius.circular(10.0),
+  ),
+  textStyle: const TextStyle(
+    color: Colors.black,
   ),
 ).merge(ButtonStyle(
-  overlayColor:
-      WidgetStateProperty.all<Color>(const Color.fromRGBO(14, 89, 112, 1.0)),
+  backgroundColor: WidgetStateProperty.all<Color>(
+    kColorScheme.primary,
+  ),
+  overlayColor: WidgetStateProperty.all<Color>(
+    kColorScheme.onPrimary,
+  ),
 ));
+
+// final primary300Button = ButtonStyle(
+//     backgroundColor: WidgetStatePropertyAll(kColorScheme.primary),
+//     // overlayColor: WidgetStateProperty.all<Color>(
+//     //   kColorScheme.primary,
+
+//     // ),
+//     padding: const WidgetStatePropertyAll(
+//       EdgeInsets.symmetric(vertical: 16),
+//     ));
 
 final warning300Button = ElevatedButton.styleFrom(
   backgroundColor: const Color(0xffFACA41),
