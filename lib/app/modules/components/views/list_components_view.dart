@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/list_components_controller.dart';
+import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_components.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 import 'package:shimmer/shimmer.dart';
@@ -263,13 +264,15 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {},
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           child: Container(
                                             alignment: Alignment.center,
                                             padding: const EdgeInsets.symmetric(
                                               vertical: 12,
                                             ),
-                                            margin: const EdgeInsets.only(
-                                                right: 8.0),
+                                            // margin: const EdgeInsets.only(
+                                            //     right: 8.0),
                                             decoration: BoxDecoration(
                                               color: Colors.amber,
                                               borderRadius:
@@ -282,9 +285,10 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                           ),
                                         ),
                                       ),
-                                      // const SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       InkWell(
                                         onTap: () {},
+                                        borderRadius: BorderRadius.circular(10),
                                         child: Container(
                                           padding: const EdgeInsets.all(12),
                                           decoration: BoxDecoration(
@@ -317,7 +321,9 @@ class ListComponentsView extends GetView<ListComponentsController> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Get.to(() => const AddComponentsView());
+        },
         backgroundColor: Colors.amber,
         child: const Icon(Icons.add),
       ),
