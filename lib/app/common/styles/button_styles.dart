@@ -61,7 +61,6 @@ final primary300Button = ElevatedButton.styleFrom(
   shape: RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(20.0),
   ),
-  padding: const EdgeInsets.symmetric(vertical: 20),
 ).merge(ButtonStyle(
   overlayColor:
       WidgetStateProperty.all<Color>(const Color.fromRGBO(14, 89, 112, 1.0)),
