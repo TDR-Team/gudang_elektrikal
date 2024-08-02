@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/data/model/activity.dart';
 import 'package:gudang_elektrikal/app/data/model/borrowed.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
 
