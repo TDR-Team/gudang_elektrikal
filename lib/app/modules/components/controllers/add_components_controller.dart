@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -168,5 +170,37 @@ class AddComponentsController extends GetxController {
       title: 'Berhasil',
       message: 'Komponen berhasil di tambahkan',
     ).showSnackbar();
+
+    try {
+      // Upload image to Firebase Storage
+      String imagePath =
+          'components/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      UploadTask uploadTask =
+          FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
+      TaskSnapshot snapshot = await uploadTask;
+      String imageUrl = await snapshot.ref.getDownloadURL();
+
+      // Save component data to Firestore
+      await FirebaseFirestore.instance
+          .collection('components')
+          .doc('rack_1')
+          .collection('laci_1')
+          .add({
+        'name': name,
+        'description': description,
+        'stock': stock,
+        'unit': unit,
+        'imageUrl': imageUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      Get.back();
+      Get.snackbar('Berhasil', 'Komponen berhasil ditambahkan',
+          snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      Get.snackbar('Gagal', 'Terjadi kesalahan, mohon coba lagi',
+          snackPosition: SnackPosition.BOTTOM);
+      print(e);
+    }
   }
 }
