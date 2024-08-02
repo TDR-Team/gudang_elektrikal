@@ -19,9 +19,9 @@ class AddComponentsController extends GetxController {
   TextEditingController descriptionComponent = TextEditingController();
   TextEditingController stockController = TextEditingController();
   FocusNode stockFocusNode = FocusNode();
-  RxBool isLoadingImageProfile = false.obs;
-  Rx<File?> imageProfileFileController = RxNullable<File?>().setNull();
-  Rx<String?> networkImageProfile = RxNullable<String?>().setNull();
+  RxBool isLoadingImage = false.obs;
+  Rx<File?> imageFileController = RxNullable<File?>().setNull();
+  Rx<String?> networkImage = RxNullable<String?>().setNull();
 
   final unitName = 'Pcs'.obs;
   final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack'];
@@ -68,7 +68,7 @@ class AddComponentsController extends GetxController {
     super.onClose();
   }
 
-  Future onPickImageProfile({required bool isCamera}) async {
+  Future onPickImage({required bool isCamera}) async {
     try {
       final image =
           isCamera ? await pickImageFromCamera() : await pickImageFromGallery();
@@ -78,7 +78,7 @@ class AddComponentsController extends GetxController {
             await croppingImage(imageFile: image, cropStyle: CropStyle.circle);
         XFile croped = XFile(croppedImageFile?.path ?? "");
         if (croppedImageFile != null) {
-          isLoadingImageProfile.value = true;
+          isLoadingImage.value = true;
           XFile? compressedImage = await compressImageForApi(croped);
           var imageTemp = File(image.path);
           if (compressedImage != null) {
@@ -90,15 +90,15 @@ class AddComponentsController extends GetxController {
             double newSizeMB = newSize / (1024 * 1024);
             log.i(
                 'Size of the file: before ${beforeSizeMB.toStringAsFixed(2)} MB, new ${newSizeMB.toStringAsFixed(2)} MB');
-            imageProfileFileController.value = tempFile;
-            networkImageProfile.value = null;
+            imageFileController.value = tempFile;
+            networkImage.value = null;
           }
         }
       }
     } on PlatformException catch (e) {
       log.e('Failed to pick image: $e');
     }
-    isLoadingImageProfile.value = false;
+    isLoadingImage.value = false;
   }
 
   void increment() {
@@ -121,7 +121,7 @@ class AddComponentsController extends GetxController {
 
   Future<void> onAddComponentsClicked() async {
     // Add logic to save component details
-    final imageFile = imageProfileFileController.value;
+    final imageFile = imageFileController.value;
     final name = nameComponent.text;
     final description =
         descriptionComponent.text.isNotEmpty ? descriptionComponent.text : null;
