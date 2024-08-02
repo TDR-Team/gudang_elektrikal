@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterController extends GetxController {
-  // late User? user; // Menggunakan User? langsung dari FirebaseAuth
+  late User? user; // Menggunakan User? langsung dari FirebaseAuth
   bool isLoading = false; // State untuk loading
   bool isPasswordHide = true;
   bool formValid = false;
@@ -18,7 +19,7 @@ class RegisterController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // user = FirebaseAuth.instance.currentUser;
+    user = FirebaseAuth.instance.currentUser;
   }
 
   void onPressedIconPassword() {
@@ -31,20 +32,20 @@ class RegisterController extends GetxController {
       isLoading = true; // Set isLoading menjadi true saat memulai proses
       update(); // Update state jika ada perubahan
 
-      // UserCredential userCredential =
-      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      //   email: emailController.text.trim(),
-      //   password: passwordController.text,
-      // );
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
 
       // Add user information to Firestore
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userCredential.user!.uid)
-      //     .set({
-      //   'name': nameController.text,
-      //   'email': emailController.text.trim(),
-      // });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'name': nameController.text,
+        'email': emailController.text.trim(),
+      });
 
       isLoading = false; // Set isLoading menjadi false setelah selesai
       update(); // Update state jika ada perubahan
