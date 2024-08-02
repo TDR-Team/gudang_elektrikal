@@ -4,11 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/helpers/nullable_rx.dart';
-import 'package:gudang_elektrikal/app/common/styles/colors.dart';
-import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -165,20 +162,20 @@ class AddComponentsController extends GetxController {
 
     Get.back();
 
-    const CustomSnackbar(
-      success: true,
-      title: 'Berhasil',
-      message: 'Komponen berhasil di tambahkan',
-    ).showSnackbar();
+    // const CustomSnackbar(
+    //   success: true,
+    //   title: 'Berhasil',
+    //   message: 'Komponen berhasil di tambahkan',
+    // ).showSnackbar();
 
     try {
       // Upload image to Firebase Storage
-      String imagePath =
-          'components/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      UploadTask uploadTask =
-          FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
-      TaskSnapshot snapshot = await uploadTask;
-      String imageUrl = await snapshot.ref.getDownloadURL();
+      // String imagePath =
+      // 'components/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      // UploadTask uploadTask =
+      // FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
+      // TaskSnapshot snapshot = await uploadTask;
+      // String imageUrl = await snapshot.ref.getDownloadURL();
 
       // Save component data to Firestore
       await FirebaseFirestore.instance
@@ -190,7 +187,7 @@ class AddComponentsController extends GetxController {
         'description': description,
         'stock': stock,
         'unit': unit,
-        'imageUrl': imageUrl,
+        'imageUrl': "https://picsum.photos/400",
         'createdAt': FieldValue.serverTimestamp(),
       });
 
