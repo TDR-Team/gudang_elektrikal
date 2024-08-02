@@ -73,7 +73,7 @@ class RegisterView extends GetView<RegisterController> {
                     isPasswordHide: controller.isPasswordHide,
                     onPressedIconPassword: controller.onPressedIconPassword,
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 75),
                   InkWell(
                     onTap: () => controller.register(),
                     child: Container(

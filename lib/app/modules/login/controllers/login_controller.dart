@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gudang_elektrikal/app/utils/validation_helpers.dart';
 
-
 class LoginController extends GetxController {
-  // User? user; // Firebase User object
+  User? user; // Firebase User object
   bool isLoading = false;
   bool isPasswordHide = true;
   bool formValid = false;
@@ -19,7 +19,7 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     // Check if user is already signed in
-    // user = FirebaseAuth.instance.currentUser;
+    user = FirebaseAuth.instance.currentUser;
   }
 
   LoginController() {
@@ -102,26 +102,26 @@ class LoginController extends GetxController {
       update();
 
       // Perform Firebase sign in
-      // UserCredential userCredential =
-      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //   email: emailController.text.trim(),
-      //   password: passwordController.text,
-      // );
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
 
       // Update local user object
-      // user = userCredential.user;
+      user = userCredential.user;
 
       // Navigate to home or profile screen
       Get.offAllNamed(
           '/bottom-nav-bar'); // Change '/home' to your desired route
-    // } on FirebaseAuthException catch (e) {
-    //   errorCode = e.code; // Capture Firebase error code
-    //   print('errorrr : $errorCode');
-    //   String errorMessage = getMessageFromErrorCode(errorCode!);
-    //   Get.snackbar(
-    //     'Terjadi Kesalahan',
-    //     errorMessage,
-    //   );
+    } on FirebaseAuthException catch (e) {
+      errorCode = e.code; // Capture Firebase error code
+      print('errorrr : $errorCode');
+      String errorMessage = getMessageFromErrorCode(errorCode!);
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        errorMessage,
+      );
     } finally {
       isLoading = false;
       update(); // Set isLoading to false when login process ends (success or error)

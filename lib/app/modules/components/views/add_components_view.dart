@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/button_styles.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
