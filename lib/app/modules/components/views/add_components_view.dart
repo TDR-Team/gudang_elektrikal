@@ -33,10 +33,8 @@ class AddComponentsView extends GetView<AddComponentsController> {
               children: [
                 Obx(
                   () => _buildImagePicker(
-                    isLoadingImage:
-                        controller.isLoadingImage.value,
-                    imageFileController:
-                        controller.imageFileController.value,
+                    isLoadingImage: controller.isLoadingImage.value,
+                    imageFileController: controller.imageFileController.value,
                     networkImage: controller.networkImage.value,
                     onPickImage: controller.onPickImage,
                   ),
@@ -148,7 +146,6 @@ class AddComponentsView extends GetView<AddComponentsController> {
           bottom: 25,
         ),
         child: CustomElevatedButton(
-          
           onPressed: () async {
             await controller.onAddComponentsClicked();
           },
@@ -223,8 +220,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
                       )
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: networkImage != null &&
-                                networkImage != ''
+                        child: networkImage != null && networkImage != ''
                             ? Image.network(
                                 networkImage,
                                 width: 150.h,
