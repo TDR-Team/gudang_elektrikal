@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
+
 import '../modules/activity/bindings/activity_binding.dart';
 import '../modules/activity/views/activity_view.dart';
 import '../modules/borrow_tools/bindings/borrow_tools_binding.dart';
@@ -8,6 +8,7 @@ import '../modules/bottom_nav_bar/bindings/bottom_nav_bar_binding.dart';
 import '../modules/bottom_nav_bar/views/bottom_nav_bar_view.dart';
 import '../modules/components/bindings/components_binding.dart';
 import '../modules/components/views/components_view.dart';
+import '../modules/components/views/list_components_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -16,6 +17,8 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/splash/bindings/splash_binding.dart';
+import '../modules/splash/views/splash_view.dart';
 
 // ignore_for_file: constant_identifier_names
 
@@ -24,7 +27,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.BOTTOM_NAV_BAR;
+  static const INITIAL = Routes.SPLASH;
   // static const INITIAL = Routes.LOGIN;
 
   static final routes = [
@@ -72,6 +75,11 @@ class AppPages {
       name: _Paths.LIST_COMPONENTS,
       page: () => const ListComponentsView(),
       binding: ComponentsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASH,
+      page: () => const SplashView(),
+      binding: SplashBinding(),
     ),
   ];
 }

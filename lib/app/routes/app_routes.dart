@@ -14,6 +14,7 @@ abstract class Routes {
   static const BORROW_TOOLS = _Paths.BORROW_TOOLS;
   static const ACTIVITY = _Paths.ACTIVITY;
   static const COMPONENTS = _Paths.COMPONENTS;
+  static const SPLASH = _Paths.SPLASH;
 }
 
 abstract class _Paths {
@@ -28,4 +29,5 @@ abstract class _Paths {
   static const ACTIVITY = '/activity';
   static const COMPONENTS = '/components';
   static const LIST_COMPONENTS = '/list-components';
+  static const SPLASH = '/splash';
 }
