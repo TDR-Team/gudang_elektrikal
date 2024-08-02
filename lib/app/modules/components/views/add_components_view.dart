@@ -31,12 +31,15 @@ class AddComponentsView extends GetView<AddComponentsController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildImageProfilePicker(
-                  isLoadingImageProfile: controller.isLoadingImageProfile.value,
-                  imageProfileFileController:
-                      controller.imageProfileFileController.value,
-                  networkImageProfile: controller.networkImageProfile.value,
-                  onPickImageProfile: controller.onPickImageProfile,
+                Obx(
+                  () => _buildImagePicker(
+                    isLoadingImage:
+                        controller.isLoadingImage.value,
+                    imageFileController:
+                        controller.imageFileController.value,
+                    networkImage: controller.networkImage.value,
+                    onPickImage: controller.onPickImage,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
@@ -58,7 +61,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
                   children: [
                     Flexible(
                       child: Text(
-                        'Stock',
+                        'Stok',
                         style: semiBoldText16,
                       ),
                     ),
@@ -119,7 +122,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
                   children: [
                     Flexible(
                       child: Text(
-                        'Unit',
+                        'Satuan',
                         style: semiBoldText16,
                       ),
                     ),
@@ -145,59 +148,9 @@ class AddComponentsView extends GetView<AddComponentsController> {
           bottom: 25,
         ),
         child: CustomElevatedButton(
-          onPressed: () {
-            Get.back();
-            Get.showSnackbar(
-              GetSnackBar(
-                snackPosition: SnackPosition.TOP,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: EdgeInsets.zero,
-                borderRadius: 10,
-                messageText: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: Icon(
-                          Icons.check,
-                          color: kColorScheme.surface,
-                          size: 24.sp,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Berhasil',
-                              style: boldText18,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                            Text(
-                              'Komponen berhasil di tambahkan',
-                              style: regularText14,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                duration: const Duration(seconds: 3),
-                barBlur: 2,
-                backgroundColor: Colors.grey[200]!.withOpacity(0.4),
-                snackStyle: SnackStyle.FLOATING,
-              ),
-            );
+          
+          onPressed: () async {
+            await controller.onAddComponentsClicked();
           },
           text: 'Tambah',
           buttonStyle: primary300Button.copyWith(
@@ -234,11 +187,11 @@ class AddComponentsView extends GetView<AddComponentsController> {
     );
   }
 
-  _buildImageProfilePicker({
-    required bool isLoadingImageProfile,
-    File? imageProfileFileController,
-    String? networkImageProfile,
-    required Future Function({required bool isCamera}) onPickImageProfile,
+  _buildImagePicker({
+    required bool isLoadingImage,
+    File? imageFileController,
+    String? networkImage,
+    required Future Function({required bool isCamera}) onPickImage,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,22 +199,22 @@ class AddComponentsView extends GetView<AddComponentsController> {
         InkWell(
           onTap: () {
             showImagePickerBottomSheet(
-              onPickImage: onPickImageProfile,
+              onPickImage: onPickImage,
             );
           },
-          borderRadius: BorderRadius.circular(120),
+          borderRadius: BorderRadius.circular(10),
           child: SizedBox(
-            width: 120,
-            height: 120,
+            width: 150.h,
+            height: 150.h,
             child: Stack(
               children: [
-                isLoadingImageProfile
+                isLoadingImage
                     ? Shimmer.fromColors(
                         baseColor: const Color.fromARGB(255, 148, 148, 148),
                         highlightColor: const Color.fromARGB(255, 102, 95, 95),
                         child: Container(
-                          width: 120,
-                          height: 120,
+                          width: 150.h,
+                          height: 150.h,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.grey.withOpacity(0.5),
@@ -269,15 +222,13 @@ class AddComponentsView extends GetView<AddComponentsController> {
                         ),
                       )
                     : ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          120,
-                        ),
-                        child: networkImageProfile != null &&
-                                networkImageProfile != ''
+                        borderRadius: BorderRadius.circular(10),
+                        child: networkImage != null &&
+                                networkImage != ''
                             ? Image.network(
-                                networkImageProfile,
-                                width: 120,
-                                height: 120,
+                                networkImage,
+                                width: 150.h,
+                                height: 150.h,
                                 fit: BoxFit.cover,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
@@ -290,8 +241,8 @@ class AddComponentsView extends GetView<AddComponentsController> {
                                       highlightColor: const Color.fromARGB(
                                           255, 102, 95, 95),
                                       child: Container(
-                                        width: 120,
-                                        height: 120,
+                                        width: 150.h,
+                                        height: 150.h,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.grey.withOpacity(0.5),
@@ -302,8 +253,8 @@ class AddComponentsView extends GetView<AddComponentsController> {
                                 },
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
-                                    height: 120,
-                                    width: 120,
+                                    height: 150.h,
+                                    width: 150.h,
                                     decoration: const BoxDecoration(
                                       color: Colors.grey,
                                       shape: BoxShape.circle,
@@ -318,25 +269,34 @@ class AddComponentsView extends GetView<AddComponentsController> {
                                   );
                                 },
                               )
-                            : imageProfileFileController != null
+                            : imageFileController != null
                                 ? Image.file(
                                     File(
-                                      imageProfileFileController.path,
+                                      imageFileController.path,
                                     ),
-                                    width: 120,
-                                    height: 120,
+                                    width: 150.h,
+                                    height: 150.h,
                                     fit: BoxFit.cover,
                                   )
-                                : SvgPicture.asset(
-                                    'assets/images/default_profile_image.svg',
+                                : Container(
+                                    width: 150.h,
+                                    height: 150.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[400],
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      size: 60.sp,
+                                    ),
                                   ),
                       ),
-                const Align(
-                  alignment: Alignment.bottomRight,
-                  child: Icon(
-                    Icons.add,
-                  ),
-                ),
+                // const Align(
+                //   alignment: Alignment.bottomRight,
+                //   child: Icon(
+                //     Icons.add,
+                //   ),
+                // ),
               ],
             ),
           ),
