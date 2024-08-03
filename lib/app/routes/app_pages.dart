@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/profile/views/edit_profile_view.dart';
 
 import '../modules/activity/bindings/activity_binding.dart';
 import '../modules/activity/views/activity_view.dart';
@@ -54,6 +55,11 @@ class AppPages {
     GetPage(
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PROFILE,
+      page: () => const EditProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
