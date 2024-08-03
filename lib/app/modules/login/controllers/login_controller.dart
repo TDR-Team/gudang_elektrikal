@@ -112,8 +112,7 @@ class LoginController extends GetxController {
       user = userCredential.user;
 
       // Navigate to home or profile screen
-      Get.offAllNamed(
-          '/bottom-nav-bar'); // Change '/home' to your desired route
+      Get.offAllNamed('/dashboard'); // Change '/home' to your desired route
     } on FirebaseAuthException catch (e) {
       errorCode = e.code; // Capture Firebase error code
       print('errorrr : $errorCode');
