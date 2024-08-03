@@ -4,16 +4,17 @@ import '../modules/activity/bindings/activity_binding.dart';
 import '../modules/activity/views/activity_view.dart';
 import '../modules/borrow_tools/bindings/borrow_tools_binding.dart';
 import '../modules/borrow_tools/views/borrow_tools_view.dart';
-import '../modules/bottom_nav_bar/bindings/bottom_nav_bar_binding.dart';
-import '../modules/bottom_nav_bar/views/bottom_nav_bar_view.dart';
 import '../modules/components/bindings/components_binding.dart';
 import '../modules/components/views/components_view.dart';
 import '../modules/components/views/list_components_view.dart';
+import '../modules/dashboard/bindings/dashboard_binding.dart';
+import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/edit_profile_view.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
@@ -47,13 +48,13 @@ class AppPages {
       binding: LoginBinding(),
     ),
     GetPage(
-      name: _Paths.BOTTOM_NAV_BAR,
-      page: () => const BottomNavBarView(),
-      binding: BottomNavBarBinding(),
-    ),
-    GetPage(
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PROFILE,
+      page: () => const EditProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
@@ -80,6 +81,11 @@ class AppPages {
       name: _Paths.SPLASH,
       page: () => const SplashView(),
       binding: SplashBinding(),
+    ),
+    GetPage(
+      name: _Paths.DASHBOARD,
+      page: () => const DashboardView(),
+      binding: DashboardBinding(),
     ),
   ];
 }
