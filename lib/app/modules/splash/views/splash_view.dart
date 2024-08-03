@@ -47,8 +47,8 @@ class SplashView extends StatelessWidget {
   void _navigateToNextScreen() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Pengguna sudah login, navigasi ke BottomNavBarView
-      Get.offAllNamed('/bottom-nav-bar');
+      // Pengguna sudah login, navigasi ke Dashboard
+      Get.offAllNamed('/dashboard');
     } else {
       // Pengguna belum login, navigasi ke LoginView
       Get.offAllNamed('/login');
