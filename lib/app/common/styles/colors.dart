@@ -31,10 +31,11 @@ ColorScheme kColorScheme = const ColorScheme(
   // primaryContainer: AppColors.neutralColors[4],
   secondary: Color(0xFFFED36A),
   // secondaryContainer: AppColors.neutralColors[4],
+
   surface: Colors.white,
   error: Colors.red,
   onPrimary: Colors.white,
-  onSecondary: Colors.white,
+  onSecondary: Colors.black,
   onSurface: Colors.white,
   onError: Colors.white,
   brightness: Brightness.dark,
