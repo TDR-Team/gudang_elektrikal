@@ -26,14 +26,14 @@ class AppColors {
   ];
 }
 
-ColorScheme kColorScheme = ColorScheme(
-  primary: AppColors.primaryColors[0],
-  primaryContainer: AppColors.neutralColors[4],
-  secondary: AppColors.secondaryColors[0],
-  secondaryContainer: AppColors.neutralColors[4],
+ColorScheme kColorScheme = const ColorScheme(
+  primary: Color(0xFF125D72),
+  // primaryContainer: AppColors.neutralColors[4],
+  secondary: Color(0xFFFED36A),
+  // secondaryContainer: AppColors.neutralColors[4],
   surface: Colors.white,
   error: Colors.red,
-  onPrimary: AppColors.primaryColors[4],
+  onPrimary: Colors.white,
   onSecondary: Colors.white,
   onSurface: Colors.white,
   onError: Colors.white,
