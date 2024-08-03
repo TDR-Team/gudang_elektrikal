@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
@@ -21,26 +22,22 @@ class BottomNavBarView extends GetView<BottomNavBarController> {
           onTap: controller.changePage,
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-          side: const BorderSide(
-            color: Colors.transparent,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        ),
-        backgroundColor: Colors.lightBlue,
-        elevation: 0,
-        child: const Icon(
-          Icons.add_rounded,
-          color: Colors.white,
-          size: 40,
-        ),
-        onPressed: () {
-          _buildAddComponentsAndTools(context);
-        },
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(50),
+      //   ),
+      //   backgroundColor: kColorScheme.secondary,
+      //   elevation: 0,
+      //   child: Icon(
+      //     Icons.add_rounded,
+      //     color: kColorScheme.onSecondary,
+      //     size: 40,
+      //   ),
+      //   onPressed: () {
+      //     _buildAddComponentsAndTools(context);
+      //   },
+      // ),
     );
   }
 
@@ -90,8 +87,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
           useMaterial3: false,
         ),
         child: BottomAppBar(
-          height: 60,
-          color: AppColors.neutralColors[3],
+          elevation: 1,
+          height: 50.h,
+          color: kColorScheme.primary,
           shape: const CircularNotchedRectangle(),
           notchMargin: 3.0,
           child: Row(
@@ -108,10 +106,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        const Icon(Icons.all_inbox),
                         SvgPicture.asset(
                           "assets/ic_getComponents.svg",
-                          width: 34,
-                          height: 34,
+                          width: 34.h,
+                          height: 34.h,
                           colorFilter: ColorFilter.mode(
                             currentIndex == 0 ? Colors.black : Colors.grey,
                             BlendMode.srcIn,
