@@ -25,6 +25,7 @@ abstract class _Paths {
   static const BOTTOM_NAV_BAR = '/bottom-nav-bar';
   static const GET_COMPONENTS = '/get-components';
   static const PROFILE = '/profile';
+  static const EDIT_PROFILE = '/edit-profile';
   static const BORROW_TOOLS = '/borrow-tools';
   static const ACTIVITY = '/activity';
   static const COMPONENTS = '/components';

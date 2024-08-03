@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
+import 'package:gudang_elektrikal/app/modules/profile/views/edit_profile_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/profile_controller.dart';
@@ -41,22 +42,6 @@ class ProfileView extends GetView<ProfileController> {
                               decoration: const BoxDecoration(
                                 color: Colors.lightBlue,
                               ),
-                              // child: CircleAvatar(
-                              //   radius: 50,
-                              //   backgroundColor: Colors.white,
-                              //   backgroundImage: controller.isLoading
-                              //       ? const CircularProgressIndicator(
-                              //           color: Colors.lightBlue,
-                              //         ) as ImageProvider
-                              //       : controller.profileImageUrl != null
-                              //           ? NetworkImage(
-                              //               controller.profileImageUrl!)
-                              //           : null,
-                              //   child: controller.profileImageUrl == null
-                              //       ? const Icon(Icons.person,
-                              //           size: 50, color: Colors.grey)
-                              //       : null,
-                              // ),
                               child: Container(
                                 width: 100,
                                 height: 100,
@@ -132,10 +117,10 @@ class ProfileView extends GetView<ProfileController> {
                                   Align(
                                       alignment: Alignment.centerRight,
                                       child: InkWell(
-                                        onTap: () =>
-                                            Get.to(() => const ProfileView())!
-                                                .then((value) =>
-                                                    controller.getUserData()),
+                                        onTap: () => Get.to(
+                                                () => const EditProfileView())!
+                                            .then((value) =>
+                                                controller.getUserData()),
                                         child: Text(
                                           'Ubah Profil',
                                           style: regularText12.copyWith(
