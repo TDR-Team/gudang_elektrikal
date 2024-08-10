@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Component {
   final String id;
-  final int numberRack;
-  final int level;
+  final int? numberRack;
+  final int? level;
   final String name;
   final String imgUrl;
   final String description;
@@ -12,8 +12,8 @@ class Component {
 
   Component({
     required this.id,
-    required this.numberRack,
-    required this.level,
+    this.numberRack,
+    this.level,
     required this.name,
     required this.imgUrl,
     required this.description,

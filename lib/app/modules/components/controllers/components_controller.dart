@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
-import 'package:gudang_elektrikal/app/data/model/component.dart';
 
 class ComponentsController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
