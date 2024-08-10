@@ -42,7 +42,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                   ),
                   child: Center(
                     child: Text(
-                      controller.numberDrawer.toString(),
+                      controller.level.toString(),
                       style: boldText28.copyWith(
                         color: Colors.white,
                         fontSize: 48.sp,
