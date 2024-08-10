@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 
 class CustomSearch extends StatelessWidget {
@@ -23,7 +24,7 @@ class CustomSearch extends StatelessWidget {
         cursorColor: Colors.blue,
         style: regularText14,
         decoration: InputDecoration(
-          fillColor: Colors.white,
+          fillColor: kColorScheme.onSecondary,
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
