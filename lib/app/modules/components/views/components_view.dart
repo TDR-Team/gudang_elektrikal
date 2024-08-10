@@ -16,7 +16,7 @@ class ComponentsView extends GetView<ComponentsController> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
-          'Ambil Komponen',
+          'Komponen',
           style: semiBoldText20,
         ),
         surfaceTintColor: Colors.transparent,
