@@ -20,6 +20,7 @@ class DashboardView extends GetView<DashboardController> {
       builder: (controller) {
         return Scaffold(
           extendBody: true,
+          // extendBodyBehindAppBar: true,
           body: Center(
             child: IndexedStack(
               index: controller.tabIndex,
@@ -54,24 +55,29 @@ class DashboardView extends GetView<DashboardController> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: SizedBox(
-            height: 60.h,
-            width: 60.h,
-            child: FittedBox(
-              child: FloatingActionButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+          // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+
+          floatingActionButton: Visibility(
+            visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+            child: SizedBox(
+              height: 60.h,
+              width: 60.h,
+              child: FittedBox(
+                child: FloatingActionButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  backgroundColor: kColorScheme.secondary,
+                  elevation: 0,
+                  child: Icon(
+                    Icons.add_rounded,
+                    color: kColorScheme.onSecondary,
+                    size: 30.h,
+                  ),
+                  onPressed: () {
+                    _buildAddComponentsAndTools(context);
+                  },
                 ),
-                backgroundColor: kColorScheme.secondary,
-                elevation: 0,
-                child: Icon(
-                  Icons.add_rounded,
-                  color: kColorScheme.onSecondary,
-                  size: 30.h,
-                ),
-                onPressed: () {
-                  _buildAddComponentsAndTools(context);
-                },
               ),
             ),
           ),
