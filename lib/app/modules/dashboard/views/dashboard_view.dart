@@ -12,6 +12,7 @@ import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
 import 'package:gudang_elektrikal/app/modules/profile/views/profile_view.dart';
 import 'package:gudang_elektrikal/app/widgets/bottom_navigation_bar.dart';
 
+import '../../components/views/get_components_view.dart';
 import '../controllers/dashboard_controller.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -128,7 +129,9 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                   const SizedBox(height: 20),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => const GetComponentsView());
+                    },
                     child: Row(
                       children: [
                         Icon(
