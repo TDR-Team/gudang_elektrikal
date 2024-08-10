@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -20,12 +21,19 @@ class AddComponentsController extends GetxController {
   RxBool isLoadingImage = false.obs;
   Rx<File?> imageFileController = RxNullable<File?>().setNull();
   Rx<String?> networkImage = RxNullable<String?>().setNull();
+  RxString selectedRack = ''.obs;
+  RxString selectedLevel = ''.obs;
 
   final unitName = 'Pcs'.obs;
   final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack'];
 
   void onChangedRackName(String? value) {
     unitName.value = value ?? "";
+  }
+
+  void setRackAndLevel(String rack, String level) {
+    selectedRack.value = rack;
+    selectedLevel.value = level;
   }
 
   // Define the stock as an RxInt to make it reactive
@@ -118,7 +126,6 @@ class AddComponentsController extends GetxController {
   }
 
   Future<void> onAddComponentsClicked() async {
-    // Add logic to save component details
     final imageFile = imageFileController.value;
     final name = nameComponent.text;
     final description =
@@ -126,12 +133,14 @@ class AddComponentsController extends GetxController {
     final stock = this.stock.value;
     final unit = unitName.value;
 
+    // Validation checks
     if (imageFile == null) {
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
         message: 'Mohon isi foto terlebih dahulu',
       ).showSnackbar();
+      return;
     }
     if (name.isEmpty) {
       const CustomSnackbar(
@@ -139,6 +148,7 @@ class AddComponentsController extends GetxController {
         title: 'Gagal',
         message: 'Mohon isi nama komponen terlebih dahulu',
       ).showSnackbar();
+      return;
     }
     if (stock == 0) {
       const CustomSnackbar(
@@ -146,53 +156,49 @@ class AddComponentsController extends GetxController {
         title: 'Gagal',
         message: 'Mohon isi stok terlebih dahulu',
       ).showSnackbar();
+      return;
     }
-
-    // Simulate saving process
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Example of logging the details
-    print('Component saved with details:');
-    print('Name: $name');
-    print('Description: $description');
-    print('Stock: $stock');
-    print('Unit: $unit');
-    print('Image Path: ${imageFile!.path}');
-
-    Get.back();
-
-    // const CustomSnackbar(
-    //   success: true,
-    //   title: 'Berhasil',
-    //   message: 'Komponen berhasil di tambahkan',
-    // ).showSnackbar();
+    if (selectedRack.value.isEmpty || selectedLevel.value.isEmpty) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Pilih rak dan level terlebih dahulu',
+      ).showSnackbar();
+      return;
+    }
 
     try {
       // Upload image to Firebase Storage
-      // String imagePath =
-      // 'components/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      // UploadTask uploadTask =
-      // FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
-      // TaskSnapshot snapshot = await uploadTask;
-      // String imageUrl = await snapshot.ref.getDownloadURL();
+      final imagePath =
+          'components/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final uploadTask =
+          FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
+      final snapshot = await uploadTask;
 
-      // Save component data to Firestore
-      await FirebaseFirestore.instance
-          .collection('components')
-          .doc('rack_1')
-          .collection('laci_1')
-          .add({
-        'name': name,
-        'description': description,
-        'stock': stock,
-        'unit': unit,
-        'imageUrl': "https://picsum.photos/400",
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      if (snapshot.state == TaskState.success) {
+        final imageUrl = await snapshot.ref.getDownloadURL();
 
-      Get.back();
-      Get.snackbar('Berhasil', 'Komponen berhasil ditambahkan',
-          snackPosition: SnackPosition.BOTTOM);
+        // Save component data to the specific rack and level
+        await FirebaseFirestore.instance
+            .collection('components')
+            .doc(selectedRack.value)
+            .collection(selectedLevel.value)
+            .add({
+          'name': name,
+          'description': description,
+          'stock': stock,
+          'unit': unit,
+          'imageUrl': imageUrl,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        Get.back();
+        Get.snackbar('Berhasil', 'Komponen berhasil ditambahkan',
+            snackPosition: SnackPosition.BOTTOM);
+      } else {
+        Get.snackbar('Gagal', 'Gagal mengunggah gambar, coba lagi.',
+            snackPosition: SnackPosition.BOTTOM);
+      }
     } catch (e) {
       Get.snackbar('Gagal', 'Terjadi kesalahan, mohon coba lagi',
           snackPosition: SnackPosition.BOTTOM);
