@@ -1,1 +1,42 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"gudang-elektrikal","appId":"1:289344003521:android:579ddde9e91d2eb5106340","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"gudang-elektrikal","appId":"1:289344003521:ios:a416fa7bc10c7d5c106340","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"gudang-elektrikal","configurations":{"android":"1:289344003521:android:579ddde9e91d2eb5106340","ios":"1:289344003521:ios:a416fa7bc10c7d5c106340"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "gudang-elektrikal",
+          "appId": "1:289344003521:android:579ddde9e91d2eb5106340",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "gudang-elektrikal",
+          "appId": "1:289344003521:ios:a416fa7bc10c7d5c106340",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "gudang-elektrikal",
+          "configurations": {
+            "android": "1:289344003521:android:579ddde9e91d2eb5106340",
+            "ios": "1:289344003521:ios:a416fa7bc10c7d5c106340"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ]
+}
