@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/tools/bindings/tools_binding.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 
 import '../modules/activity/bindings/activity_binding.dart';
 import '../modules/activity/views/activity_view.dart';
-import '../modules/tools/bindings/borrow_tools_binding.dart';
-import '../modules/tools/views/borrow_tools_view.dart';
 import '../modules/components/bindings/components_binding.dart';
 import '../modules/components/views/components_view.dart';
 import '../modules/components/views/list_components_view.dart';
@@ -59,8 +59,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.BORROW_TOOLS,
-      page: () => const BorrowToolsView(),
-      binding: BorrowToolsBinding(),
+      page: () => const ToolsView(),
+      binding: ToolsBinding(),
     ),
     GetPage(
       name: _Paths.ACTIVITY,
