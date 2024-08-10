@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/activity/views/activity_view.dart';
-import 'package:gudang_elektrikal/app/modules/borrow_tools/views/borrow_tools_view.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
 import 'package:gudang_elektrikal/app/modules/profile/views/profile_view.dart';
@@ -28,7 +27,7 @@ class DashboardView extends GetView<DashboardController> {
               index: controller.tabIndex,
               children: const [
                 ComponentsView(),
-                BorrowToolsView(),
+                ToolsView(),
                 LoginView(),
                 ActivityView(),
                 ProfileView()
