@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/activity/views/activity_view.dart';
-import 'package:gudang_elektrikal/app/modules/borrow_tools/views/borrow_tools_view.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/borrow_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
 import 'package:gudang_elektrikal/app/modules/profile/views/profile_view.dart';

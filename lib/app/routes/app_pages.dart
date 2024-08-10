@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/activity/bindings/activity_binding.dart';
 import '../modules/activity/views/activity_view.dart';
-import '../modules/borrow_tools/bindings/borrow_tools_binding.dart';
-import '../modules/borrow_tools/views/borrow_tools_view.dart';
+import '../modules/tools/bindings/borrow_tools_binding.dart';
+import '../modules/tools/views/borrow_tools_view.dart';
 import '../modules/components/bindings/components_binding.dart';
 import '../modules/components/views/components_view.dart';
 import '../modules/components/views/list_components_view.dart';
