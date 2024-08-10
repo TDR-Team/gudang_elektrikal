@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Component {
   final String id;
   final int numberRack;
-  final int numberDrawer;
+  final int level;
   final String name;
   final String imgUrl;
   final String description;
@@ -13,7 +13,7 @@ class Component {
   Component({
     required this.id,
     required this.numberRack,
-    required this.numberDrawer,
+    required this.level,
     required this.name,
     required this.imgUrl,
     required this.description,
@@ -26,7 +26,7 @@ class Component {
     return Component(
       id: doc.id,
       numberRack: data['numberRack'] ?? 0,
-      numberDrawer: data['numberDrawer'] ?? 0,
+      level: data['numberDrawer'] ?? 0,
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       imgUrl: data['imgUrl'] ?? '',
@@ -39,7 +39,7 @@ class Component {
     return Component(
       id: data['id'] ?? '',
       numberRack: data['numberRack'] ?? 0,
-      numberDrawer: data['numberDrawer'] ?? 0,
+      level: data['numberDrawer'] ?? 0,
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       imgUrl: data['imgUrl'] ?? '',
@@ -53,7 +53,7 @@ final listDummyComponents = [
   Component(
     id: "1",
     numberRack: 1,
-    numberDrawer: 1,
+    level: 1,
     name: 'Obeng',
     imgUrl: 'imgUrl',
     description: 'description',
@@ -63,7 +63,7 @@ final listDummyComponents = [
   Component(
     id: "2",
     numberRack: 1,
-    numberDrawer: 2,
+    level: 2,
     name: 'Obeng',
     imgUrl: 'imgUrl',
     description: 'description',
@@ -73,7 +73,7 @@ final listDummyComponents = [
   Component(
     id: "3",
     numberRack: 1,
-    numberDrawer: 3,
+    level: 3,
     name: 'Obeng',
     imgUrl: 'imgUrl',
     description: 'description',
@@ -83,7 +83,7 @@ final listDummyComponents = [
   Component(
     id: "4",
     numberRack: 1,
-    numberDrawer: 4,
+    level: 4,
     name: 'Obeng',
     imgUrl: 'imgUrl',
     description: 'description',
@@ -93,7 +93,7 @@ final listDummyComponents = [
   Component(
     id: "5",
     numberRack: 1,
-    numberDrawer: 5,
+    level: 5,
     name: 'Obeng',
     imgUrl: 'imgUrl',
     description: 'description',
@@ -103,7 +103,7 @@ final listDummyComponents = [
   Component(
     id: "6",
     numberRack: 1,
-    numberDrawer: 6,
+    level: 6,
     name: 'Obeng',
     imgUrl: 'imgUrl',
     description: 'description',

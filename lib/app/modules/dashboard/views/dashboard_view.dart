@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
+import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/activity/views/activity_view.dart';
 import 'package:gudang_elektrikal/app/modules/borrow_tools/views/borrow_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
@@ -99,9 +101,72 @@ class DashboardView extends GetView<DashboardController> {
       builder: (context) {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
-          child: const SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(24),
+          child: SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                // vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Container(
+                    width: MediaQuery.sizeOf(context).width / 4,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.all_inbox,
+                          size: 24.sp,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Ambil Komponen',
+                          style: mediumText18,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    splashColor: Colors.blue,
+                    onTap: () {},
+                    child: Ink(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.build_outlined,
+                            size: 24.h,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Pinjam Alat',
+                            style: mediumText18,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         );
