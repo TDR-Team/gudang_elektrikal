@@ -14,18 +14,12 @@ import 'package:gudang_elektrikal/app/widgets/show_image_picker_bottom_sheet.dar
 import 'package:shimmer/shimmer.dart';
 
 class AddComponentsView extends GetView<AddComponentsController> {
-  final String rack; // Assume you pass the rack name here
-  final String level; // Assume you pass the level here
-  const AddComponentsView({
-    super.key,
-    required this.rack,
-    required this.level,
-  });
+  const AddComponentsView({super.key});
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => AddComponentsController());
     final controller = Get.find<AddComponentsController>();
-    controller.setRackAndLevel(rack, level); // Set the rack and level
+    controller.setRackAndLevel(); // Set the rack and level
 
     return Scaffold(
       appBar: AppBar(
