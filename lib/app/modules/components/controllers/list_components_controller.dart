@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 
 class ListComponentsController extends GetxController {
   final String levelName = Get.arguments['levelName'];
@@ -17,7 +18,7 @@ class ListComponentsController extends GetxController {
     fetchComponents();
   }
 
-  void fetchComponents() async {
+  Future<void> fetchComponents() async {
     try {
       var levelSnapshot = await FirebaseFirestore.instance
           .collection('components')
@@ -48,5 +49,16 @@ class ListComponentsController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void onAddComponentClicked() {
+    Get.to(
+      () => const AddComponentsView(),
+      arguments: {
+        "rackName": rackName,
+        "levelName": levelName,
+        // Pass level data to the next view
+      },
+    )?.then((value) async => await fetchComponents());
   }
 }
