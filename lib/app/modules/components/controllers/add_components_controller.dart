@@ -9,11 +9,15 @@ import 'package:gudang_elektrikal/app/common/helpers/nullable_rx.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../common/helpers/image_helpers.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class AddComponentsController extends GetxController {
+  final String levelName = Get.arguments['levelName'];
+  final String rackName = Get.arguments['rackName'];
+
   TextEditingController nameComponent = TextEditingController();
   TextEditingController descriptionComponent = TextEditingController();
   TextEditingController stockController = TextEditingController();
@@ -31,9 +35,9 @@ class AddComponentsController extends GetxController {
     unitName.value = value ?? "";
   }
 
-  void setRackAndLevel(String rack, String level) {
-    selectedRack.value = rack;
-    selectedLevel.value = level;
+  void setRackAndLevel() {
+    selectedRack.value = rackName;
+    selectedLevel.value = levelName;
   }
 
   // Define the stock as an RxInt to make it reactive
@@ -177,20 +181,25 @@ class AddComponentsController extends GetxController {
 
       if (snapshot.state == TaskState.success) {
         final imageUrl = await snapshot.ref.getDownloadURL();
+        const uuid = Uuid();
 
-        // Save component data to the specific rack and level
+        final String componentId = uuid.v4();
+
         await FirebaseFirestore.instance
             .collection('components')
-            .doc(selectedRack.value)
-            .collection(selectedLevel.value)
-            .add({
-          'name': name,
-          'description': description,
-          'stock': stock,
-          'unit': unit,
-          'imageUrl': imageUrl,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
+            .doc(rackName)
+            .set({
+          levelName: {
+            componentId: {
+              'name': name,
+              'description': description,
+              'stock': stock,
+              'unit': unit,
+              'imgUrl': imageUrl,
+              'createdAt': FieldValue.serverTimestamp(),
+            }
+          }
+        }, SetOptions(merge: true));
 
         Get.back();
         Get.snackbar('Berhasil', 'Komponen berhasil ditambahkan',
