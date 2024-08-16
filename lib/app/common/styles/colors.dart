@@ -27,9 +27,9 @@ class AppColors {
 }
 
 ColorScheme kColorScheme = const ColorScheme(
-  primary: Color(0xFF125D72),
+  primary: Color(0xFF137BA1),
   // primaryContainer: AppColors.neutralColors[4],
-  secondary: Color(0xFFFED36A),
+  secondary: Color(0xFFFFDF00),
   // secondaryContainer: AppColors.neutralColors[4],
 
   surface: Colors.white,
