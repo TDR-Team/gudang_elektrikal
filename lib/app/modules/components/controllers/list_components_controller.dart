@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 
+
 class ListComponentsController extends GetxController {
   final String levelName = Get.arguments['levelName'];
   final String rackName = Get.arguments['rackName'];
@@ -61,4 +62,5 @@ class ListComponentsController extends GetxController {
       },
     )?.then((value) async => await fetchComponents());
   }
+
 }

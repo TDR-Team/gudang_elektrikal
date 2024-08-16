@@ -6,13 +6,13 @@ import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 
 import '../../../common/theme/font.dart';
-import '../controllers/borrow_tools_controller.dart';
+import '../controllers/tools_controller.dart';
 
-class BorrowToolsView extends GetView<BorrowToolsController> {
-  const BorrowToolsView({super.key});
+class ToolsView extends GetView<ToolsController> {
+  const ToolsView({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => BorrowToolsController());
+    Get.lazyPut(() => ToolsController());
     return Scaffold(
       backgroundColor: kColorScheme.surface,
       extendBodyBehindAppBar: true,

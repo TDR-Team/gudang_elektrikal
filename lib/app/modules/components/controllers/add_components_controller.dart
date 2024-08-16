@@ -38,6 +38,7 @@ class AddComponentsController extends GetxController {
   void setRackAndLevel() {
     selectedRack.value = rackName;
     selectedLevel.value = levelName;
+
   }
 
   // Define the stock as an RxInt to make it reactive
@@ -200,6 +201,7 @@ class AddComponentsController extends GetxController {
             }
           }
         }, SetOptions(merge: true));
+
 
         Get.back();
         Get.snackbar('Berhasil', 'Komponen berhasil ditambahkan',
