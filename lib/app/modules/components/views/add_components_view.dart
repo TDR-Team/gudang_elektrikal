@@ -25,7 +25,8 @@ class AddComponentsView extends GetView<AddComponentsController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => AddComponentsController());
     final controller = Get.find<AddComponentsController>();
-    controller.setRackAndLevel(rack, level); // Set the rack and level
+    controller.setRackAndLevel(); // Set the rack and level
+
 
     return Scaffold(
       appBar: AppBar(

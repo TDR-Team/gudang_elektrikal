@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/common/styles/colors.dart';
-import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/widgets/dropdown_button.dart';
-import '../controllers/components_controller.dart';
 
-class ComponentsView extends GetView<ComponentsController> {
-  const ComponentsView({super.key});
+import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/components/controllers/get_components_controller.dart';
+
+import '../../../common/styles/colors.dart';
+import '../../../common/theme/font.dart';
+import '../../../widgets/dropdown_button.dart';
+
+class GetComponentsView extends GetView<GetComponentsController> {
+  const GetComponentsView({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => ComponentsController());
+    Get.lazyPut(() => GetComponentsController());
     return Scaffold(
       backgroundColor: kColorScheme.surface,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
-          'Komponen',
+          'Ambil Komponen',
           style: semiBoldText20,
         ),
         surfaceTintColor: Colors.transparent,
@@ -27,7 +29,7 @@ class ComponentsView extends GetView<ComponentsController> {
             child: IconButton(
               onPressed: () {},
               icon: Icon(
-                Icons.add,
+                Icons.shopping_cart_outlined,
                 size: 24.sp,
                 color: Colors.black,
               ),
