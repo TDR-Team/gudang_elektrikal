@@ -20,17 +20,24 @@ class ToolsController extends GetxController {
       final QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('tools').get();
 
-      tools.value = querySnapshot.docs.map((doc) {
-        return {
-          'id': doc.id,
-          'name': doc['name'] ?? 'No name',
-          'description': doc['description'] ?? '',
-          'stock': doc['stock'] ?? 0,
-          'tStock': doc['tStock'] ?? 0,
-          'status': doc['status'] ?? false,
-          'imgUrl': doc['imgUrl'] ?? '',
-        };
-      }).toList();
+      if (querySnapshot.docs.isNotEmpty) {
+        print('Documents found: ${querySnapshot.docs.length}');
+        tools.value = querySnapshot.docs.map((tools) {
+          print(tools.data()); // Print each document's data for debugging
+          return {
+            'id': tools.id,
+            'name': tools['name'] ?? 'No name',
+            'description': tools['description'] ?? '',
+            'stock': tools['stock'] ?? 0,
+            'tStock': tools['tStock'] ?? 0,
+            'isStatus': tools['isStatus'] ?? false,
+            'imgUrl': tools['imgUrl'] ?? '',
+          };
+        }).toList();
+      } else {
+        tools.value = [];
+        print('No documents found');
+      }
     } catch (e) {
       print('Error fetching tools: $e');
       tools.value = [];
