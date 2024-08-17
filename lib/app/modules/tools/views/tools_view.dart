@@ -3,10 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
-import 'package:gudang_elektrikal/app/widgets/custom_list_components.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_tools.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../common/theme/font.dart';
 import '../controllers/tools_controller.dart';
@@ -86,25 +84,57 @@ class ToolsView extends GetView<ToolsController> {
               ],
             ),
           ),
-          const CustomListTools(
-            id: "id",
-            name: "name",
-            imgUrl: "imgUrl",
-            description: "description",
-            stock: 8,
-            tStock: 8,
-            isStatus: true,
-          ),
-          const CustomListTools(
-            id: "id",
-            name: "name",
-            imgUrl: "imgUrl",
-            description: "description",
-            stock: 0,
-            tStock: 1,
-            isStatus: false,
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (controller.tools.isEmpty) {
+                return const Center(child: Text("No tools found"));
+              } else {
+                return ListView.separated(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.only(
+                    top: 12,
+                    left: 16,
+                    right: 16,
+                    bottom: 0,
+                  ),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemCount: controller.tools.length,
+                  itemBuilder: (context, index) {
+                    var tools = controller.tools[index];
+                    return CustomListTools(
+                        id: tools['id'],
+                        name: tools['name'],
+                        imgUrl:
+                            tools['imgUrl'] ?? 'https://picsum.photos/200/300',
+                        description:
+                            tools['description'] ?? 'No description available',
+                        stock: tools['stock'],
+                        tStock: tools['tStock'],
+                        isStatus: tools['isStatus']);
+                  },
+                );
+              }
+            }),
           ),
         ],
+      ),
+      floatingActionButton: Visibility(
+        visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 70.0),
+          child: FloatingActionButton(
+            heroTag: "addTools",
+            onPressed: () {
+              // Get.to(() => const AddComponentsView());
+              // controller.onAddComponentClicked();
+            },
+            backgroundColor: Colors.amber,
+            child: const Icon(Icons.add),
+          ),
+        ),
       ),
     );
   }
