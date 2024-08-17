@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/list_components_controller.dart';
-import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_components.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 import 'package:shimmer/shimmer.dart';
@@ -80,7 +79,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               } else if (controller.components.isEmpty) {
-                return const Center(child: Text("No components found"));
+                return const Center(child: Text('Komponen Masih Kosong :()'));
               } else {
                 return ListView.separated(
                   shrinkWrap: true,
@@ -204,14 +203,18 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Column(
-                                            children: [
-                                              Text(
-                                                component['name'],
-                                                style: boldText20,
-                                              )
-                                            ],
+                                          Flexible(
+                                            flex: 3,
+                                            child: Text(
+                                              component['name'],
+                                              maxLines: 5,
+                                              style: boldText20,
+                                              overflow: TextOverflow.ellipsis,
+                                              textScaler:
+                                                  const TextScaler.linear(1),
+                                            ),
                                           ),
+                                          const SizedBox(width: 5),
                                           Container(
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 9,
@@ -231,20 +234,32 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        component['description'] ??
-                                            'No description available',
-                                        style: regularText10,
-                                      ),
-                                      const SizedBox(height: 10),
+                                      if (component['description'] != null &&
+                                          component['description']!
+                                              .trim()
+                                              .isNotEmpty)
+                                        Column(
+                                          children: [
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              component['description'] ??
+                                                  'No description available',
+                                              style: regularText10,
+                                            ),
+                                          ],
+                                        ),
+                                      const SizedBox(height: 20),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: InkWell(
-                                              onTap: () {},
+                                              onTap: () {
+                                                controller
+                                                    .onEditComponentClicked(
+                                                        index);
+                                              },
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: Container(
@@ -267,7 +282,13 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                           ),
                                           const SizedBox(width: 10),
                                           InkWell(
-                                            onTap: () {},
+                                            onTap: () {
+                                              final String componentId =
+                                                  component['id'];
+                                              controller
+                                                  .onDeleteComponentClicked(
+                                                      componentId);
+                                            },
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             child: Container(
@@ -294,7 +315,9 @@ class ListComponentsView extends GetView<ListComponentsController> {
                           },
                         );
                       },
-                      onTapEdit: () {},
+                      onTapEdit: () {
+                        controller.onEditComponentClicked(index);
+                      },
                     );
                   },
                 );
@@ -303,14 +326,16 @@ class ListComponentsView extends GetView<ListComponentsController> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Get.to(() => const AddComponentsView());
-          controller.onAddComponentClicked();
-
-        },
-        backgroundColor: Colors.amber,
-        child: const Icon(Icons.add),
+      floatingActionButton: Visibility(
+        visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+        child: FloatingActionButton(
+          onPressed: () {
+            // Get.to(() => const AddComponentsView());
+            controller.onAddComponentClicked();
+          },
+          backgroundColor: Colors.amber,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
