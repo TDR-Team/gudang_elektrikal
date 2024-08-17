@@ -25,7 +25,9 @@ class ComponentsView extends GetView<ComponentsController> {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                controller.addLevel();
+              },
               icon: Icon(
                 Icons.add,
                 size: 24.sp,
