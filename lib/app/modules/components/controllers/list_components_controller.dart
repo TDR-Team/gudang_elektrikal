@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
-
 import '../../../widgets/custom_snackbar.dart';
 
 class ListComponentsController extends GetxController {
