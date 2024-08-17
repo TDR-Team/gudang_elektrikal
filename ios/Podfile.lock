@@ -20,7 +20,7 @@ PODS:
     - abseil/base/cycleclock_internal (= 1.20240116.2)
     - abseil/base/dynamic_annotations (= 1.20240116.2)
     - abseil/base/endian (= 1.20240116.2)
-    - abseil/base/errno_saver (= 1.20240116.2)8
+    - abseil/base/errno_saver (= 1.20240116.2)
     - abseil/base/fast_type_id (= 1.20240116.2)
     - abseil/base/log_severity (= 1.20240116.2)
     - abseil/base/malloc_internal (= 1.20240116.2)
@@ -1229,9 +1229,9 @@ PODS:
     - FlutterMacOS
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
-  - SDWebImage (5.19.4):
-    - SDWebImage/Core (= 5.19.4)
-  - SDWebImage/Core (5.19.4)
+  - SDWebImage (5.19.6):
+    - SDWebImage/Core (= 5.19.6)
+  - SDWebImage/Core (5.19.6)
   - SDWebImageWebPCoder (0.14.6):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
@@ -1346,10 +1346,10 @@ SPEC CHECKSUMS:
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  SDWebImage: 066c47b573f408f18caa467d71deace7c0f8280d
+  SDWebImage: a79252b60f4678812d94316c91da69ec83089c9f
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
 
-PODFILE CHECKSUM: 54ee79e44821cce01d0801e8b0aa4dd83550b3bc
+PODFILE CHECKSUM: 024432cc3824fa858320904d43d18013e7743486
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.15.0
