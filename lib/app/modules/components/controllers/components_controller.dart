@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
+import 'dart:math' as math; // Import math library with alias
 
 class ComponentsController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -80,6 +81,40 @@ class ComponentsController extends GetxController {
       listLevels.clear(); // Clear previous levels
       levelData.clear(); // Clear previous level data
       fetchRackLevels(value);
+    }
+  }
+
+  void addLevel() async {
+    try {
+      // Get the current highest level number (if any)
+      int highestLevel = 0;
+      if (listLevels.isNotEmpty) {
+        highestLevel = listLevels
+            .map(int.parse)
+            .reduce(math.max); // Efficiently find the highest level
+      }
+
+      // Generate the new level name (increment by 1)
+      String newLevelName = (highestLevel + 1).toString();
+
+      // Add the new level to the rack document
+      await FirebaseFirestore.instance
+          .collection('components')
+          .doc(rackName.value)
+          .set({newLevelName: {}}, SetOptions(merge: true));
+
+      // Update the UI to reflect the new level
+      listLevels.add(newLevelName);
+      levelData[newLevelName] =
+          {}; // Create an empty entry for the new level data
+
+      Get.back(); // Close the add level dialog (if applicable)
+    } catch (e) {
+      print("Error adding level: $e");
+      Get.snackbar(
+        "Error",
+        "Gagal",
+      );
     }
   }
 
