@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_list_tools.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 
 import '../../../common/theme/font.dart';
@@ -47,36 +48,6 @@ class ToolsView extends GetView<ToolsController> {
                     ),
                   ),
                 ),
-                // Positioned(
-                //   left: 0,
-                //   right: MediaQuery.sizeOf(context).width / 4,
-                //   bottom: 0,
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                //     child: CustomSearch(
-                //       searchController: controller.searchController,
-                //       //                       onTap: () {
-                //       //                         FocusScope.of(context).unfocus();
-
-                //       // // This is the correct approach of calling unfocus on primary focus
-                //       //                         FocusManager.instance.primaryFocus!.unfocus();
-                //       //                         TextEditingController().clear();
-                //       //                       },
-                //     ),
-                //   ),
-                // ),
-                // Positioned(
-                //   left: MediaQuery.sizeOf(context).width / 1.4,
-                //   right: 0,
-                //   bottom: 0,
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                //     child: Container(
-                //       padding: const EdgeInsets.all(20),
-                //       color: Colors.amber,
-                //     ),
-                //   ),
-                // )
                 Positioned(
                   left: 0,
                   right: 0,
@@ -106,12 +77,6 @@ class ToolsView extends GetView<ToolsController> {
                             size: 24.sp,
                           ),
                         ),
-                        // Flexible(
-                        //   flex: 1,
-                        //   child: CustomSearch(
-                        //     searchController: controller.searchController,
-                        //   ),
-                        // )
                       ],
                     ),
                   ),
@@ -119,121 +84,58 @@ class ToolsView extends GetView<ToolsController> {
               ],
             ),
           ),
-          // Expanded(
-          //   child: Obx(
-          //     () {
-          //       // return _buildRackContent(
-          //       //   context: context,
-          //       //   rackName: controller.rackNames,
-          //       //   onDrawerClicked: controller.onDrawerClicked,
-          //       // );
-          //       // return _buildRackContent(
-          //       //   context: context,
-          //       //   rackName: controller.rackName.value,
-          //       //   drawers: controller.listDrawers,
-          //       //   onDrawerClicked: controller.onDrawerClicked,
-          //       // );
-          //     },
-          //   ),
-          // ),
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (controller.tools.isEmpty) {
+                return const Center(child: Text("No tools found"));
+              } else {
+                return ListView.separated(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.only(
+                    top: 12,
+                    left: 16,
+                    right: 16,
+                    bottom: 0,
+                  ),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemCount: controller.tools.length,
+                  itemBuilder: (context, index) {
+                    var tools = controller.tools[index];
+                    return CustomListTools(
+                        id: tools['id'],
+                        name: tools['name'],
+                        imgUrl:
+                            tools['imgUrl'] ?? 'https://picsum.photos/200/300',
+                        description:
+                            tools['description'] ?? 'No description available',
+                        stock: tools['stock'],
+                        tStock: tools['tStock'],
+                        isStatus: tools['isStatus']);
+                  },
+                );
+              }
+            }),
+          ),
         ],
       ),
-    );
-  }
-
-  // _buildDropDown({
-  //   required List<String> listRack,
-  //   // required String rackName,
-  //   required void Function(String? value) onChangedRackName,
-  // }) {
-  //   return Positioned(
-  //     left: 0,
-  //     right: 0,
-  //     bottom: 0,
-  //     child: Padding(
-  //       padding: const EdgeInsets.symmetric(horizontal: 16),
-  //       child: DropDown(
-  //         listElement: listRack,
-  //         hintText: 'Rak 1',
-  //         // selectedItem: rackName,
-  //         onChange: onChangedRackName,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _buildRackContent({
-    required String rackName,
-    required BuildContext context,
-    required List<String> drawers,
-    required void Function(String rackName, String drawerName) onDrawerClicked,
-  }) {
-    // return ListView.builder(
-    //   itemCount: drawers.length,
-    //   itemBuilder: (context, index) {
-    //     final drawer = drawers[index];
-    //     return GestureDetector(
-    //       onTap: () => onDrawerClicked(rackName, drawer.id),
-    //       child: Card(
-    //         child: ListTile(
-    //           title: Text(drawer.name),
-    //           subtitle: Text(drawer.description),
-    //           trailing: Text('${drawer.stock} ${drawer.unit}'),
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(
-        top: 12,
-        right: 0,
-        left: 0,
-        bottom: 50,
-      ),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          // onTap: onDrawerClicked,
-          onTap: () {
-            // Get.to(
-            //   () => const ListComponentsView(),
-            //   arguments: {
-            //     "numberDrawer": listDummyComponents[index].numberDrawer,
-            //   },
-            // );
-          },
-          child: UnconstrainedBox(
-            child: Container(
-              alignment: Alignment.center,
-              width: MediaQuery.sizeOf(context).width / 2,
-              decoration: BoxDecoration(
-                color: kColorScheme.primary,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                // listDummyComponents[index].numberDrawer.toString(),
-                drawers[index],
-                style: boldText28.copyWith(
-                  color: Colors.white,
-                  fontSize: 96.sp,
-                ),
-              ),
-            ),
+      floatingActionButton: Visibility(
+        visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 70.0),
+          child: FloatingActionButton(
+            heroTag: "addTools",
+            onPressed: () {
+              // Get.to(() => const AddComponentsView());
+              // controller.onAddComponentClicked();
+            },
+            backgroundColor: Colors.amber,
+            child: const Icon(Icons.add),
           ),
-        );
-      },
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
-      itemCount: drawers.length,
+        ),
+      ),
     );
-    //   // switch (rackName) {
-    //   //   case 'rack_1':
-    //   //     return _buildContentForRack1(onDrawerClicked: onDrawerClicked);
-    //   //   case 'rack_2':
-    //   //     return _buildContentForRack2();
-    //   //   default:
-    //   //     return const SizedBox.shrink();
-    //   // }
-    // }
   }
 }
