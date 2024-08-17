@@ -142,24 +142,30 @@ class AddComponentsView extends GetView<AddComponentsController> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 50.h,
-        margin: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 25,
-        ),
-        child: CustomElevatedButton(
-          onPressed: () async {
-            await controller.onAddComponentsClicked();
-          },
-          text: 'Tambah',
-          buttonStyle: primary300Button.copyWith(
-            padding: const WidgetStatePropertyAll(
-              EdgeInsets.only(left: 16),
-            ),
+      bottomNavigationBar: Obx(
+        () => Container(
+          height: 50.h,
+          margin: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 25,
           ),
-          // buttonStyle: primary300Button,
+          child: CustomElevatedButton(
+            isLoading: controller.isLoadingAddComponent.value,
+            onPressed: () async {
+              await controller.onAddComponentsClicked();
+            },
+            text: 'Tambah',
+            buttonStyle: primary300Button.copyWith(
+              padding: const WidgetStatePropertyAll(
+                EdgeInsets.only(left: 16),
+              ),
+              overlayColor: WidgetStateProperty.all<Color>(
+                const Color.fromARGB(255, 13, 97, 128),
+              ),
+            ),
+            // buttonStyle: primary300Button,
+          ),
         ),
       ),
     );

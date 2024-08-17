@@ -23,6 +23,7 @@ class AddComponentsController extends GetxController {
   TextEditingController stockController = TextEditingController();
   FocusNode stockFocusNode = FocusNode();
   RxBool isLoadingImage = false.obs;
+  RxBool isLoadingAddComponent = false.obs;
   Rx<File?> imageFileController = RxNullable<File?>().setNull();
   Rx<String?> networkImage = RxNullable<String?>().setNull();
   RxString selectedRack = ''.obs;
@@ -38,7 +39,6 @@ class AddComponentsController extends GetxController {
   void setRackAndLevel() {
     selectedRack.value = rackName;
     selectedLevel.value = levelName;
-
   }
 
   // Define the stock as an RxInt to make it reactive
@@ -137,9 +137,11 @@ class AddComponentsController extends GetxController {
         descriptionComponent.text.isNotEmpty ? descriptionComponent.text : null;
     final stock = this.stock.value;
     final unit = unitName.value;
+    isLoadingAddComponent.value = true;
 
     // Validation checks
     if (imageFile == null) {
+      isLoadingAddComponent.value = false;
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
@@ -148,6 +150,7 @@ class AddComponentsController extends GetxController {
       return;
     }
     if (name.isEmpty) {
+      isLoadingAddComponent.value = false;
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
@@ -156,6 +159,7 @@ class AddComponentsController extends GetxController {
       return;
     }
     if (stock == 0) {
+      isLoadingAddComponent.value = false;
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
@@ -164,6 +168,7 @@ class AddComponentsController extends GetxController {
       return;
     }
     if (selectedRack.value.isEmpty || selectedLevel.value.isEmpty) {
+      isLoadingAddComponent.value = false;
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
@@ -202,18 +207,28 @@ class AddComponentsController extends GetxController {
           }
         }, SetOptions(merge: true));
 
-
         Get.back();
-        Get.snackbar('Berhasil', 'Komponen berhasil ditambahkan',
-            snackPosition: SnackPosition.BOTTOM);
+        const CustomSnackbar(
+          success: true,
+          title: 'Berhasil',
+          message: 'Komponen berhasil ditambahkan',
+        ).showSnackbar();
       } else {
-        Get.snackbar('Gagal', 'Gagal mengunggah gambar, coba lagi.',
-            snackPosition: SnackPosition.BOTTOM);
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Gagal mengunggah gambar, coba lagi',
+        ).showSnackbar();
       }
     } catch (e) {
-      Get.snackbar('Gagal', 'Terjadi kesalahan, mohon coba lagi',
-          snackPosition: SnackPosition.BOTTOM);
-      print(e);
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Terjadi kesalahan, mohon coba lagi',
+      ).showSnackbar();
+      log.e(e);
+    } finally {
+      isLoadingAddComponent.value = false;
     }
   }
 }
