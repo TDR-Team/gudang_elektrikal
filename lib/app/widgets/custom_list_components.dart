@@ -7,7 +7,7 @@ class CustomListComponents extends StatelessWidget {
   final String id;
   final String name;
   final String imgUrl;
-  final String description;
+  final String? description;
   final int stock;
   final String unit;
   final void Function()? onTapDetail;
@@ -18,7 +18,7 @@ class CustomListComponents extends StatelessWidget {
     required this.id,
     required this.name,
     required this.imgUrl,
-    required this.description,
+    this.description,
     required this.stock,
     required this.unit,
     this.onTapDetail,
@@ -27,6 +27,9 @@ class CustomListComponents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+      'Description: $description , isEmpty: ${description!.isEmpty}',
+    );
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: onTapDetail,
@@ -89,17 +92,25 @@ class CustomListComponents extends StatelessWidget {
                 children: [
                   Text(
                     name,
+                    maxLines:
+                        description != null && description!.trim().isNotEmpty
+                            ? 1
+                            : 2,
                     overflow: TextOverflow.ellipsis,
                     style: boldText18,
                     textScaler: const TextScaler.linear(1),
                   ),
-                  Text(
-                    description,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: regularText10,
-                    textScaler: const TextScaler.linear(1),
-                  ),
+                  if (description != null && description!.trim().isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        description!,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: regularText10,
+                        textScaler: const TextScaler.linear(1),
+                      ),
+                    ),
                 ],
               ),
             ),
