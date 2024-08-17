@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
+import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
+
+import '../../../widgets/custom_snackbar.dart';
 
 class ListComponentsController extends GetxController {
   final String levelName = Get.arguments['levelName'];
@@ -60,5 +63,47 @@ class ListComponentsController extends GetxController {
         // Pass level data to the next view
       },
     )?.then((value) async => await fetchComponents());
+  }
+
+  void onEditComponentClicked(int index) {
+    final selectedComponent = components[index];
+    Get.to(
+      () => const EditComponentsView(),
+      arguments: {
+        "rackName": rackName,
+        "levelName": levelName,
+        "component": selectedComponent, // Pass the selected component data
+        "componentId": selectedComponent['id'], // Pass the component ID
+      },
+    )?.then((value) async => await fetchComponents());
+  }
+
+  Future<void> onDeleteComponentClicked(String componentId) async {
+    try {
+      // Reference to the rack document
+      DocumentReference rackDocRef =
+          FirebaseFirestore.instance.collection('components').doc(rackName);
+
+      // Update the rack document to remove the component
+      await rackDocRef.update({'$levelName.$componentId': FieldValue.delete()});
+
+      Get.back();
+      // Show success snackbar
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Komponen Berhasil Dihapus',
+      ).showSnackbar();
+
+      // Update the component list
+      await fetchComponents();
+    } catch (e) {
+      print('Error deleting component: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal Menghapus Komponen',
+      ).showSnackbar();
+    }
   }
 }
