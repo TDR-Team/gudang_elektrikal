@@ -84,14 +84,6 @@ class GetComponentsController extends GetxController {
   }
 
   void onLevelClicked(String rackName, String levelName) {
-    Map<String, dynamic> selectedLevelData = levelData[levelName] ?? {};
-
-    Get.to(() => const ListComponentsView(), arguments: {"level": rackName}
-        // arguments: {
-        //   "rackName": rackName,
-        //   "levelName": levelName,
-        //   "levelData": selectedLevelData, // Pass level data to the next view
-        // },
-        );
+    Get.to(() => const ListComponentsView(), arguments: {"level": rackName});
   }
 }
