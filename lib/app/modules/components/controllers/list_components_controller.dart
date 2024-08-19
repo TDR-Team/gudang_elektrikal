@@ -64,15 +64,18 @@ class ListComponentsController extends GetxController {
     )?.then((value) async => await fetchComponents());
   }
 
-  void onEditComponentClicked(int index) {
-    final selectedComponent = components[index];
+  void onEditComponentClicked(String componentId) {
+    final selectedComponent = components.firstWhere(
+      (component) => component['id'] == componentId,
+    );
+
     Get.to(
       () => const EditComponentsView(),
       arguments: {
         "rackName": rackName,
         "levelName": levelName,
         "component": selectedComponent, // Pass the selected component data
-        "componentId": selectedComponent['id'], // Pass the component ID
+        "componentId": componentId, // Pass the component ID
       },
     )?.then((value) async => await fetchComponents());
   }
