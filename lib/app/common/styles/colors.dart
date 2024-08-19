@@ -2,40 +2,51 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const List<Color> primaryColors = [
-    Color(0xFF0E5970),
-    Color(0xFF3A97A9),
-    Color(0xFF64C9D4),
-    Color(0xFF9CEFF0),
-    Color(0xFFCCF7F5),
+    Color(0xFF137BA1),
+    Color(0xFF189dcd),
+    Color(0xFF32b7e7),
+    Color(0xFF5fc7ec),
+    Color(0xFF8dd7f2),
   ];
 
+  static const List<Color> onPrimaryColors = [
+    Color(0xFFf2f2f2),
+    Color(0xFF404040),
+  ];
   static const List<Color> secondaryColors = [
-    Color(0xFFFED36A),
-    Color(0xFFFACA41),
-    Color(0xFFFCDA67),
-    Color(0xFFFEEA9A),
-    Color(0xFFFEF6CC),
+    Color(0xFFffdf00),
+    Color(0xFFffe433),
+    Color(0xFFffeb66),
+    Color(0xFFffee80),
+    Color(0xFFfff199),
+  ];
+
+  static const List<Color> onSecondaryColors = [
+    Color(0xFFf2f2f2),
+    Color(0xFF404040),
+    Color(0xFF000000),
   ];
 
   static const List<Color> neutralColors = [
     Color(0xFF000000),
-    Color(0xFF666666),
-    Color(0xFFB2B2B2),
-    Color(0xFFE5E5E5),
-    Color(0xFFF2F2F2),
+    Color(0xFF404040),
+    Color(0xFF808080),
+    Color(0xFFbfbfbf),
+    Color(0xFFf2f2f2),
   ];
+
+  static const Color errorColors = Color(0xFFcc0022);
+  static const Color successColors = Color(0xFF00b300);
+  static const Color warningColors = Color(0xFFffdf00);
 }
 
-ColorScheme kColorScheme = const ColorScheme(
-  primary: Color(0xFF137BA1),
-  // primaryContainer: AppColors.neutralColors[4],
-  secondary: Color(0xFFFFDF00),
-  // secondaryContainer: AppColors.neutralColors[4],
-
-  surface: Colors.white,
+ColorScheme kColorScheme = ColorScheme(
+  primary: AppColors.primaryColors[0],
+  secondary: AppColors.secondaryColors[0],
+  surface: AppColors.neutralColors[4],
   error: Colors.red,
   onPrimary: Colors.white,
-  onSecondary: Colors.black,
+  onSecondary: Colors.white,
   onSurface: Colors.white,
   onError: Colors.white,
   brightness: Brightness.dark,
