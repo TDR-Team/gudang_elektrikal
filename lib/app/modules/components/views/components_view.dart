@@ -147,7 +147,7 @@ class ComponentsView extends GetView<ComponentsController> {
           child: UnconstrainedBox(
             child: Container(
               alignment: Alignment.center,
-              width: MediaQuery.sizeOf(context).width / 2,
+              width: MediaQuery.sizeOf(context).width / 1.1,
               decoration: BoxDecoration(
                 color: kColorScheme.primary,
                 borderRadius: BorderRadius.circular(20),
@@ -156,7 +156,7 @@ class ComponentsView extends GetView<ComponentsController> {
                 levels[index],
                 style: boldText28.copyWith(
                   color: Colors.white,
-                  fontSize: 96.sp,
+                  fontSize: 75.sp,
                 ),
               ),
             ),
