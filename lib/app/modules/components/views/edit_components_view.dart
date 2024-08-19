@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/button_styles.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/modules/components/controllers/add_components_controller.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_elevated_button.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
 import 'package:gudang_elektrikal/app/widgets/dropdown_button.dart';

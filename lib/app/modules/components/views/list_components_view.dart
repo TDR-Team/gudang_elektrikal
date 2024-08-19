@@ -6,7 +6,6 @@ import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/list_components_controller.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_components.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ListComponentsView extends GetView<ListComponentsController> {
   const ListComponentsView({super.key});
