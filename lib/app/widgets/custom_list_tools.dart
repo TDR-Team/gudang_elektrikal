@@ -71,7 +71,7 @@ class CustomListTools extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
-                          imgUrl ?? 'https://picsum.photos/200/300',
+                          imgUrl,
                           height: 200.h,
                           width: double.infinity,
                           fit: BoxFit.cover,
@@ -159,7 +159,7 @@ class CustomListTools extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        description ?? 'No description available',
+                        description,
                         style: regularText10,
                       ),
                       const SizedBox(height: 10),
@@ -296,9 +296,9 @@ class CustomListTools extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 3,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.h,
+                    vertical: 4.w,
                   ),
                   decoration: isStatus
                       ? BoxDecoration(
@@ -312,14 +312,14 @@ class CustomListTools extends StatelessWidget {
                   child: isStatus
                       ? Text(
                           "Tersedia",
-                          style: semiBoldText14.copyWith(
+                          style: semiBoldText12.copyWith(
                             color: Colors.white,
                           ),
                           textScaler: const TextScaler.linear(1),
                         )
                       : Text(
                           "Tidak tersedia",
-                          style: semiBoldText14.copyWith(
+                          style: semiBoldText12.copyWith(
                             color: Colors.white,
                           ),
                           textScaler: const TextScaler.linear(1),
