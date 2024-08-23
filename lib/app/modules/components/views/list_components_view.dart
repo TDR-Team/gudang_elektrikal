@@ -146,8 +146,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
                                         child: Image.network(
-                                          component['imgUrl'] ??
-                                              'https://picsum.photos/200/300',
+                                          component['imgUrl'],
                                           height: 200.h,
                                           width: double.infinity,
                                           fit: BoxFit.cover,
@@ -163,8 +162,8 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                                     const Color.fromARGB(
                                                         255, 102, 95, 95),
                                                 child: Container(
-                                                  height: 60.h,
-                                                  width: 60.w,
+                                                  height: 200.h,
+                                                  width: double.infinity,
                                                   decoration: BoxDecoration(
                                                     color: Colors.grey
                                                         .withOpacity(0.5),
@@ -179,7 +178,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return Container(
-                                              height: 250.h,
+                                              height: 200.h,
                                               width: double.infinity,
                                               decoration: BoxDecoration(
                                                 color: Colors.grey,
@@ -255,6 +254,8 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                         children: [
                                           Expanded(
                                             child: InkWell(
+                                              splashColor: const Color.fromARGB(
+                                                  255, 225, 179, 43),
                                               onTap: () {
                                                 controller
                                                     .onEditComponentClicked(
@@ -262,8 +263,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                               },
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child: Container(
-                                                alignment: Alignment.center,
+                                              child: Ink(
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                   vertical: 12,
@@ -276,12 +276,15 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                                 child: Text(
                                                   'Ubah',
                                                   style: semiBoldText16,
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
                                             ),
                                           ),
                                           const SizedBox(width: 10),
                                           InkWell(
+                                            splashColor: const Color.fromARGB(
+                                                255, 210, 51, 40),
                                             onTap: () {
                                               final String componentId =
                                                   component['id'];
@@ -291,7 +294,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                             },
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            child: Container(
+                                            child: Ink(
                                               padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
                                                 color: Colors.red,
