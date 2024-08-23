@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/common/styles/colors.dart';
-import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/widgets/dropdown_button.dart';
+import '../../../common/styles/colors.dart';
+import '../../../common/theme/font.dart';
+import '../../../widgets/dropdown_button.dart';
 import '../controllers/components_controller.dart';
 
 class ComponentsView extends GetView<ComponentsController> {
@@ -26,7 +26,38 @@ class ComponentsView extends GetView<ComponentsController> {
             padding: const EdgeInsets.only(right: 10.0),
             child: IconButton(
               onPressed: () {
-                controller.addLevel();
+                Get.dialog(
+                  AlertDialog(
+                    title: Text(
+                      'Tambah Laci',
+                      style: semiBoldText16,
+                    ),
+                    content: TextField(
+                      controller: controller.customLevelController,
+                      style: semiBoldText14,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Nomor Laci',
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          String customLevelName =
+                              controller.customLevelController.text;
+                          controller.addLevel(customLevelName);
+                        },
+                        child: Text(
+                          'Tambah',
+                          style: semiBoldText14.copyWith(
+                            color: kColorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
               icon: Icon(
                 Icons.add,
@@ -146,18 +177,141 @@ class ComponentsView extends GetView<ComponentsController> {
           onTap: () => onLevelClicked(rackName, levels[index]),
           child: UnconstrainedBox(
             child: Container(
-              alignment: Alignment.center,
               width: MediaQuery.sizeOf(context).width / 1.1,
               decoration: BoxDecoration(
                 color: kColorScheme.primary,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                levels[index],
-                style: boldText28.copyWith(
-                  color: Colors.white,
-                  fontSize: 75.sp,
-                ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: PopupMenuButton(
+                      onSelected: (value) {
+                        if (value == 0) {
+                          Get.dialog(
+                            AlertDialog(
+                              title: Text(
+                                'Masukkan Nomor Laci yang baru',
+                                style: semiBoldText16,
+                              ),
+                              content: TextField(
+                                controller: controller.customLevelController,
+                                style: semiBoldText14,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Ubah Nomor Laci',
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    String customLevelName = controller
+                                        .customLevelController.text
+                                        .trim();
+
+                                    // Assuming you have the current level name stored in a variable `currentLevelName`
+                                    controller.onEditLevel(
+                                      rackName, // The name of the rack
+                                      levels[index], // The current level name
+                                      customLevelName, // The new level name
+                                    );
+                                  },
+                                  child: Text(
+                                    'Ubah',
+                                    style: semiBoldText14.copyWith(
+                                      color: kColorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        if (value == 1) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Apakah anda yakin?',
+                                    style: semiBoldText16,
+                                  ),
+                                  content: Text(
+                                    'Laci ini akan dihapus',
+                                    style: regularText12,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => controller.onDeleteLevel(
+                                        rackName,
+                                        levels[index],
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 16,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          border: Border.all(
+                                            color: kColorScheme.error,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Hapus',
+                                          style: semiBoldText12.copyWith(
+                                            color: kColorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: Text(
+                                        'Kembali',
+                                        style: semiBoldText12,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: kColorScheme.surface,
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          const PopupMenuItem(
+                            value: 0,
+                            child: Text('Ubah'),
+                          ),
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text('Hapus'),
+                          ),
+                        ];
+                      },
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      levels[index],
+                      textAlign: TextAlign.center,
+                      style: boldText28.copyWith(
+                        color: Colors.white,
+                        fontSize: 75.sp,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
