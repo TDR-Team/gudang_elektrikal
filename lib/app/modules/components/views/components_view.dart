@@ -139,7 +139,7 @@ class ComponentsView extends GetView<ComponentsController> {
         top: 12,
         right: 0,
         left: 0,
-        bottom: 50,
+        bottom: 100,
       ),
       itemBuilder: (context, index) {
         return GestureDetector(
