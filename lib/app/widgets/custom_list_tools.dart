@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -7,24 +8,26 @@ class CustomListTools extends StatelessWidget {
   final String id;
   final String name;
   final String imgUrl;
-  final String description;
+  final String? description;
   final int stock;
   final int tStock;
   final bool isStatus;
   final void Function()? onTapDetail;
   final void Function()? onTapEdit;
+  final void Function()? onTapDelete;
 
   const CustomListTools({
     super.key,
     required this.id,
     required this.name,
     required this.imgUrl,
-    required this.description,
+    this.description,
     required this.stock,
     required this.tStock,
     required this.isStatus,
     this.onTapDetail,
     this.onTapEdit,
+    this.onTapDelete,
   });
 
   @override
@@ -63,7 +66,7 @@ class CustomListTools extends StatelessWidget {
                           height: 4.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: Colors.grey,
+                            color: AppColors.neutralColors[3],
                           ),
                         ),
                       ),
@@ -85,8 +88,8 @@ class CustomListTools extends StatelessWidget {
                                 highlightColor:
                                     const Color.fromARGB(255, 102, 95, 95),
                                 child: Container(
-                                  height: 60.h,
-                                  width: 60.w,
+                                  height: 250.h,
+                                  width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(20),
@@ -103,10 +106,10 @@ class CustomListTools extends StatelessWidget {
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.image_not_supported,
-                                size: 30,
-                                color: Color.fromARGB(255, 53, 53, 53),
+                                size: 125.sp,
+                                color: const Color.fromARGB(255, 53, 53, 53),
                               ),
                             );
                           },
@@ -115,15 +118,17 @@ class CustomListTools extends StatelessWidget {
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            children: [
-                              Text(
-                                name,
-                                style: boldText20,
-                              )
-                            ],
+                          Flexible(
+                            flex: 3,
+                            child: Text(
+                              name,
+                              maxLines: 5,
+                              style: boldText20,
+                              overflow: TextOverflow.ellipsis,
+                              textScaler: const TextScaler.linear(1),
+                            ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -132,48 +137,56 @@ class CustomListTools extends StatelessWidget {
                             ),
                             decoration: isStatus
                                 ? BoxDecoration(
-                                    color: Colors.green,
+                                    color: AppColors.successColors,
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : BoxDecoration(
-                                    color: Colors.red,
+                                    color: AppColors.errorColors,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                             child: isStatus
                                 ? Text(
                                     "Tersedia",
                                     style: semiBoldText14.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.neutralColors[5],
                                     ),
                                     textScaler: const TextScaler.linear(1),
                                   )
                                 : Text(
                                     "Tidak tersedia",
                                     style: semiBoldText14.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.neutralColors[5],
                                     ),
                                     textScaler: const TextScaler.linear(1),
                                   ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        description,
-                        style: regularText10,
-                      ),
+                      if (description != null && description!.trim().isNotEmpty)
+                        Column(
+                          children: [
+                            Text(
+                              description ?? 'No description available',
+                              style: regularText10.copyWith(
+                                color: AppColors.neutralColors[2],
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(height: 10),
                       Text(
                         'Stok: $stock/$tStock',
-                        style: regularText14,
+                        style: regularText12.copyWith(
+                          color: AppColors.neutralColors[2],
+                        ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: InkWell(
-                              onTap: () {},
+                              onTap: onTapEdit,
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
                                 alignment: Alignment.center,
@@ -181,29 +194,31 @@ class CustomListTools extends StatelessWidget {
                                   vertical: 12,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.amber,
+                                  color: AppColors.secondaryColors[0],
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
-                                  'Ubah',
-                                  style: semiBoldText16,
+                                  'Edit',
+                                  style: semiBoldText16.copyWith(
+                                    color: AppColors.onSecondaryColors[2],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 10),
                           InkWell(
-                            onTap: () {},
+                            onTap: onTapDelete,
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.red,
+                                color: AppColors.errorColors,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
                                 Icons.delete,
-                                color: Colors.white,
+                                color: AppColors.onPrimaryColors[0],
                                 size: 24.sp,
                               ),
                             ),
@@ -222,8 +237,11 @@ class CustomListTools extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.black12,
+          ),
         ),
         child: Row(
           children: [
@@ -239,13 +257,13 @@ class CustomListTools extends StatelessWidget {
                     return child;
                   } else {
                     return Shimmer.fromColors(
-                      baseColor: const Color.fromARGB(255, 148, 148, 148),
-                      highlightColor: const Color.fromARGB(255, 102, 95, 95),
+                      baseColor: AppColors.neutralColors[2],
+                      highlightColor: AppColors.neutralColors[1],
                       child: Container(
                         height: 60.h,
                         width: 60.w,
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.5),
+                          color: AppColors.neutralColors[3].withOpacity(0.5),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -257,13 +275,13 @@ class CustomListTools extends StatelessWidget {
                     height: 60.h,
                     width: 60.w,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: AppColors.neutralColors[3],
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.image_not_supported,
                       size: 30,
-                      color: Color.fromARGB(255, 53, 53, 53),
+                      color: AppColors.neutralColors[1],
                     ),
                   );
                 },
@@ -277,16 +295,32 @@ class CustomListTools extends StatelessWidget {
                 children: [
                   Text(
                     name,
+                    maxLines:
+                        description != null && description!.trim().isNotEmpty
+                            ? 1
+                            : 2,
                     overflow: TextOverflow.ellipsis,
-                    style: boldText18,
+                    style: boldText18.copyWith(
+                      color: AppColors.neutralColors[1],
+                    ),
                     textScaler: const TextScaler.linear(1),
                   ),
+                  if (description != null && description!.trim().isNotEmpty)
+                    Text(
+                      description!,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: regularText10.copyWith(
+                        color: AppColors.neutralColors[2],
+                      ),
+                      textScaler: const TextScaler.linear(1),
+                    ),
+                  const SizedBox(height: 5),
                   Text(
-                    description,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: regularText10,
-                    textScaler: const TextScaler.linear(1),
+                    'Stok: $stock/$tStock',
+                    style: regularText10.copyWith(
+                      color: AppColors.neutralColors[2],
+                    ),
                   ),
                 ],
               ),
@@ -297,48 +331,43 @@ class CustomListTools extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 8.h,
-                    vertical: 4.w,
+                    horizontal: 9.h,
+                    vertical: 3.w,
                   ),
                   decoration: isStatus
                       ? BoxDecoration(
-                          color: Colors.green,
+                          color: AppColors.successColors,
                           borderRadius: BorderRadius.circular(20),
                         )
                       : BoxDecoration(
-                          color: Colors.red,
+                          color: AppColors.errorColors,
                           borderRadius: BorderRadius.circular(20),
                         ),
                   child: isStatus
                       ? Text(
                           "Tersedia",
                           style: semiBoldText12.copyWith(
-                            color: Colors.white,
+                            color: AppColors.neutralColors[5],
                           ),
                           textScaler: const TextScaler.linear(1),
                         )
                       : Text(
                           "Tidak tersedia",
                           style: semiBoldText12.copyWith(
-                            color: Colors.white,
+                            color: AppColors.neutralColors[5],
                           ),
                           textScaler: const TextScaler.linear(1),
                         ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      '$stock/$tStock',
-                      style: semiBoldText18.copyWith(
-                        color: Colors.black54,
-                      ),
-                      textScaler: const TextScaler.linear(1),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.edit),
-                    ),
-                  ],
+                IconButton(
+                  onPressed: () {
+                    print("object");
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    size: 18.h,
+                    color: AppColors.neutralColors[2],
+                  ),
                 ),
               ],
             ),
