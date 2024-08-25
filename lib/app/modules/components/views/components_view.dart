@@ -152,7 +152,61 @@ class ComponentsView extends GetView<ComponentsController> {
         child: DropDown(
           listElement: listRack,
           hintText: 'Pilih Rak',
+          // onChange: (value) async {
+          //   if (value == 'Tambah Rak Baru') {
+          //     // Trigger the "Add New Rack" dialog
+          //     String? newRackName = await Get.dialog<String>(
+          //       AlertDialog(
+          //         title: Text(
+          //           'Tambah Rak',
+          //           style: semiBoldText16,
+          //         ),
+          //         content: TextField(
+          //           controller: TextEditingController(),
+          //           style: semiBoldText14,
+          //           decoration: const InputDecoration(
+          //             border: OutlineInputBorder(),
+          //             labelText: 'Nama Rak',
+          //           ),
+          //         ),
+          //         actions: [
+          //           TextButton(
+          //             onPressed: () {
+          //               // Retrieve the entered rack name from the TextField
+          //               String customRackName =
+          //                   Get.find<TextEditingController>().text;
+          //               // Close the dialog and return the rack name
+          //               Get.back(result: customRackName);
+          //             },
+          //             child: Text(
+          //               'Tambah',
+          //               style: semiBoldText14.copyWith(
+          //                 color: kColorScheme.primary,
+          //               ),
+          //             ),
+          //           ),
+          //         ],aa
+          //       ),
+          //     );
+
+          //     if (newRackName != null && newRackName.isNotEmpty) {
+          //       // Add the new rack to the list and trigger the onChange callback
+          //       listRack.add(newRackName);
+          //       onChangedRackName(newRackName);
+          //     }
+          //   } else {
+          //     // Otherwise, trigger the normal onChange callback
+          //     onChangedRackName(value);
+          //   }
+          // },
           onChange: onChangedRackName,
+          onAddItem: (value) {
+            if (value == 'Tambah Rak Baru') {
+              // Since the onChange is handling the dialog, simply return null here.
+              return null;
+            }
+            return value;
+          },
         ),
       ),
     );
