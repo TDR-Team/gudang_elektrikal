@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,7 +7,17 @@ import 'package:image_picker/image_picker.dart';
 import '../../utils/logging.dart';
 
 Future<XFile?> pickImageFromCamera() async {
-  return await ImagePicker().pickImage(source: ImageSource.camera);
+  try {
+    final XFile? pickedImage = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.rear, // Request the rear camera
+    );
+    return pickedImage;
+  } on PlatformException catch (e) {
+    // Handle platform-specific errors (e.g., permissions denied)
+    log.e('Error picking image: $e');
+    return null;
+  }
 }
 
 Future<XFile?> pickImageFromGallery() async {

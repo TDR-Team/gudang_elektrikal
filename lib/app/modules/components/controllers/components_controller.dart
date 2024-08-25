@@ -1,16 +1,20 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
-import 'dart:math' as math; // Import math library with alias
+import '../views/list_components_view.dart';
+import '../../../widgets/custom_snackbar.dart';
+import '../../../utils/logging.dart';
 
 class ComponentsController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var rackNames = <String>[].obs;
   var listLevels = <String>[].obs;
   var rackName = ''.obs;
-  var levelData =
-      <String, Map<String, dynamic>>{}.obs; // New observable for level data
+  var levelData = <String, Map<String, dynamic>>{}.obs;
   var isLoadingLevels = false.obs;
+  final Map<String, String> convertedToOriginalMap = {};
+
+  TextEditingController customLevelController = TextEditingController();
 
   @override
   void onInit() {
@@ -23,15 +27,26 @@ class ComponentsController extends GetxController {
       QuerySnapshot querySnapshot =
           await _firestore.collection('components').get();
 
-      // Assuming that 'components' collection has documents representing rack names
-      List<String> names = querySnapshot.docs.map((doc) => doc.id).toList();
+      List<String> convertedNames = querySnapshot.docs.map((doc) {
+        String originalName = doc.id; // e.g., "rack_1"
 
-      // For debugging
-      print("Fetched Rack Names: $names");
+        // Convert the original name to the desired format
+        String convertedName =
+            originalName.replaceAll('_', ' '); // e.g., "rack 1"
+        convertedName =
+            convertedName.replaceFirst('rack', 'Rak'); // e.g., "Rak 1"
 
-      rackNames.assignAll(names);
+        // Store in the map for later lookup
+        convertedToOriginalMap[convertedName] = originalName;
+
+        return convertedName;
+      }).toList();
+
+      log.i("Fetched and Converted Rack Names: $convertedNames");
+
+      rackNames.assignAll(convertedNames); // Assign the converted names
     } catch (e) {
-      print("Error fetching rack names: $e");
+      log.e("Error fetching rack names: $e");
     }
   }
 
@@ -55,15 +70,17 @@ class ComponentsController extends GetxController {
           }
         });
 
+        // Convert keys to a list and sort them numerically
         List<String> levels = levelsData.keys.toList();
+        levels.sort((a, b) => int.parse(a).compareTo(int.parse(b)));
 
         // For debugging
-        print("Fetched Levels for $selectedRackName: $levels");
+        log.i("Fetched and Sorted Levels for $selectedRackName: $levels");
 
         listLevels.assignAll(levels);
         levelData.value = levelsData; // Assign the cast data
       } else {
-        print("Rack document does not exist");
+        log.e("Rack document does not exist");
         listLevels.clear();
         levelData.clear();
       }
@@ -71,50 +88,159 @@ class ComponentsController extends GetxController {
       isLoadingLevels.value = false;
     } catch (e) {
       isLoadingLevels.value = false;
-      print("Error fetching levels: $e");
+      log.e("Error fetching levels: $e");
     }
   }
 
   void onChangedRackNames(String? value) {
     if (value != null && value.isNotEmpty) {
-      rackName.value = value;
-      listLevels.clear(); // Clear previous levels
-      levelData.clear(); // Clear previous level data
-      fetchRackLevels(value);
+      // Map the converted name back to the original name
+      String? originalRackName = convertedToOriginalMap[value];
+
+      if (originalRackName != null) {
+        rackName.value = originalRackName;
+        listLevels.clear(); // Clear previous levels
+        levelData.clear(); // Clear previous level data
+        fetchRackLevels(originalRackName);
+      }
     }
   }
 
-  void addLevel() async {
+  void addLevel(String customLevelName) async {
     try {
-      // Get the current highest level number (if any)
-      int highestLevel = 0;
-      if (listLevels.isNotEmpty) {
-        highestLevel = listLevels
-            .map(int.parse)
-            .reduce(math.max); // Efficiently find the highest level
+      // Validate the input
+      if (customLevelName.isEmpty) {
+        Get.snackbar(
+          "Gagal",
+          "Nama laci tidak boleh kosong",
+        );
+        return;
       }
 
-      // Generate the new level name (increment by 1)
-      String newLevelName = (highestLevel + 1).toString();
+      // Check if the level already exists
+      if (listLevels.contains(customLevelName)) {
+        Get.snackbar(
+          "Gagal",
+          "Laci dengan nomor $customLevelName sudah ada",
+        );
+        return;
+      }
 
       // Add the new level to the rack document
       await FirebaseFirestore.instance
           .collection('components')
           .doc(rackName.value)
-          .set({newLevelName: {}}, SetOptions(merge: true));
+          .set({customLevelName: {}}, SetOptions(merge: true));
 
       // Update the UI to reflect the new level
-      listLevels.add(newLevelName);
-      levelData[newLevelName] =
+      listLevels.add(customLevelName);
+      listLevels.sort((a, b) =>
+          int.parse(a).compareTo(int.parse(b))); // Keep the list sorted
+      levelData[customLevelName] =
           {}; // Create an empty entry for the new level data
 
       Get.back(); // Close the add level dialog (if applicable)
+      customLevelController.clear();
     } catch (e) {
-      print("Error adding level: $e");
+      log.i("Error adding level: $e");
       Get.snackbar(
         "Error",
-        "Gagal",
+        "Gagal menambah laci",
       );
+    }
+  }
+
+  Future<void> onDeleteLevel(String selectedRackName, String levelName) async {
+    try {
+      DocumentReference rackDocRef = FirebaseFirestore.instance
+          .collection('components')
+          .doc(selectedRackName);
+
+      // Update the rack document to remove the component
+      await rackDocRef.update({levelName: FieldValue.delete()});
+
+      Get.back();
+      // Show success snackbar
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Laci Berhasil Dihapus',
+      ).showSnackbar();
+
+      // Update the component list
+      fetchRackLevels(selectedRackName);
+    } catch (e) {
+      log.i('Error deleting level: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal Menghapus Laci',
+      ).showSnackbar();
+    }
+  }
+
+  Future<void> onEditLevel(
+    String selectedRackName,
+    String oldLevelName,
+    String newLevelName,
+  ) async {
+    try {
+      if (newLevelName.isEmpty) {
+        Get.snackbar(
+          "Gagal",
+          "Nama laci tidak boleh kosong",
+        );
+        return;
+      }
+
+      if (listLevels.contains(newLevelName)) {
+        Get.snackbar(
+          "Gagal",
+          "Laci dengan nomor $newLevelName sudah ada",
+        );
+        return;
+      }
+
+      DocumentReference rackDocRef = FirebaseFirestore.instance
+          .collection('components')
+          .doc(selectedRackName);
+
+      // Get the old level data
+      Map<String, dynamic>? oldLevelData = levelData[oldLevelName];
+
+      // Update Firestore: delete the old level and add the new one
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(rackDocRef);
+        if (!snapshot.exists) {
+          throw Exception("Document does not exist!");
+        }
+
+        transaction.update(rackDocRef, {oldLevelName: FieldValue.delete()});
+        transaction.update(rackDocRef, {newLevelName: oldLevelData ?? {}});
+      });
+
+      // Update the UI to reflect the renamed level
+      listLevels.remove(oldLevelName);
+      listLevels.add(newLevelName);
+      listLevels.sort((a, b) => int.parse(a).compareTo(int.parse(b)));
+      levelData.remove(oldLevelName);
+      levelData[newLevelName] = oldLevelData ?? {};
+
+      Get.back(); // Close the edit level dialog (if applicable)
+
+      // Show success snackbar
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Laci Berhasil Diubah',
+      ).showSnackbar();
+    } catch (e) {
+      log.e('Error editing level: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal Mengubah Laci',
+      ).showSnackbar();
     }
   }
 
