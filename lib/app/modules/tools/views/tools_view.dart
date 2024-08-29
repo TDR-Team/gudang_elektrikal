@@ -128,8 +128,7 @@ class ToolsView extends GetView<ToolsController> {
           child: FloatingActionButton(
             heroTag: "addTools",
             onPressed: () {
-              // Get.to(() => const AddComponentsView());
-              // controller.onAddComponentClicked();
+              controller.onAddToolsClicked();
             },
             backgroundColor: Colors.amber,
             child: const Icon(Icons.add),
