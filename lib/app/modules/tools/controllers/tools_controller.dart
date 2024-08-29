@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/add_tools_view.dart';
 
 class ToolsController extends GetxController {
   TextEditingController searchController = TextEditingController();
@@ -44,5 +45,11 @@ class ToolsController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void onAddToolsClicked() {
+    Get.to(
+      () => const AddToolsView(),
+    )?.then((value) async => await fetchTools());
   }
 }
