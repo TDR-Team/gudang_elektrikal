@@ -93,6 +93,7 @@ class CustomTextField extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         TextFormField(
+          autocorrect: false,
           inputFormatters: [LengthLimitingTextInputFormatter(lengthInput)],
           validator: validator,
           enabled: isEnabled,
