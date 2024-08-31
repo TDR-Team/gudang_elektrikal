@@ -24,16 +24,15 @@ class SplashView extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.center,
-              child: SvgPicture.asset(
-                'assets/images/img_register.svg', // Change this to your register SVG asset
-                semanticsLabel: 'Register SVG Picture',
-                height: 200,
-                fit: BoxFit.fill,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/img_pln.png'),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             Text(
-              'Nusa Wash Laundry', // Ganti dengan judul aplikasi Anda
+              'PUSHARLIS', // Ganti dengan judul aplikasi Anda
               style: boldText24.copyWith(
                 color: Colors.lightBlue,
               ),
