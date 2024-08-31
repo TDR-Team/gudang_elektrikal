@@ -107,10 +107,10 @@ class CustomListComponents extends StatelessWidget {
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.image_not_supported,
-                                size: 30,
-                                color: Color.fromARGB(255, 53, 53, 53),
+                                size: 125.sp,
+                                color: const Color.fromARGB(255, 53, 53, 53),
                               ),
                             );
                           },
@@ -119,7 +119,7 @@ class CustomListComponents extends StatelessWidget {
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Flexible(
                             flex: 3,
@@ -137,13 +137,13 @@ class CustomListComponents extends StatelessWidget {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.secondaryColors[0],
+                              color: AppColors.warningColors,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               '$stock $unit',
                               style: semiBoldText14.copyWith(
-                                color: AppColors.onSecondaryColors[2],
+                                color: AppColors.neutralColors[0],
                               ),
                               textScaler: const TextScaler.linear(1),
                             ),
@@ -238,13 +238,13 @@ class CustomListComponents extends StatelessWidget {
                     return child;
                   } else {
                     return Shimmer.fromColors(
-                      baseColor: const Color.fromARGB(255, 148, 148, 148),
-                      highlightColor: const Color.fromARGB(255, 102, 95, 95),
+                      baseColor: AppColors.neutralColors[2],
+                      highlightColor: AppColors.neutralColors[1],
                       child: Container(
                         height: 60.h,
                         width: 60.w,
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.5),
+                          color: AppColors.neutralColors[3].withOpacity(0.5),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -256,13 +256,13 @@ class CustomListComponents extends StatelessWidget {
                     height: 60.h,
                     width: 60.w,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: AppColors.neutralColors[3],
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.image_not_supported,
                       size: 30,
-                      color: Color.fromARGB(255, 53, 53, 53),
+                      color: AppColors.neutralColors[1],
                     ),
                   );
                 },
@@ -304,9 +304,9 @@ class CustomListComponents extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 3,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 9.h,
+                    vertical: 3.w,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryColors[0],
