@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
@@ -66,6 +67,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearch(
+                     
                       searchController: controller.searchController,
                     ),
                   ),
@@ -77,8 +79,32 @@ class ListComponentsView extends GetView<ListComponentsController> {
             child: Obx(() {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (controller.components.isEmpty) {
-                return const Center(child: Text('Komponen Masih Kosong :()'));
+              } else if (controller.searchController.text.isNotEmpty &&
+                  controller.filteredComponents.isEmpty) {
+                return Center(
+                  child: Text(
+                    'Tidak ada komponen yang dicari',
+                    style: semiBoldText16.copyWith(
+                      color: AppColors.primaryColors[1],
+                    ),
+                  ),
+                );
+              } else if (controller.filteredComponents.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/icons/ic_emptyBox.svg'),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        'Rak belum memiliki komponen',
+                        style: semiBoldText16.copyWith(
+                          color: AppColors.primaryColors[1],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               } else {
                 return ListView.separated(
                   shrinkWrap: true,
@@ -90,9 +116,9 @@ class ListComponentsView extends GetView<ListComponentsController> {
                   ),
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 12),
-                  itemCount: controller.components.length,
+                  itemCount: controller.filteredComponents.length,
                   itemBuilder: (context, index) {
-                    var component = controller.components[index];
+                    var component = controller.filteredComponents[index];
                     return CustomListComponents(
                       id: component['id'],
                       name: component['name'],
@@ -118,7 +144,6 @@ class ListComponentsView extends GetView<ListComponentsController> {
         visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
         child: FloatingActionButton(
           onPressed: () {
-            // Get.to(() => const AddComponentsView());
             controller.onAddComponentClicked();
           },
           backgroundColor: Colors.amber,
