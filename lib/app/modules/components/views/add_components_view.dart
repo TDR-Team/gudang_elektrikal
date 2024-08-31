@@ -17,6 +17,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
   const AddComponentsView({
     super.key,
   });
+
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => AddComponentsController());
@@ -25,6 +26,18 @@ class AddComponentsView extends GetView<AddComponentsController> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          padding: const EdgeInsets.all(16),
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 24.sp,
+            color: Colors.black,
+          ),
+        ),
         title: const Text('Tambah Komponen'),
         centerTitle: false,
       ),
@@ -71,7 +84,6 @@ class AddComponentsView extends GetView<AddComponentsController> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: kColorScheme.primary,
-                          // color: Colors.amber,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -132,7 +144,10 @@ class AddComponentsView extends GetView<AddComponentsController> {
                       context: context,
                       listRack: controller.listUnit,
                       rackName: controller.unitName.value,
-                      onChangedRackName: controller.onChangedRackName,
+                      onChangedRackName: (value) {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        controller.onChangedRackName(value);
+                      },
                     ),
                   ],
                 ),
@@ -164,7 +179,6 @@ class AddComponentsView extends GetView<AddComponentsController> {
                 const Color.fromARGB(255, 13, 97, 128),
               ),
             ),
-            // buttonStyle: primary300Button,
           ),
         ),
       ),
@@ -297,12 +311,6 @@ class AddComponentsView extends GetView<AddComponentsController> {
                                     ),
                                   ),
                       ),
-                // const Align(
-                //   alignment: Alignment.bottomRight,
-                //   child: Icon(
-                //     Icons.add,
-                //   ),
-                // ),
               ],
             ),
           ),

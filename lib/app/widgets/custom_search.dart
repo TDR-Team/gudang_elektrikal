@@ -15,13 +15,16 @@ class CustomSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      autofocus: false,
       borderRadius: const BorderRadius.all(
         Radius.circular(12),
       ),
       onTap: onTap,
       child: TextField(
+        
+        autocorrect: false,
         controller: searchController,
-        cursorColor: Colors.blue,
+        cursorColor: AppColors.primaryColors[1],
         style: regularText14,
         decoration: InputDecoration(
           fillColor: kColorScheme.onSecondary,

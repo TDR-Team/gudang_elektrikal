@@ -25,6 +25,15 @@ class EditComponentsView extends GetView<EditComponentsController> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          padding: const EdgeInsets.all(16),
+          onPressed: () => Get.back(),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 24.sp,
+            color: Colors.black,
+          ),
+        ),
         title: const Text('Ubah Komponen'),
         centerTitle: false,
       ),
@@ -132,7 +141,10 @@ class EditComponentsView extends GetView<EditComponentsController> {
                       context: context,
                       listRack: controller.listUnit,
                       rackName: controller.unitName.value,
-                      onChangedRackName: controller.onChangedRackName,
+                      onChangedRackName: (value) {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        controller.onChangedRackName(value);
+                      },
                     ),
                   ],
                 ),

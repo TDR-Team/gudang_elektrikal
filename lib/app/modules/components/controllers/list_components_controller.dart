@@ -11,6 +11,8 @@ class ListComponentsController extends GetxController {
 
   RxBool isLoading = true.obs;
   RxList<Map<String, dynamic>> components = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> filteredComponents =
+      <Map<String, dynamic>>[].obs;
 
   TextEditingController searchController = TextEditingController();
 
@@ -18,6 +20,17 @@ class ListComponentsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchComponents();
+    // FocusManager.instance.primaryFocus!.unfocus();
+    FocusScope.of(Get.context!).requestFocus(FocusNode());
+    searchController.clear();
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void onClose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.onClose();
   }
 
   Future<void> fetchComponents() async {
@@ -42,15 +55,28 @@ class ListComponentsController extends GetxController {
             'imgUrl': componentData['imgUrl'] ?? '',
           };
         }).toList();
+
+        filteredComponents.value =
+            components.value; // Initialize with all components
       } else {
         components.value = [];
+        filteredComponents.value = [];
       }
     } catch (e) {
       print('Error fetching components: $e');
       components.value = [];
+      filteredComponents.value = [];
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void _onSearchChanged() {
+    final query = searchController.text.toLowerCase();
+    filteredComponents.value = components.where((component) {
+      final name = component['name'].toLowerCase();
+      return name.contains(query);
+    }).toList();
   }
 
   void onAddComponentClicked() {
@@ -59,9 +85,11 @@ class ListComponentsController extends GetxController {
       arguments: {
         "rackName": rackName,
         "levelName": levelName,
-        // Pass level data to the next view
       },
-    )?.then((value) async => await fetchComponents());
+    )?.then((value) async {
+      searchController.clear();
+      await fetchComponents();
+    });
   }
 
   void onEditComponentClicked(String componentId) {
@@ -74,30 +102,26 @@ class ListComponentsController extends GetxController {
       arguments: {
         "rackName": rackName,
         "levelName": levelName,
-        "component": selectedComponent, // Pass the selected component data
-        "componentId": componentId, // Pass the component ID
+        "component": selectedComponent,
+        "componentId": componentId,
       },
     )?.then((value) async => await fetchComponents());
   }
 
   Future<void> onDeleteComponentClicked(String componentId) async {
     try {
-      // Reference to the rack document
       DocumentReference rackDocRef =
           FirebaseFirestore.instance.collection('components').doc(rackName);
 
-      // Update the rack document to remove the component
       await rackDocRef.update({'$levelName.$componentId': FieldValue.delete()});
 
       Get.back();
-      // Show success snackbar
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
         message: 'Komponen Berhasil Dihapus',
       ).showSnackbar();
 
-      // Update the component list
       await fetchComponents();
     } catch (e) {
       print('Error deleting component: $e');

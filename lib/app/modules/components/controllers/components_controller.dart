@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../common/styles/colors.dart';
+import '../../../common/theme/font.dart';
 import '../views/list_components_view.dart';
 import '../../../widgets/custom_snackbar.dart';
 import '../../../utils/logging.dart';
@@ -15,6 +17,7 @@ class ComponentsController extends GetxController {
   final Map<String, String> convertedToOriginalMap = {};
 
   TextEditingController customLevelController = TextEditingController();
+  TextEditingController customRackController = TextEditingController();
 
   @override
   void onInit() {
@@ -104,6 +107,159 @@ class ComponentsController extends GetxController {
         fetchRackLevels(originalRackName);
       }
     }
+  }
+
+  void addRack(String newRackName) async {
+    try {
+      // Validate the input
+      if (newRackName.isEmpty) {
+        Get.snackbar(
+          "Gagal",
+          "Nama rak tidak boleh kosong",
+        );
+        return;
+      }
+
+      // Check if the input is a valid number
+      int? rackNumber = int.tryParse(newRackName);
+      if (rackNumber == null) {
+        Get.snackbar(
+          "Gagal",
+          "Nama rak harus berupa angka",
+        );
+        return;
+      }
+
+      // Convert the new rack name to the required Firestore format
+      String firestoreRackName = 'rack_$rackNumber';
+
+      // Check if the rack already exists by validating against the original names
+      if (convertedToOriginalMap.containsValue(firestoreRackName)) {
+        Get.snackbar(
+          "Gagal",
+          "Rak dengan nama $newRackName sudah ada",
+        );
+        return;
+      }
+
+      // Add the new rack to Firestore
+      await _firestore.collection('components').doc(firestoreRackName).set({});
+
+      // Update the UI to reflect the new rack
+      String displayRackName = 'Rak $rackNumber'; // For UI display
+      rackNames.add(displayRackName);
+      rackNames.sort(); // Optional: Sort the list if you want it ordered
+      convertedToOriginalMap[displayRackName] = firestoreRackName;
+
+      Get.back(); // Close the add rack dialog (if applicable)
+      customRackController.clear();
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Rak Berhasil Ditambahkan',
+      ).showSnackbar();
+    } catch (e) {
+      log.e("Error adding rack: $e");
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal Menambah Rak',
+      ).showSnackbar();
+    }
+  }
+
+  void onEditRack(String oldRackName, String newRackName) {
+    if (newRackName.isEmpty) {
+      Get.snackbar('Error', 'Nama rak tidak boleh kosong.');
+      return;
+    }
+
+    if (oldRackName == newRackName) {
+      Get.snackbar('Info', 'Nama rak tidak berubah.');
+      return;
+    }
+
+    // Simulate updating rack name in a database or data source
+    final index = rackNames.indexOf(oldRackName);
+    if (index != -1) {
+      rackNames[index] = newRackName;
+      // Update the data source (e.g., Firestore)
+      // Example:
+      // firestore.collection('racks').doc(oldRackName).update({'name': newRackName});
+
+      // Notify user
+      Get.snackbar('Sukses', 'Nama rak berhasil diubah.');
+    } else {
+      Get.snackbar('Error', 'Rak tidak ditemukan.');
+    }
+  }
+
+  void onDeleteRack(String inputRackName) async {
+    if (inputRackName.isEmpty) {
+      Get.snackbar('Error', 'Pilih rak terlebih dahulu.');
+      return;
+    }
+
+    // Confirm deletion
+    Get.defaultDialog(
+      title: 'Konfirmasi Hapus',
+      content: Text(
+        'Apakah Anda yakin ingin menghapus rak ini?',
+        style: semiBoldText14,
+      ),
+      confirm: TextButton(
+        onPressed: () async {
+          try {
+            // Get the original rack name from the converted map
+            String? originalRackName = convertedToOriginalMap[inputRackName];
+
+            if (originalRackName != null) {
+              // Log the names to debug
+              print(
+                  'Attempting to delete rack with original name: $originalRackName');
+
+              // Delete the document from Firestore
+              await _firestore
+                  .collection('components')
+                  .doc(originalRackName)
+                  .delete();
+
+              // Update the UI
+              rackNames.remove(inputRackName);
+              convertedToOriginalMap.remove(inputRackName);
+
+              // Clear selected rack and levels if needed
+              if (inputRackName == rackName.value) {
+                rackName.value = '';
+                listLevels.clear();
+                levelData.clear();
+              }
+
+              Get.snackbar('Sukses', 'Rak berhasil dihapus.');
+              Get.back(); // Close the confirmation dialog
+            } else {
+              Get.snackbar('Error', 'Rak tidak ditemukan.');
+            }
+          } catch (e) {
+            print('Error deleting rack: $e'); // Log error for debugging
+            Get.snackbar('Error', 'Gagal menghapus rak.');
+          } finally {
+            Get.back(); // Close the confirmation dialog
+          }
+        },
+        child: Text(
+          'Hapus',
+          style: semiBoldText14.copyWith(color: kColorScheme.error),
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(), // Close the dialog without doing anything
+        child: Text(
+          'Batal',
+          style: semiBoldText14,
+        ),
+      ),
+    );
   }
 
   void addLevel(String customLevelName) async {
