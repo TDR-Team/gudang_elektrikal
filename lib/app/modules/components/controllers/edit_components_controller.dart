@@ -192,10 +192,9 @@ class EditComponentsController extends GetxController {
         return;
       }
 
-      // Add or update the component in Firestore
       await _addOrUpdateComponent(componentData);
-      Get.back(); // Go back to the previous screen
-      Get.back(); // Go back to the previous screen
+      Get.back();
+
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
