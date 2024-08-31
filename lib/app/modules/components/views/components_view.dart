@@ -238,39 +238,42 @@ class ComponentsView extends GetView<ComponentsController> {
           onChange: (value) {
             if (value == 'Tambah Rak') {
               // Show dialog to add a new rack
-              Get.dialog(
-                AlertDialog(
-                  title: Text(
-                    'Tambah Rak Baru',
-                    style: semiBoldText16,
-                  ),
-                  content: TextField(
-                    controller: controller.customRackController,
-                    style: semiBoldText14,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nomor Rak',
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        String newRackName =
-                            controller.customRackController.text.trim();
-                        controller.addRack(newRackName);
-                        Navigator.pop(Get.context!);
-                      },
-                      child: Text(
-                        'Tambah',
-                        style: semiBoldText14.copyWith(
-                          color: kColorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              // Get.dialog(
+              //   AlertDialog(
+              //     title: Text(
+              //       'Tambah Rak Baru',
+              //       style: semiBoldText16,
+              //     ),
+              //     content: TextField(
+              //       controller: controller.customRackController,
+              //       style: semiBoldText14,
+              //       decoration: const InputDecoration(
+              //         border: OutlineInputBorder(),
+              //         labelText: 'Nomor Rak',
+              //       ),
+              //       keyboardType: TextInputType.number,
+              //     ),
+              //     actions: [
+              //       TextButton(
+              //         onPressed: () {
+              //           // String newRackName =
+              //           //     controller.customRackController.text.trim();
+              //           // controller.addRack(newRackName);
+              //           controller.addRack();
+              //           Navigator.pop(Get.context!);
+              //         },
+              //         child: Text(
+              //           'Tambah',
+              //           style: semiBoldText14.copyWith(
+              //             color: kColorScheme.primary,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // );
+              controller.addRack();
+              // Navigator.pop(Get.context!);
             } else {
               // Handle rack selection
               onChangedRackName(value);
@@ -448,331 +451,332 @@ class ComponentsView extends GetView<ComponentsController> {
     );
   }
 
-  // Widget _buildRackLevels({
-  //   required String rackName,
-  //   required BuildContext context,
-  //   required List<String> levels,
-  //   required void Function(String rackName, String levelName) onLevelClicked,
-  // }) {
-  //   return ListView.separated(
-  //     shrinkWrap: true,
-  //     padding: const EdgeInsets.only(
-  //       top: 12,
-  //       right: 0,
-  //       left: 0,
-  //       bottom: 100,
-  //     ),
-  //     itemBuilder: (context, index) {
-  //       return GestureDetector(
-  //         onTap: () => onLevelClicked(rackName, levels[index]),
-  //         child: UnconstrainedBox(
-  //           child: Container(
-  //             width: MediaQuery.sizeOf(context).width / 1.1,
-  //             decoration: BoxDecoration(
-  //               color: kColorScheme.primary,
-  //               borderRadius: BorderRadius.circular(20),
-  //             ),
-  //             child: Stack(
-  //               children: [
-  //                 Positioned(
-  //                   right: 5,
-  //                   top: 5,
-  //                   child: PopupMenuButton(
-  //                     onSelected: (value) {
-  //                       if (value == 0) {
-  //                         Get.dialog(
-  //                           AlertDialog(
-  //                             title: Text(
-  //                               'Masukkan Nomor Laci yang baru',
-  //                               style: semiBoldText16,
-  //                             ),
-  //                             content: TextField(
-  //                               controller: controller.customLevelController,
-  //                               style: semiBoldText14,
-  //                               decoration: const InputDecoration(
-  //                                 border: OutlineInputBorder(),
-  //                                 labelText: 'Ubah Nomor Laci',
-  //                               ),
-  //                               keyboardType: TextInputType.number,
-  //                             ),
-  //                             actions: [
-  //                               TextButton(
-  //                                 onPressed: () {
-  //                                   String customLevelName = controller
-  //                                       .customLevelController.text
-  //                                       .trim();
-
-  //                                   // Assuming you have the current level name stored in a variable `currentLevelName`
-  //                                   controller.onEditLevel(
-  //                                     rackName, // The name of the rack
-  //                                     levels[index], // The current level name
-  //                                     customLevelName, // The new level name
-  //                                   );
-  //                                 },
-  //                                 child: Text(
-  //                                   'Ubah',
-  //                                   style: semiBoldText14.copyWith(
-  //                                     color: kColorScheme.primary,
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         );
-  //                       }
-  //                       if (value == 1) {
-  //                         showDialog(
-  //                             context: context,
-  //                             builder: (context) {
-  //                               return AlertDialog(
-  //                                 title: Text(
-  //                                   'Apakah anda yakin?',
-  //                                   style: semiBoldText16,
-  //                                 ),
-  //                                 content: Text(
-  //                                   'Laci ini akan dihapus',
-  //                                   style: regularText12,
-  //                                 ),
-  //                                 actions: [
-  //                                   TextButton(
-  //                                     onPressed: () => controller.onDeleteLevel(
-  //                                       rackName,
-  //                                       levels[index],
-  //                                     ),
-  //                                     child: Container(
-  //                                       padding: const EdgeInsets.symmetric(
-  //                                         vertical: 8,
-  //                                         horizontal: 16,
-  //                                       ),
-  //                                       decoration: BoxDecoration(
-  //                                         borderRadius:
-  //                                             BorderRadius.circular(50),
-  //                                         border: Border.all(
-  //                                           color: kColorScheme.error,
-  //                                         ),
-  //                                       ),
-  //                                       child: Text(
-  //                                         'Hapus',
-  //                                         style: semiBoldText12.copyWith(
-  //                                           color: kColorScheme.error,
-  //                                         ),
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                   TextButton(
-  //                                     onPressed: () =>
-  //                                         Navigator.pop(context, false),
-  //                                     child: Text(
-  //                                       'Kembali',
-  //                                       style: semiBoldText12,
-  //                                     ),
-  //                                   ),
-  //                                 ],
-  //                               );
-  //                             });
-  //                       }
-  //                     },
-  //                     icon: Icon(
-  //                       Icons.more_vert,
-  //                       color: kColorScheme.surface,
-  //                     ),
-  //                     itemBuilder: (context) {
-  //                       return [
-  //                         const PopupMenuItem(
-  //                           value: 0,
-  //                           child: Text('Ubah'),
-  //                         ),
-  //                         const PopupMenuItem(
-  //                           value: 1,
-  //                           child: Text('Hapus'),
-  //                         ),
-  //                       ];
-  //                     },
-  //                   ),
-  //                 ),
-  //                 Align(
-  //                   alignment: Alignment.center,
-  //                   child: Text(
-  //                     levels[index],
-  //                     textAlign: TextAlign.center,
-  //                     style: boldText28.copyWith(
-  //                       color: Colors.white,
-  //                       fontSize: 75.sp,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //     separatorBuilder: (context, index) => const SizedBox(height: 20),
-  //     itemCount: levels.length,
-  //   );
-  // }
   Widget _buildRackLevels({
     required String rackName,
     required BuildContext context,
     required List<String> levels,
     required void Function(String rackName, String levelName) onLevelClicked,
   }) {
-    return Column(
-      children: [
-        // Top bar with "more vert" button
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            PopupMenuButton(
-              onSelected: (value) {
-                if (value == 0) {
-                  Get.dialog(
-                    AlertDialog(
-                      title: Text(
-                        'Ubah Nama Rak',
-                        style: semiBoldText16,
-                      ),
-                      content: TextField(
-                        controller: controller.customRackController,
-                        style: semiBoldText14,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Nomor Rak',
-                        ),
-                        keyboardType: TextInputType.text,
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            String newRackName =
-                                controller.customRackController.text.trim();
-                            controller.onEditRack(
-                              rackName,
-                              newRackName,
-                            );
-                            Navigator.pop(Get.context!);
-                          },
-                          child: Text(
-                            'Ubah',
-                            style: semiBoldText14.copyWith(
-                              color: kColorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                if (value == 1) {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Apakah anda yakin?',
-                            style: semiBoldText16,
-                          ),
-                          content: Text(
-                            'Rak ini akan dihapus',
-                            style: regularText12,
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                controller.onDeleteRack(rackName);
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                    color: kColorScheme.error,
-                                  ),
-                                ),
-                                child: Text(
-                                  'Hapus',
-                                  style: semiBoldText12.copyWith(
-                                    color: kColorScheme.error,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                'Kembali',
-                                style: semiBoldText12,
-                              ),
-                            ),
-                          ],
-                        );
-                      });
-                }
-              },
-              icon: Icon(
-                Icons.more_vert,
+    return ListView.separated(
+      shrinkWrap: true,
+      padding: const EdgeInsets.only(
+        top: 12,
+        right: 0,
+        left: 0,
+        bottom: 100,
+      ),
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => onLevelClicked(rackName, levels[index]),
+          child: UnconstrainedBox(
+            child: Container(
+              width: MediaQuery.sizeOf(context).width / 1.1,
+              decoration: BoxDecoration(
                 color: kColorScheme.primary,
+                borderRadius: BorderRadius.circular(20),
               ),
-              itemBuilder: (context) {
-                return [
-                  const PopupMenuItem(
-                    value: 0,
-                    child: Text('Ubah Rak'),
-                  ),
-                  const PopupMenuItem(
-                    value: 1,
-                    child: Text('Hapus Rak'),
-                  ),
-                ];
-              },
-            ),
-          ],
-        ),
-        // ListView to show rack levels
-        Expanded(
-          child: ListView.separated(
-            shrinkWrap: true,
-            padding: const EdgeInsets.only(
-              top: 12,
-              right: 0,
-              left: 0,
-              bottom: 100,
-            ),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () => onLevelClicked(rackName, levels[index]),
-                child: UnconstrainedBox(
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width / 1.1,
-                    decoration: BoxDecoration(
-                      color: kColorScheme.primary,
-                      borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: PopupMenuButton(
+                      onSelected: (value) {
+                        if (value == 0) {
+                          Get.dialog(
+                            AlertDialog(
+                              title: Text(
+                                'Masukkan Nomor Laci yang baru',
+                                style: semiBoldText16,
+                              ),
+                              content: TextField(
+                                controller: controller.customLevelController,
+                                style: semiBoldText14,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Ubah Nomor Laci',
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    String customLevelName = controller
+                                        .customLevelController.text
+                                        .trim();
+
+                                    // Assuming you have the current level name stored in a variable `currentLevelName`
+                                    controller.onEditLevel(
+                                      rackName, // The name of the rack
+                                      levels[index], // The current level name
+                                      customLevelName, // The new level name
+                                    );
+                                  },
+                                  child: Text(
+                                    'Ubah',
+                                    style: semiBoldText14.copyWith(
+                                      color: kColorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        if (value == 1) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Apakah anda yakin?',
+                                    style: semiBoldText16,
+                                  ),
+                                  content: Text(
+                                    'Laci ini akan dihapus',
+                                    style: regularText12,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => controller.onDeleteLevel(
+                                        rackName,
+                                        levels[index],
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 16,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          border: Border.all(
+                                            color: kColorScheme.error,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Hapus',
+                                          style: semiBoldText12.copyWith(
+                                            color: kColorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: Text(
+                                        'Kembali',
+                                        style: semiBoldText12,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: kColorScheme.surface,
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          const PopupMenuItem(
+                            value: 0,
+                            child: Text('Ubah'),
+                          ),
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text('Hapus'),
+                          ),
+                        ];
+                      },
                     ),
-                    child: Center(
-                      child: Text(
-                        levels[index],
-                        textAlign: TextAlign.center,
-                        style: boldText28.copyWith(
-                          color: Colors.white,
-                          fontSize: 75.sp,
-                        ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      levels[index],
+                      textAlign: TextAlign.center,
+                      style: boldText28.copyWith(
+                        color: Colors.white,
+                        fontSize: 75.sp,
                       ),
                     ),
                   ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) => const SizedBox(height: 20),
-            itemCount: levels.length,
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        );
+      },
+      separatorBuilder: (context, index) => const SizedBox(height: 20),
+      itemCount: levels.length,
     );
   }
+  // Widget _buildRackLevels({
+  //   required String rackName,
+  //   required BuildContext context,
+  //   required List<String> levels,
+  //   required void Function(String rackName, String levelName) onLevelClicked,
+  // }) {
+  //   return Column(
+  //     children: [
+  //       // Top bar with "more vert" button
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: [
+  //           PopupMenuButton(
+  //             onSelected: (value) {
+  //               if (value == 0) {
+  //                 Get.dialog(
+  //                   AlertDialog(
+  //                     title: Text(
+  //                       'Ubah Nama Rak',
+  //                       style: semiBoldText16,
+  //                     ),
+  //                     content: TextField(
+  //                       controller: controller.customRackController,
+  //                       style: semiBoldText14,
+  //                       decoration: const InputDecoration(
+  //                         border: OutlineInputBorder(),
+  //                         labelText: 'Nomor Rak',
+  //                       ),
+  //                       keyboardType: TextInputType.text,
+  //                     ),
+  //                     actions: [
+  //                       TextButton(
+  //                         onPressed: () {
+  //                           String newRackName =
+  //                               controller.customRackController.text.trim();
+  //                           controller.onEditRack(
+  //                             rackName,
+  //                             newRackName,
+  //                           );
+  //                           Navigator.pop(Get.context!);
+  //                         },
+  //                         child: Text(
+  //                           'Ubah',
+  //                           style: semiBoldText14.copyWith(
+  //                             color: kColorScheme.primary,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 );
+  //               }
+  //               if (value == 1) {
+  //                 showDialog(
+  //                     context: context,
+  //                     builder: (context) {
+  //                       return AlertDialog(
+  //                         title: Text(
+  //                           'Apakah anda yakin?',
+  //                           style: semiBoldText16,
+  //                         ),
+  //                         content: Text(
+  //                           'Rak ini akan dihapus',
+  //                           style: regularText12,
+  //                         ),
+  //                         actions: [
+  //                           TextButton(
+  //                             onPressed: () {
+  //                               controller.onDeleteRack(rackName);
+  //                               Navigator.pop(context);
+  //                             },
+  //                             child: Container(
+  //                               padding: const EdgeInsets.symmetric(
+  //                                 vertical: 8,
+  //                                 horizontal: 16,
+  //                               ),
+  //                               decoration: BoxDecoration(
+  //                                 borderRadius: BorderRadius.circular(50),
+  //                                 border: Border.all(
+  //                                   color: kColorScheme.error,
+  //                                 ),
+  //                               ),
+  //                               child: Text(
+  //                                 'Hapus',
+  //                                 style: semiBoldText12.copyWith(
+  //                                   color: kColorScheme.error,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           TextButton(
+  //                             onPressed: () => Navigator.pop(context),
+  //                             child: Text(
+  //                               'Kembali',
+  //                               style: semiBoldText12,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       );
+  //                     });
+  //               }
+  //             },
+  //             icon: Icon(
+  //               Icons.more_vert,
+  //               color: kColorScheme.primary,
+  //             ),
+  //             itemBuilder: (context) {
+  //               return [
+  //                 const PopupMenuItem(
+  //                   value: 0,
+  //                   child: Text('Ubah Rak'),
+  //                 ),
+  //                 const PopupMenuItem(
+  //                   value: 1,
+  //                   child: Text('Hapus Rak'),
+  //                 ),
+  //               ];
+  //             },
+  //           ),
+  //         ],
+  //       ),
+  //       // ListView to show rack levels
+  //       Expanded(
+  //         child: ListView.separated(
+  //           shrinkWrap: true,
+  //           padding: const EdgeInsets.only(
+  //             top: 12,
+  //             right: 0,
+  //             left: 0,
+  //             bottom: 100,
+  //           ),
+  //           itemBuilder: (context, index) {
+  //             return GestureDetector(
+  //               onTap: () => onLevelClicked(rackName, levels[index]),
+  //               child: UnconstrainedBox(
+  //                 child: Container(
+  //                   width: MediaQuery.sizeOf(context).width / 1.1,
+  //                   decoration: BoxDecoration(
+  //                     color: kColorScheme.primary,
+  //                     borderRadius: BorderRadius.circular(20),
+  //                   ),
+  //                   // child: Center(
+  //                   //   child: Text(
+  //                   //     levels[index],
+  //                   //     textAlign: TextAlign.center,
+  //                   //     style: boldText28.copyWith(
+  //                   //       color: Colors.white,
+  //                   //       fontSize: 75.sp,
+  //                   //     ),
+  //                   //   ),
+  //                   // ),
+
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //           separatorBuilder: (context, index) => const SizedBox(height: 20),
+  //           itemCount: levels.length,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';

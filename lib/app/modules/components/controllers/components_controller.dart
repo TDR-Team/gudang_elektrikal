@@ -109,35 +109,36 @@ class ComponentsController extends GetxController {
     }
   }
 
-  void addRack(String newRackName) async {
+  void addRack() async {
     try {
-      // Validate the input
-      if (newRackName.isEmpty) {
+      // Fetch existing racks from Firestore
+      QuerySnapshot snapshot = await _firestore.collection('components').get();
+      List<String> existingRackNames =
+          snapshot.docs.map((doc) => doc.id).toList();
+
+      // Extract rack numbers from existing rack names
+      List<int> rackNumbers = existingRackNames
+          .map((name) {
+            final match = RegExp(r'rack_(\d+)').firstMatch(name);
+            return match != null ? int.tryParse(match.group(1) ?? '') : null;
+          })
+          .where((number) => number != null)
+          .cast<int>()
+          .toList();
+
+      // Determine the next available rack number
+      int nextRackNumber = rackNumbers.isNotEmpty
+          ? rackNumbers.reduce((a, b) => a > b ? a : b) + 1
+          : 1;
+
+      // Convert the new rack number to Firestore format
+      String firestoreRackName = 'rack_$nextRackNumber';
+
+      // Check if the rack already exists
+      if (existingRackNames.contains(firestoreRackName)) {
         Get.snackbar(
           "Gagal",
-          "Nama rak tidak boleh kosong",
-        );
-        return;
-      }
-
-      // Check if the input is a valid number
-      int? rackNumber = int.tryParse(newRackName);
-      if (rackNumber == null) {
-        Get.snackbar(
-          "Gagal",
-          "Nama rak harus berupa angka",
-        );
-        return;
-      }
-
-      // Convert the new rack name to the required Firestore format
-      String firestoreRackName = 'rack_$rackNumber';
-
-      // Check if the rack already exists by validating against the original names
-      if (convertedToOriginalMap.containsValue(firestoreRackName)) {
-        Get.snackbar(
-          "Gagal",
-          "Rak dengan nama $newRackName sudah ada",
+          "Rak dengan nomor $nextRackNumber sudah ada",
         );
         return;
       }
@@ -146,7 +147,7 @@ class ComponentsController extends GetxController {
       await _firestore.collection('components').doc(firestoreRackName).set({});
 
       // Update the UI to reflect the new rack
-      String displayRackName = 'Rak $rackNumber'; // For UI display
+      String displayRackName = 'Rak $nextRackNumber'; // For UI display
       rackNames.add(displayRackName);
       rackNames.sort(); // Optional: Sort the list if you want it ordered
       convertedToOriginalMap[displayRackName] = firestoreRackName;
