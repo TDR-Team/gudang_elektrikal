@@ -360,9 +360,7 @@ class CustomListTools extends StatelessWidget {
                         ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    print("object");
-                  },
+                  onPressed: onTapEdit,
                   icon: Icon(
                     Icons.edit,
                     size: 18.h,

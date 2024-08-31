@@ -57,7 +57,7 @@ class AddToolsController extends GetxController {
   void onClose() {
     // Dispose of the controllers and focus nodes
     nameController.dispose();
-    nameController.dispose();
+    descriptionController.dispose();
     stockController.dispose();
     stockFocusNode.dispose();
     super.onClose();
@@ -170,7 +170,6 @@ class AddToolsController extends GetxController {
           'description': description,
           'stock': stock,
           'tStock': stock,
-          'isStatus': true,
           'imgUrl': imageUrl,
           'createdAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));

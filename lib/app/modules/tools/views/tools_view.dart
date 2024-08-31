@@ -105,15 +105,22 @@ class ToolsView extends GetView<ToolsController> {
                   itemBuilder: (context, index) {
                     var tools = controller.tools[index];
                     return CustomListTools(
-                        id: tools['id'],
-                        name: tools['name'],
-                        imgUrl:
-                            tools['imgUrl'] ?? 'https://picsum.photos/200/300',
-                        description:
-                            tools['description'] ?? 'No description available',
-                        stock: tools['stock'],
-                        tStock: tools['tStock'],
-                        isStatus: tools['isStatus']);
+                      id: tools['id'],
+                      name: tools['name'],
+                      imgUrl:
+                          tools['imgUrl'] ?? 'https://picsum.photos/200/300',
+                      description:
+                          tools['description'] ?? 'No description available',
+                      stock: tools['stock'],
+                      tStock: tools['tStock'],
+                      isStatus: tools['stock'] != 0,
+                      onTapEdit: () {
+                        controller.onEditToolsClicked(tools['id']);
+                      },
+                      onTapDelete: () {
+                        controller.onDeleteToolsClicked(tools['id']);
+                      },
+                    );
                   },
                 );
               }
