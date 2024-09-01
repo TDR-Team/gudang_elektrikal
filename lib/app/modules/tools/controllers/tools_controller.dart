@@ -9,7 +9,8 @@ class ToolsController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   RxBool isLoading = true.obs;
-  RxList<Map<String, dynamic>> tools = <Map<String, dynamic>>[].obs;
+  RxMap<String, List<Map<String, dynamic>>> categorizedTools =
+      <String, List<Map<String, dynamic>>>{}.obs;
 
   @override
   void onInit() {
@@ -20,30 +21,34 @@ class ToolsController extends GetxController {
   Future<void> fetchTools() async {
     isLoading.value = true;
     try {
-      final QuerySnapshot querySnapshot =
+      final QuerySnapshot categorySnapshot =
           await FirebaseFirestore.instance.collection('tools').get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        print('Documents found: ${querySnapshot.docs.length}');
-        tools.value = querySnapshot.docs.map((tools) {
-          print(tools.data()); // Print each document's data for debugging
+      Map<String, List<Map<String, dynamic>>> toolsData = {};
+
+      for (var categoryDoc in categorySnapshot.docs) {
+        String categoryName = categoryDoc.id;
+
+        final toolsMap = categoryDoc.data() as Map<String, dynamic>;
+
+        List<Map<String, dynamic>> toolsList = toolsMap.entries.map((entry) {
           return {
-            'id': tools.id,
-            'name': tools['name'] ?? 'No name',
-            'description': tools['description'] ?? '',
-            'stock': tools['stock'] ?? 0,
-            'tStock': tools['tStock'] ?? 0,
-            // 'isStatus': tools['isStatus'] ?? false,
-            'imgUrl': tools['imgUrl'] ?? '',
+            'id': entry.key,
+            'name': entry.value['name'] ?? 'No name',
+            'description': entry.value['description'] ?? '',
+            'stock': entry.value['stock'] ?? 0,
+            'tStock': entry.value['tStock'] ?? 0,
+            'imgUrl': entry.value['imgUrl'] ?? '',
           };
         }).toList();
-      } else {
-        tools.value = [];
-        print('No documents found');
+
+        toolsData[categoryName] = toolsList;
       }
+
+      categorizedTools.value = toolsData;
     } catch (e) {
       print('Error fetching tools: $e');
-      tools.value = [];
+      categorizedTools.value = {};
     } finally {
       isLoading.value = false;
     }
@@ -58,8 +63,8 @@ class ToolsController extends GetxController {
     });
   }
 
-  void onEditToolsClicked(String toolsId) {
-    final selectedTools = tools.firstWhere(
+  void onEditToolsClicked(String categoryName, String toolsId) {
+    final selectedTools = categorizedTools[categoryName]!.firstWhere(
       (tools) => tools['id'] == toolsId,
     );
     Get.to(
@@ -67,6 +72,7 @@ class ToolsController extends GetxController {
       arguments: {
         "tools": selectedTools, // Pass the selected tools data
         "toolsId": toolsId, // Pass the tools ID
+        "categoryId": categoryName,
       },
     )?.then((value) async {
       searchController.clear();
@@ -74,13 +80,15 @@ class ToolsController extends GetxController {
     });
   }
 
-  Future<void> onDeleteToolsClicked(String toolsId) async {
+  Future<void> onDeleteToolsClicked(String categoryName, String toolsId) async {
     try {
       // Delete
       await FirebaseFirestore.instance
           .collection('tools')
-          .doc(toolsId)
-          .delete();
+          .doc(categoryName)
+          .update({
+        toolsId: FieldValue.delete(),
+      });
 
       Get.back();
       // Show success snackbar
@@ -100,5 +108,13 @@ class ToolsController extends GetxController {
         message: 'Gagal Menghapus Alat',
       ).showSnackbar();
     }
+  }
+
+  void onUnderDev() {
+    const CustomSnackbar(
+      success: false,
+      title: 'Mohon maaf',
+      message: 'Fitur ini sedang dalam pengembangan',
+    ).showSnackbar();
   }
 }

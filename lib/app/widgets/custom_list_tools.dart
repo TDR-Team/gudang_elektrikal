@@ -235,6 +235,7 @@ class CustomListTools extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
+        margin: EdgeInsets.symmetric(vertical: 3.h),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
