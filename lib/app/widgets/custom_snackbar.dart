@@ -23,7 +23,7 @@ class CustomSnackbar extends StatelessWidget {
     Get.showSnackbar(
       GetSnackBar(
         snackPosition: SnackPosition.TOP,
-        margin: const EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: EdgeInsets.zero,
         borderRadius: 10,
         messageText: Padding(
