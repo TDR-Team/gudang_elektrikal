@@ -24,9 +24,20 @@ class AddToolsController extends GetxController {
   RxBool isLoadingAddTools = false.obs;
   Rx<File?> imageFileController = RxNullable<File?>().setNull();
   Rx<String?> networkImage = RxNullable<String?>().setNull();
-
-  // Define the stock as an RxInt to make it reactive
   RxInt stock = 0.obs;
+
+  final categoryName = 'Kategori 1'.obs;
+  final listCategory = [
+    'Kategori 1',
+    'Kategori 2',
+    'Kategori 3',
+    'Kategori 4',
+    'Kategori 5'
+  ];
+
+  void onChangedCategory(String? value) {
+    categoryName.value = value ?? "";
+  }
 
   @override
   void onInit() {
@@ -165,13 +176,18 @@ class AddToolsController extends GetxController {
 
         final String toolsId = uuid.v4();
 
-        await FirebaseFirestore.instance.collection('tools').doc(toolsId).set({
-          'name': name,
-          'description': description,
-          'stock': stock,
-          'tStock': stock,
-          'imgUrl': imageUrl,
-          'createdAt': FieldValue.serverTimestamp(),
+        await FirebaseFirestore.instance
+            .collection('tools')
+            .doc(categoryName.value as String?)
+            .set({
+          toolsId: {
+            'name': name,
+            'description': description,
+            'stock': stock,
+            'tStock': stock,
+            'imgUrl': imageUrl,
+            'createdAt': FieldValue.serverTimestamp(),
+          }
         }, SetOptions(merge: true));
 
         Get.back();
