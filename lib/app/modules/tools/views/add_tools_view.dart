@@ -24,7 +24,7 @@ class AddToolsView extends GetView<AddToolsController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Komponen'),
+        title: const Text('Tambah Alat'),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -118,6 +118,27 @@ class AddToolsView extends GetView<AddToolsController> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Kategori',
+                        style: semiBoldText16,
+                      ),
+                    ),
+                    _buildDropDown(
+                      context: context,
+                      listRack: controller.listCategory,
+                      categoryName: controller.categoryName.value,
+                      onChangedCategory: (value) {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        controller.onChangedCategory(value);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -138,9 +159,6 @@ class AddToolsView extends GetView<AddToolsController> {
             },
             text: 'Tambah',
             buttonStyle: primary300Button.copyWith(
-              padding: const WidgetStatePropertyAll(
-                EdgeInsets.only(left: 16),
-              ),
               overlayColor: WidgetStateProperty.all<Color>(
                 const Color.fromARGB(255, 13, 97, 128),
               ),
@@ -155,8 +173,8 @@ class AddToolsView extends GetView<AddToolsController> {
   _buildDropDown({
     required BuildContext context,
     required List<String> listRack,
-    required String rackName,
-    required void Function(String? value) onChangedRackName,
+    required String categoryName,
+    required void Function(String? value) onChangedCategory,
   }) {
     return Flexible(
       child: Padding(
@@ -166,8 +184,8 @@ class AddToolsView extends GetView<AddToolsController> {
         child: DropDown(
           showSearchBox: false,
           listElement: listRack,
-          selectedItem: rackName,
-          onChange: onChangedRackName,
+          selectedItem: categoryName,
+          onChange: onChangedCategory,
           borderSide: const BorderSide(),
           fillColor: Colors.white,
         ),

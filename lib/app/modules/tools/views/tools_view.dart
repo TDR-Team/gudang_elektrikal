@@ -23,10 +23,10 @@ class ToolsView extends GetView<ToolsController> {
           style: semiBoldText20,
         ),
         surfaceTintColor: Colors.transparent,
-        // backgroundColor: kColorScheme.primary,
         backgroundColor: Colors.transparent,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: 150.h,
@@ -64,17 +64,20 @@ class ToolsView extends GetView<ToolsController> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Container(
-                          // width: ,
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.tune,
-                            size: 24.sp,
+                        InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: controller.onUnderDev,
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.tune,
+                              size: 24.sp,
+                            ),
                           ),
                         ),
                       ],
@@ -88,40 +91,53 @@ class ToolsView extends GetView<ToolsController> {
             child: Obx(() {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (controller.tools.isEmpty) {
+              } else if (controller.categorizedTools.isEmpty) {
                 return const Center(child: Text("No tools found"));
               } else {
-                return ListView.separated(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(
-                    top: 12,
-                    left: 16,
-                    right: 16,
-                    bottom: 0,
+                return ListView(
+                  padding: EdgeInsets.only(
+                    top: 12.h,
+                    left: 16.w,
+                    right: 16.w,
+                    bottom: 0.h,
                   ),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemCount: controller.tools.length,
-                  itemBuilder: (context, index) {
-                    var tools = controller.tools[index];
-                    return CustomListTools(
-                      id: tools['id'],
-                      name: tools['name'],
-                      imgUrl:
-                          tools['imgUrl'] ?? 'https://picsum.photos/200/300',
-                      description:
-                          tools['description'] ?? 'No description available',
-                      stock: tools['stock'],
-                      tStock: tools['tStock'],
-                      isStatus: tools['stock'] != 0,
-                      onTapEdit: () {
-                        controller.onEditToolsClicked(tools['id']);
-                      },
-                      onTapDelete: () {
-                        controller.onDeleteToolsClicked(tools['id']);
-                      },
+                  children: controller.categorizedTools.entries.map((entry) {
+                    String categoryName = entry.key;
+                    List<Map<String, dynamic>> toolsList = entry.value;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          categoryName,
+                          style: semiBoldText16,
+                        ),
+                        SizedBox(height: 5.h),
+                        ...toolsList.map((tools) {
+                          return CustomListTools(
+                            id: tools['id'],
+                            name: tools['name'],
+                            imgUrl: tools['imgUrl'] ??
+                                'https://picsum.photos/200/300',
+                            description: tools['description'] ??
+                                'No description available',
+                            stock: tools['stock'],
+                            tStock: tools['tStock'],
+                            isStatus: tools['stock'] != 0,
+                            onTapEdit: () {
+                              controller.onEditToolsClicked(
+                                  categoryName, tools['id']);
+                            },
+                            onTapDelete: () {
+                              controller.onDeleteToolsClicked(
+                                  categoryName, tools['id']);
+                            },
+                          );
+                        }),
+                        const SizedBox(height: 20),
+                      ],
                     );
-                  },
+                  }).toList(),
                 );
               }
             }),
@@ -137,8 +153,11 @@ class ToolsView extends GetView<ToolsController> {
             onPressed: () {
               controller.onAddToolsClicked();
             },
-            backgroundColor: Colors.amber,
-            child: const Icon(Icons.add),
+            backgroundColor: AppColors.secondaryColors[0],
+            child: Icon(
+              Icons.add,
+              color: AppColors.onSecondaryColors[1],
+            ),
           ),
         ),
       ),

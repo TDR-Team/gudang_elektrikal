@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 
 class EditToolsController extends GetxController {
   final Map<String, dynamic> tools = Get.arguments['tools'];
+  final String categoryId = Get.arguments['categoryId']; // Get the category ID
   final String toolsId = Get.arguments['toolsId']; // Get the tools ID
 
   TextEditingController nameController = TextEditingController();
@@ -134,12 +135,14 @@ class EditToolsController extends GetxController {
 
       // Create tools data
       Map<String, dynamic> toolsData = {
-        'id': toolsId,
-        'name': nameController.text,
-        'description': descriptionController.text,
-        'stock': stock.value - tempStock,
-        'tStock': stock.value,
-        'imgUrl': imageUrl ?? networkImage.value,
+        toolsId: {
+          'name': nameController.text,
+          'description': descriptionController.text,
+          'stock': stock.value - tempStock,
+          'tStock': stock.value,
+          'imgUrl': imageUrl ?? networkImage.value,
+          'updatedAt': FieldValue.serverTimestamp(),
+        }
       };
 
       // Validation checks
@@ -162,8 +165,8 @@ class EditToolsController extends GetxController {
         return;
       }
 
-      // Add or update the tools in Firestore
-      await _addOrUpdateTools(toolsData);
+      // Update the tools in Firestore within the specific category
+      await _updateToolsInCategory(toolsData);
       Get.back(); // Go back to the previous screen
       const CustomSnackbar(
         success: true,
@@ -171,7 +174,7 @@ class EditToolsController extends GetxController {
         message: 'Komponen Berhasil Diubah',
       ).showSnackbar();
     } catch (e) {
-      log.e('Error adding component: $e');
+      log.e('Error updating component: $e');
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
@@ -197,15 +200,17 @@ class EditToolsController extends GetxController {
     }
   }
 
-  Future<void> _addOrUpdateTools(Map<String, dynamic> toolsData) async {
+  Future<void> _updateToolsInCategory(Map<String, dynamic> toolsData) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('tools')
-          .doc(toolsId)
-          .update(toolsData);
+      // Mengambil dokumen kategori
+      DocumentReference categoryRef =
+          FirebaseFirestore.instance.collection('tools').doc(categoryId);
+
+      // Update tools yang ada dalam map pada dokumen kategori
+      await categoryRef.update(toolsData);
     } catch (e) {
-      log.e('Error adding/updating component: $e');
-      throw Exception('Failed to add/update component');
+      log.e('Error updating tools in category: $e');
+      throw Exception('Failed to update tools in category');
     }
   }
 }
