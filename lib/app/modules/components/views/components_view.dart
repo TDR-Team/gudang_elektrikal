@@ -8,6 +8,7 @@ import '../controllers/components_controller.dart';
 
 class ComponentsView extends GetView<ComponentsController> {
   const ComponentsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => ComponentsController());
@@ -27,92 +28,15 @@ class ComponentsView extends GetView<ComponentsController> {
             child: PopupMenuButton<int>(
               onSelected: (value) {
                 switch (value) {
-                  case 0: // Add Level
-                    Get.dialog(
-                      AlertDialog(
-                        title: Text(
-                          'Tambah Laci',
-                          style: semiBoldText16,
-                        ),
-                        content: TextField(
-                          controller: controller.customLevelController,
-                          style: semiBoldText14,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Nomor Laci',
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              String customLevelName =
-                                  controller.customLevelController.text.trim();
-                              controller.addLevel(customLevelName);
-                              Navigator.pop(Get.context!);
-                            },
-                            child: Text(
-                              'Tambah',
-                              style: semiBoldText14.copyWith(
-                                color: kColorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                    break;
-                  case 1: // Edit Rack
+                  case 0: // Edit Rack
                     if (controller.rackName.value.isNotEmpty) {
                       showEditRackDialog(controller.rackName.value);
                     } else {
                       Get.snackbar('Error', 'Pilih rak terlebih dahulu.');
                     }
                     break;
-                  // case 2: // Delete Rack
-                  //   if (controller.rackName.value.isNotEmpty) {
-                  //     showDialog(
-                  //       context: context,
-                  //       builder: (context) {
-                  //         return AlertDialog(
-                  //           title: Text(
-                  //             'Konfirmasi Hapus',
-                  //             style: semiBoldText16,
-                  //           ),
-                  //           content: Text(
-                  //             'Apakah Anda yakin ingin menghapus rak ini?',
-                  //             style: regularText12,
-                  //           ),
-                  //           actions: [
-                  //             TextButton(
-                  //               onPressed: () {
-                  //                 controller
-                  //                     .onDeleteRack(controller.rackName.value);
-                  //                 Navigator.pop(context);
-                  //               },
-                  //               child: Text(
-                  //                 'Hapus',
-                  //                 style: semiBoldText12.copyWith(
-                  //                   color: kColorScheme.error,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             TextButton(
-                  //               onPressed: () => Navigator.pop(context),
-                  //               child: Text(
-                  //                 'Batal',
-                  //                 style: semiBoldText12,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         );
-                  //       },
-                  //     );
-                  //   } else {
-                  //     Get.snackbar('Error', 'Pilih rak terlebih dahulu.');
-                  //   }
-                  //   break;
-                  case 2: // Delete Rack
+
+                  case 1: // Delete Rack
                     if (controller.rackName.value.isNotEmpty) {
                       // Directly call the method without creating a new dialog here
                       controller.onDeleteRack(controller.rackName.value);
@@ -130,14 +54,10 @@ class ComponentsView extends GetView<ComponentsController> {
               itemBuilder: (context) => [
                 const PopupMenuItem<int>(
                   value: 0,
-                  child: Text('Tambah Laci'),
-                ),
-                const PopupMenuItem<int>(
-                  value: 1,
                   child: Text('Ubah Rak'),
                 ),
                 const PopupMenuItem<int>(
-                  value: 2,
+                  value: 1,
                   child: Text('Hapus Rak'),
                 ),
               ],
@@ -167,9 +87,17 @@ class ComponentsView extends GetView<ComponentsController> {
                 ),
                 Obx(
                   () {
+                    // return _buildDropDown(
+                    //   listRack: controller.rackNames,
+                    //   onChangedRackName: controller.onChangedRackNames,
+                    // );
                     return _buildDropDown(
                       listRack: controller.rackNames,
-                      onChangedRackName: controller.onChangedRackNames,
+                      onChangedRackName: (value) {
+                        if (value != null) {
+                          controller.onChangedRackNames(value);
+                        }
+                      },
                     );
                   },
                 ),
@@ -205,11 +133,23 @@ class ComponentsView extends GetView<ComponentsController> {
                     onLevelClicked: controller.onLevelClicked,
                   );
                 } else {
-                  return Center(
-                    child: Text(
-                      'Tidak ada level untuk rak ini.',
-                      style: semiBoldText20,
-                    ),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          controller.addLevel();
+                        },
+                        label: const Text('Tambah Laci'),
+                        icon: const Icon(Icons.add),
+                      ),
+                      Center(
+                        child: Text(
+                          'Tidak ada level untuk rak ini.',
+                          style: semiBoldText20,
+                        ),
+                      ),
+                    ],
                   );
                 }
               },
@@ -237,45 +177,9 @@ class ComponentsView extends GetView<ComponentsController> {
           hintText: 'Pilih Rak',
           onChange: (value) {
             if (value == 'Tambah Rak') {
-              // Show dialog to add a new rack
-              // Get.dialog(
-              //   AlertDialog(
-              //     title: Text(
-              //       'Tambah Rak Baru',
-              //       style: semiBoldText16,
-              //     ),
-              //     content: TextField(
-              //       controller: controller.customRackController,
-              //       style: semiBoldText14,
-              //       decoration: const InputDecoration(
-              //         border: OutlineInputBorder(),
-              //         labelText: 'Nomor Rak',
-              //       ),
-              //       keyboardType: TextInputType.number,
-              //     ),
-              //     actions: [
-              //       TextButton(
-              //         onPressed: () {
-              //           // String newRackName =
-              //           //     controller.customRackController.text.trim();
-              //           // controller.addRack(newRackName);
-              //           controller.addRack();
-              //           Navigator.pop(Get.context!);
-              //         },
-              //         child: Text(
-              //           'Tambah',
-              //           style: semiBoldText14.copyWith(
-              //             color: kColorScheme.primary,
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // );
               controller.addRack();
-              // Navigator.pop(Get.context!);
+              onChangedRackName(value);
             } else {
-              // Handle rack selection
               onChangedRackName(value);
             }
           },
@@ -291,120 +195,11 @@ class ComponentsView extends GetView<ComponentsController> {
                 ),
               );
             } else {
-              return Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: Text(rackName!),
-                      onTap: () {
-                        // Handle selection tap if needed
-                        onChangedRackName(rackName);
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: const Icon(Icons.edit),
-                                title: const Text('Ubah'),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Get.dialog(
-                                    AlertDialog(
-                                      title: Text(
-                                        'Ubah Nama Rak',
-                                        style: semiBoldText16,
-                                      ),
-                                      content: TextField(
-                                        controller:
-                                            controller.customLevelController,
-                                        style: semiBoldText14,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Nomor Rak',
-                                        ),
-                                        keyboardType: TextInputType.number,
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            String newRackName = controller
-                                                .customLevelController.text
-                                                .trim();
-                                            controller.onEditRack(
-                                                rackName, newRackName);
-                                            Navigator.pop(Get.context!);
-                                          },
-                                          child: Text(
-                                            'Ubah',
-                                            style: semiBoldText14.copyWith(
-                                              color: kColorScheme.primary,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.delete),
-                                title: const Text('Hapus'),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          'Konfirmasi Hapus',
-                                          style: semiBoldText16,
-                                        ),
-                                        content: Text(
-                                          'Apakah Anda yakin ingin menghapus rak ini?',
-                                          style: regularText12,
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              controller.onDeleteRack(rackName);
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text(
-                                              'Hapus',
-                                              style: semiBoldText12.copyWith(
-                                                color: kColorScheme.error,
-                                              ),
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text(
-                                              'Batal',
-                                              style: semiBoldText12,
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
+              return ListTile(
+                title: Text(rackName!),
+                // onTap: () {
+                //   onChangedRackName(rackName);
+                // },
               );
             }
           },
@@ -466,8 +261,20 @@ class ComponentsView extends GetView<ComponentsController> {
         bottom: 100,
       ),
       itemBuilder: (context, index) {
+        if (index == 0) {
+          return TextButton.icon(
+            onPressed: () {
+              controller.addLevel();
+            },
+            label: const Text('Tambah Laci'),
+            icon: const Icon(Icons.add),
+          );
+        }
+
+        // For other levels
+        final levelIndex = index - 1; // Adjust index for other levels
         return GestureDetector(
-          onTap: () => onLevelClicked(rackName, levels[index]),
+          onTap: () => onLevelClicked(rackName, levels[levelIndex]),
           child: UnconstrainedBox(
             child: Container(
               width: MediaQuery.sizeOf(context).width / 1.1,
@@ -480,7 +287,7 @@ class ComponentsView extends GetView<ComponentsController> {
                   Positioned(
                     right: 5,
                     top: 5,
-                    child: PopupMenuButton(
+                    child: PopupMenuButton<int>(
                       onSelected: (value) {
                         if (value == 0) {
                           Get.dialog(
@@ -504,13 +311,12 @@ class ComponentsView extends GetView<ComponentsController> {
                                     String customLevelName = controller
                                         .customLevelController.text
                                         .trim();
-
-                                    // Assuming you have the current level name stored in a variable `currentLevelName`
                                     controller.onEditLevel(
-                                      rackName, // The name of the rack
-                                      levels[index], // The current level name
-                                      customLevelName, // The new level name
+                                      rackName,
+                                      levels[levelIndex], // Current level name
+                                      customLevelName,
                                     );
+                                    Navigator.pop(Get.context!);
                                   },
                                   child: Text(
                                     'Ubah',
@@ -525,54 +331,54 @@ class ComponentsView extends GetView<ComponentsController> {
                         }
                         if (value == 1) {
                           showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text(
-                                    'Apakah anda yakin?',
-                                    style: semiBoldText16,
-                                  ),
-                                  content: Text(
-                                    'Laci ini akan dihapus',
-                                    style: regularText12,
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => controller.onDeleteLevel(
-                                        rackName,
-                                        levels[index],
-                                      ),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 16,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                            color: kColorScheme.error,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Hapus',
-                                          style: semiBoldText12.copyWith(
-                                            color: kColorScheme.error,
-                                          ),
-                                        ),
-                                      ),
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  'Apakah anda yakin?',
+                                  style: semiBoldText16,
+                                ),
+                                content: Text(
+                                  'Laci ini akan dihapus',
+                                  style: regularText12,
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => controller.onDeleteLevel(
+                                      rackName,
+                                      levels[levelIndex],
                                     ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, false),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 16,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(
+                                          color: kColorScheme.error,
+                                        ),
+                                      ),
                                       child: Text(
-                                        'Kembali',
-                                        style: semiBoldText12,
+                                        'Hapus',
+                                        style: semiBoldText12.copyWith(
+                                          color: kColorScheme.error,
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                );
-                              });
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: Text(
+                                      'Kembali',
+                                      style: semiBoldText12,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       },
                       icon: Icon(
@@ -581,11 +387,11 @@ class ComponentsView extends GetView<ComponentsController> {
                       ),
                       itemBuilder: (context) {
                         return [
-                          const PopupMenuItem(
+                          const PopupMenuItem<int>(
                             value: 0,
                             child: Text('Ubah'),
                           ),
-                          const PopupMenuItem(
+                          const PopupMenuItem<int>(
                             value: 1,
                             child: Text('Hapus'),
                           ),
@@ -596,7 +402,7 @@ class ComponentsView extends GetView<ComponentsController> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      levels[index],
+                      levels[levelIndex],
                       textAlign: TextAlign.center,
                       style: boldText28.copyWith(
                         color: Colors.white,
@@ -611,9 +417,10 @@ class ComponentsView extends GetView<ComponentsController> {
         );
       },
       separatorBuilder: (context, index) => const SizedBox(height: 20),
-      itemCount: levels.length,
+      itemCount: levels.length + 1, // Add 1 for the "Add Level" button
     );
   }
+
   // Widget _buildRackLevels({
   //   required String rackName,
   //   required BuildContext context,
