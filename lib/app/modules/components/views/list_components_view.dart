@@ -67,7 +67,6 @@ class ListComponentsView extends GetView<ListComponentsController> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearch(
-                     
                       searchController: controller.searchController,
                     ),
                   ),
@@ -97,7 +96,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                     const SizedBox(height: 10),
                     Center(
                       child: Text(
-                        'Rak belum memiliki komponen',
+                        'Laci ${controller.levelName} belum memiliki komponen',
                         style: semiBoldText16.copyWith(
                           color: AppColors.primaryColors[1],
                         ),
