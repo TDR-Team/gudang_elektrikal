@@ -73,9 +73,10 @@ class ComponentsController extends GetxController {
           }
         });
 
-        // Convert keys to a list and sort them numerically
+        // Convert keys to a list and sort them numerically in descending order
         List<String> levels = levelsData.keys.toList();
-        levels.sort((a, b) => int.parse(a).compareTo(int.parse(b)));
+        levels.sort((a, b) => int.parse(b).compareTo(
+            int.parse(a))); // Ensure sorting is from largest to smallest
 
         // For debugging
         log.i("Fetched and Sorted Levels for $selectedRackName: $levels");
@@ -148,9 +149,27 @@ class ComponentsController extends GetxController {
 
       // Update the UI to reflect the new rack
       String displayRackName = 'Rak $nextRackNumber'; // For UI display
+
+      // Update the list and map
       rackNames.add(displayRackName);
-      rackNames.sort(); // Optional: Sort the list if you want it ordered
       convertedToOriginalMap[displayRackName] = firestoreRackName;
+
+      // Sort the rackNames list by numerical order
+      rackNames.sort((a, b) {
+        final numA =
+            int.tryParse(RegExp(r'\d+').firstMatch(a)?.group(0) ?? '0') ?? 0;
+        final numB =
+            int.tryParse(RegExp(r'\d+').firstMatch(b)?.group(0) ?? '0') ?? 0;
+        return numA.compareTo(numB);
+      });
+
+      // Automatically set the new rack as selected
+      rackName.value = firestoreRackName;
+      listLevels.clear(); // Clear previous levels
+      levelData.clear(); // Clear previous level data
+
+      // Fetch and display levels for the new rack
+      fetchRackLevels(firestoreRackName);
 
       Get.back(); // Close the add rack dialog (if applicable)
       customRackController.clear();
@@ -263,43 +282,71 @@ class ComponentsController extends GetxController {
     );
   }
 
-  void addLevel(String customLevelName) async {
+  void addLevel() async {
     try {
-      // Validate the input
-      if (customLevelName.isEmpty) {
+      // Fetch the current levels from Firestore
+      DocumentSnapshot rackDoc = await FirebaseFirestore.instance
+          .collection('components')
+          .doc(rackName.value)
+          .get();
+
+      // If the rack document does not exist, handle this case
+      if (!rackDoc.exists) {
         Get.snackbar(
-          "Gagal",
-          "Nama laci tidak boleh kosong",
+          "Error",
+          "Rak tidak ditemukan.",
         );
         return;
       }
 
-      // Check if the level already exists
-      if (listLevels.contains(customLevelName)) {
-        Get.snackbar(
-          "Gagal",
-          "Laci dengan nomor $customLevelName sudah ada",
-        );
-        return;
+      // Extract existing levels from the document data
+      Map<String, dynamic> existingLevels =
+          rackDoc.data() as Map<String, dynamic>;
+
+      // Find the highest level number and determine the next level number
+      List<String> levelKeys = existingLevels.keys.toList();
+      int nextLevelNumber = 1; // Default to 1 if no levels exist
+
+      if (levelKeys.isNotEmpty) {
+        // Convert level names to integers, handle possible conversion errors
+        List<int> levelNumbers = [];
+        for (var key in levelKeys) {
+          final int? levelNumber = int.tryParse(key);
+          if (levelNumber != null) {
+            levelNumbers.add(levelNumber);
+          }
+        }
+
+        // Find the highest level number and increment by 1
+        if (levelNumbers.isNotEmpty) {
+          nextLevelNumber = levelNumbers.reduce((a, b) => a > b ? a : b) + 1;
+        }
       }
+
+      // Create a new level name
+      String newLevelName = nextLevelNumber.toString();
 
       // Add the new level to the rack document
       await FirebaseFirestore.instance
           .collection('components')
           .doc(rackName.value)
-          .set({customLevelName: {}}, SetOptions(merge: true));
+          .set({newLevelName: {}}, SetOptions(merge: true));
 
       // Update the UI to reflect the new level
-      listLevels.add(customLevelName);
-      listLevels.sort((a, b) =>
-          int.parse(a).compareTo(int.parse(b))); // Keep the list sorted
-      levelData[customLevelName] =
+      listLevels.add(newLevelName);
+      listLevels.sort((a, b) => int.parse(b)
+          .compareTo(int.parse(a))); // Keep the list sorted in descending order
+      levelData[newLevelName] =
           {}; // Create an empty entry for the new level data
 
       Get.back(); // Close the add level dialog (if applicable)
       customLevelController.clear();
+      Get.snackbar(
+        "Berhasil",
+        "Laci berhasil ditambahkan.",
+      );
     } catch (e) {
-      log.i("Error adding level: $e");
+      log.e("Error adding level: $e");
       Get.snackbar(
         "Error",
         "Gagal menambah laci",
