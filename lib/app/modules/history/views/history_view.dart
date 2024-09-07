@@ -9,16 +9,16 @@ import 'package:gudang_elektrikal/app/data/model/borrowed.dart';
 import 'package:gudang_elektrikal/app/widgets/not_logged_in.dart';
 import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_job_horizontal.dart';
 
-import '../controllers/activity_controller.dart';
+import '../controllers/history_controller.dart';
 
-class ActivityView extends GetView<ActivityController> {
-  const ActivityView({super.key});
+class HistoryView extends GetView<HistoryController> {
+  const HistoryView({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.put(ActivityController());
+    Get.put(HistoryController());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aktivitas'),
+        title: const Text('Riwayat'),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -40,24 +40,24 @@ class ActivityView extends GetView<ActivityController> {
                       unselectedLabelColor:
                           const Color.fromARGB(255, 25, 27, 27),
                       tabs: const [
+                        Tab(text: 'Aktivitas'),
                         Tab(text: 'Pinjaman'),
-                        Tab(text: 'Riwayat'),
                       ],
                     ),
                     Expanded(
                       child: TabBarView(
                         controller: controller.tabController,
                         children: [
+                          _buildTabContentHistory(
+                            isLoading: controller.isLoadingHistory.value,
+                            listJob: controller.dataHistory,
+                            onRefreshActivity: controller.onRefreshHistory,
+                          ),
                           _buildTabContentBorrowed(
                             isLoading: controller.isLoadingBorrowed.value,
                             isActive: true,
                             listJob: controller.dataBorrowed,
                             onRefreshActivity: controller.onRefreshBorrowed,
-                          ),
-                          _buildTabContentHistory(
-                            isLoading: controller.isLoadingHistory.value,
-                            listJob: controller.dataHistory,
-                            onRefreshActivity: controller.onRefreshHistory,
                           ),
                         ],
                       ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/modules/activity/views/activity_view.dart';
+import 'package:gudang_elektrikal/app/modules/history/views/history_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
@@ -31,7 +30,7 @@ class DashboardView extends GetView<DashboardController> {
                 ComponentsView(),
                 ToolsView(),
                 LoginView(),
-                ActivityView(),
+                HistoryView(),
                 ProfileView()
               ],
             ),
@@ -132,7 +131,6 @@ class DashboardView extends GetView<DashboardController> {
                     onTap: () {
                       Get.to(() => const GetComponentsView());
                     },
-
                     child: Row(
                       children: [
                         Icon(

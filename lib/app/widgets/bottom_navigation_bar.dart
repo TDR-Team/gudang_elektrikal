@@ -78,7 +78,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             size: 24.h,
             color: kColorScheme.surface,
           ),
-          label: 'Aktivitas',
+          label: 'Riwayat',
         ),
         BottomNavigationBarItem(
           icon: Icon(

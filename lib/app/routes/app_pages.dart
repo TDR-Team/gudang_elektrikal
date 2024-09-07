@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/tools/bindings/tools_binding.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 
-import '../modules/activity/bindings/activity_binding.dart';
-import '../modules/activity/views/activity_view.dart';
+import '../modules/history/bindings/history_binding.dart';
+import '../modules/history/views/history_view.dart';
 import '../modules/components/bindings/components_binding.dart';
 import '../modules/components/views/components_view.dart';
 import '../modules/components/views/list_components_view.dart';
@@ -64,8 +64,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ACTIVITY,
-      page: () => const ActivityView(),
-      binding: ActivityBinding(),
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
     ),
     GetPage(
       name: _Paths.COMPONENTS,
