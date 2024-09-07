@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/data/model/borrowed.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
 
-class ActivityController extends GetxController
+class HistoryController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final isLoggedIn = true.obs;
   final isLoadingBorrowed = false.obs;
