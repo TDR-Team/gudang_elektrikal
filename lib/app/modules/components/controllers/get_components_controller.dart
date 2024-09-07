@@ -1,15 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
 
+import '../../../utils/logging.dart';
+import '../../../widgets/custom_snackbar.dart';
+
 class GetComponentsController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  var rackNames = <String>[].obs;
-  var listLevels = <String>[].obs;
-  var rackName = ''.obs;
-  var levelData =
-      <String, Map<String, dynamic>>{}.obs; // New observable for level data
-  var isLoadingLevels = false.obs;
+  RxList listRackNames = <String>[].obs;
+  RxList listLevels = <String>[].obs;
+  RxString rackName = ''.obs;
+  RxMap levelData = <String, Map<String, dynamic>>{}.obs;
+  RxBool isLoadingLevels = false.obs;
+
+  TextEditingController customLevelController = TextEditingController();
+  TextEditingController customRackController = TextEditingController();
 
   @override
   void onInit() {
@@ -17,36 +23,41 @@ class GetComponentsController extends GetxController {
     fetchRackNames();
   }
 
+  void onChangedRackNames(String? value) {
+    if (value != null && value.isNotEmpty) {
+      rackName.value = value;
+      listLevels.clear();
+      levelData.clear();
+      fetchLevelByRack(value);
+    }
+  }
+
   void fetchRackNames() async {
     try {
       QuerySnapshot querySnapshot =
           await _firestore.collection('components').get();
 
-      // Assuming that 'components' collection has documents representing rack names
-      List<String> names = querySnapshot.docs.map((doc) => doc.id).toList();
+      List<String> rackNamesList =
+          querySnapshot.docs.map((doc) => doc.id).toList();
 
-      // For debugging
-      print("Fetched Rack Names: $names");
+      log.i("Fetched Rack Names: $rackNamesList");
 
-      rackNames.assignAll(names);
+      listRackNames.assignAll(rackNamesList);
     } catch (e) {
-      print("Error fetching rack names: $e");
+      log.e("Error fetching rack names: $e");
     }
   }
 
-  void fetchRackLevels(String selectedRackName) async {
+  void fetchLevelByRack(String selectedRackName) async {
     try {
       isLoadingLevels.value = true;
 
-      // Fetch the document for the selected rack
       DocumentSnapshot rackDoc =
           await _firestore.collection('components').doc(selectedRackName).get();
 
       if (rackDoc.exists) {
-        // Extract levels from the document data
         Map<String, dynamic> data = rackDoc.data() as Map<String, dynamic>;
 
-        // Filter and cast the levels correctly
         Map<String, Map<String, dynamic>> levelsData = {};
         data.forEach((key, value) {
           if (value is Map<String, dynamic>) {
@@ -55,14 +66,14 @@ class GetComponentsController extends GetxController {
         });
 
         List<String> levels = levelsData.keys.toList();
+        levels.sort((a, b) => int.parse(b).compareTo(int.parse(a)));
 
-        // For debugging
-        print("Fetched Levels for $selectedRackName: $levels");
+        log.i("Fetched and Sorted Levels for $selectedRackName: $levels");
 
         listLevels.assignAll(levels);
-        levelData.value = levelsData; // Assign the cast data
+        levelData.value = levelsData;
       } else {
-        print("Rack document does not exist");
+        log.e("Rack document does not exist");
         listLevels.clear();
         levelData.clear();
       }
@@ -70,20 +81,21 @@ class GetComponentsController extends GetxController {
       isLoadingLevels.value = false;
     } catch (e) {
       isLoadingLevels.value = false;
-      print("Error fetching levels: $e");
-    }
-  }
-
-  void onChangedRackNames(String? value) {
-    if (value != null && value.isNotEmpty) {
-      rackName.value = value;
-      listLevels.clear(); // Clear previous levels
-      levelData.clear(); // Clear previous level data
-      fetchRackLevels(value);
+      log.e("Error fetching levels: $e");
     }
   }
 
   void onLevelClicked(String rackName, String levelName) {
-    Get.to(() => const ListComponentsView(), arguments: {"level": rackName});
+    Map<String, dynamic> selectedLevelData = levelData[levelName] ?? {};
+
+    Get.to(
+      () => const ListComponentsView(),
+      arguments: {
+        "isGetComponent": true,
+        "rackName": rackName,
+        "levelName": levelName,
+        "levelData": selectedLevelData, // Pass level data to the next view
+      },
+    );
   }
 }

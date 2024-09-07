@@ -187,7 +187,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
 
   _buildDropDown({
     required BuildContext context,
-    required List<String> listRack,
+    required var listRack,
     required String rackName,
     required void Function(String? value) onChangedRackName,
   }) {

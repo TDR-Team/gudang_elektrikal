@@ -10,6 +10,7 @@ import '../../../widgets/dropdown_button.dart';
 
 class GetComponentsView extends GetView<GetComponentsController> {
   const GetComponentsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => GetComponentsController());
@@ -17,25 +18,23 @@ class GetComponentsView extends GetView<GetComponentsController> {
       backgroundColor: kColorScheme.surface,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          padding: const EdgeInsets.all(16),
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 24.sp,
+            color: Colors.black,
+          ),
+        ),
         title: Text(
           'Ambil Komponen',
           style: semiBoldText20,
         ),
         surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                size: 24.sp,
-                color: Colors.black,
-              ),
-            ),
-          )
-        ],
       ),
       body: Column(
         children: [
@@ -57,8 +56,30 @@ class GetComponentsView extends GetView<GetComponentsController> {
                     ),
                   ),
                 ),
+                // Obx(
+                //   () {
+                //     // return _buildDropDown(
+                //     //   listRack: controller.rackNames,
+                //     //   onChangedRackName: controller.onChangedRackNames,
+                //     // );
+                //     return _buildDropDown(
+                //       listRack: controller.rackNames,
+                //       // onChangedRackName: (value) {
+                //       //   if (value != null) {
+                //       //     controller.onChangedRackNames(value);
+                //       //   }
+                //       // },
+                //       onChangedRackName: controller.onChangedRackNames,
+                //     );
+                //   },
+                // ),
                 _buildDropDown(
-                  listRack: controller.rackNames,
+                  listRack: controller.listRackNames,
+                  // onChangedRackName: (value) {
+                  //   if (value != null) {
+                  //     controller.onChangedRackNames(value);
+                  //   }
+                  // },
                   onChangedRackName: controller.onChangedRackNames,
                 ),
               ],
@@ -95,7 +116,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
                 } else {
                   return Center(
                     child: Text(
-                      'Tidak ada level untuk rak ini.',
+                      'Tidak ada laci untuk rak ini.',
                       style: semiBoldText20,
                     ),
                   );
@@ -108,10 +129,12 @@ class GetComponentsView extends GetView<GetComponentsController> {
     );
   }
 
-  _buildDropDown({
-    required List<String> listRack,
+  Widget _buildDropDown({
+    required var listRack,
     required void Function(String? value) onChangedRackName,
   }) {
+    // List<String> updatedListRack = List.from(listRack)..add('Tambah Rak');
+
     return Positioned(
       left: 0,
       right: 0,
@@ -121,7 +144,15 @@ class GetComponentsView extends GetView<GetComponentsController> {
         child: DropDown(
           listElement: listRack,
           hintText: 'Pilih Rak',
+          // onChange: (value) {
+          //   onChangedRackName(value);
+          // },
           onChange: onChangedRackName,
+          itemBuilder: (context, rackName, isSelected) {
+            return ListTile(
+              title: Text(rackName!),
+            );
+          },
         ),
       ),
     );
@@ -130,7 +161,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
   Widget _buildRackLevels({
     required String rackName,
     required BuildContext context,
-    required List<String> levels,
+    required RxList levels,
     required void Function(String rackName, String levelName) onLevelClicked,
   }) {
     return ListView.separated(
@@ -139,25 +170,32 @@ class GetComponentsView extends GetView<GetComponentsController> {
         top: 12,
         right: 0,
         left: 0,
-        bottom: 50,
+        bottom: 100,
       ),
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () => onLevelClicked(rackName, levels[index]),
           child: UnconstrainedBox(
             child: Container(
-              alignment: Alignment.center,
-              width: MediaQuery.sizeOf(context).width / 2,
+              width: MediaQuery.sizeOf(context).width / 1.1,
               decoration: BoxDecoration(
                 color: kColorScheme.primary,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                levels[index],
-                style: boldText28.copyWith(
-                  color: Colors.white,
-                  fontSize: 96.sp,
-                ),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      levels[index],
+                      textAlign: TextAlign.center,
+                      style: boldText28.copyWith(
+                        color: Colors.white,
+                        fontSize: 75.sp,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
