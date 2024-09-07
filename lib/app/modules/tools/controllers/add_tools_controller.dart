@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,8 @@ class AddToolsController extends GetxController {
   Rx<String?> networkImage = RxNullable<String?>().setNull();
   RxInt stock = 0.obs;
 
+  String? userName;
+
   final categoryName = 'Kategori 1'.obs;
   final listCategory = [
     'Kategori 1',
@@ -42,6 +45,7 @@ class AddToolsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getUserData();
     // Initialize the stockController with the initial stock value
     stockController.text = stock.value.toString();
 
@@ -173,13 +177,10 @@ class AddToolsController extends GetxController {
       if (snapshot.state == TaskState.success) {
         final imageUrl = await snapshot.ref.getDownloadURL();
         const uuid = Uuid();
-
         final String toolsId = uuid.v4();
 
-        await FirebaseFirestore.instance
-            .collection('tools')
-            .doc(categoryName.value as String?)
-            .set({
+        // Prepare data to add to Firestore
+        Map<String, dynamic> toolsData = {
           toolsId: {
             'name': name,
             'description': description,
@@ -188,7 +189,11 @@ class AddToolsController extends GetxController {
             'imgUrl': imageUrl,
             'createdAt': FieldValue.serverTimestamp(),
           }
-        }, SetOptions(merge: true));
+        };
+
+        // Add tools data to the specified category
+        await _addToolsInCategory(toolsData);
+        await _logHistoryActivity(toolsData);
 
         Get.back();
         const CustomSnackbar(
@@ -212,6 +217,77 @@ class AddToolsController extends GetxController {
       log.e(e);
     } finally {
       isLoadingAddTools.value = false;
+    }
+  }
+
+  Future<void> _addToolsInCategory(Map<String, dynamic> toolsData) async {
+    try {
+      DocumentReference categoryRef = FirebaseFirestore.instance
+          .collection('tools')
+          .doc(categoryName.value);
+
+      await categoryRef.set(toolsData, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Error adding tools in category: $e');
+      throw Exception('Failed to add tools in category');
+    }
+  }
+
+  Future<void> _getUserData() async {
+    try {
+      update();
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        update();
+
+        // Convert DocumentSnapshot to Map<String, dynamic>
+        Map<String, dynamic> data =
+            userData.data() as Map<String, dynamic>? ?? {};
+
+        // Check if the document exists
+        if (userData.exists) {
+          userName = data['name'] ?? '';
+          update();
+        } else {
+          // Handle case where document does not exist
+          userName = '';
+          update();
+        }
+      }
+      update();
+    } catch (e) {
+      print('Error getting profile data: $e');
+    } finally {
+      update();
+    }
+  }
+
+  Future<void> _logHistoryActivity(
+    Map<String, dynamic> toolsData,
+  ) async {
+    try {
+      final activityId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .set({
+        activityId: {
+          'user': userName,
+          'itemType': "tools",
+          'actionType': "add",
+          'itemData': toolsData,
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
     }
   }
 }
