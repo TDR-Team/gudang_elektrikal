@@ -6,6 +6,7 @@ import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/list_components_controller.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_components.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_list_get_component.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 
 class ListComponentsView extends GetView<ListComponentsController> {
@@ -67,7 +68,6 @@ class ListComponentsView extends GetView<ListComponentsController> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: CustomSearch(
-                     
                       searchController: controller.searchController,
                     ),
                   ),
@@ -97,7 +97,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                     const SizedBox(height: 10),
                     Center(
                       child: Text(
-                        'Rak belum memiliki komponen',
+                        'Laci ${controller.levelName} belum memiliki komponen',
                         style: semiBoldText16.copyWith(
                           color: AppColors.primaryColors[1],
                         ),
@@ -119,20 +119,43 @@ class ListComponentsView extends GetView<ListComponentsController> {
                   itemCount: controller.filteredComponents.length,
                   itemBuilder: (context, index) {
                     var component = controller.filteredComponents[index];
-                    return CustomListComponents(
-                      id: component['id'],
-                      name: component['name'],
-                      imgUrl: component['imgUrl'],
-                      description: component['description'],
-                      stock: component['stock'],
-                      unit: component['unit'],
-                      onTapEdit: () {
-                        controller.onEditComponentClicked(component['id']);
-                      },
-                      onTapDelete: () {
-                        controller.onDeleteComponentClicked(component['id']);
-                      },
-                    );
+                    return controller.isGetComponent
+                        ? CustomListGetComponent(
+                            id: component['id'],
+                            name: component['name'],
+                            imgUrl: component['imgUrl'],
+                            description: component['description'],
+                            stock: component['stock'],
+                            unit: component['unit'],
+                            onTapGetComponent: () {
+                              controller.onGetComponentClicked(component['id']);
+                            },
+                            stockController: controller.stockController,
+                            stockFocusNode: controller.stockFocusNode,
+                            onIncrementButton: () {
+                              controller.increment(component['id']);
+                            },
+                            onDecrementButton: () =>
+                                controller.decrement(component['id']),
+                          )
+                        : CustomListComponents(
+                            id: component['id'],
+                            name: component['name'],
+                            imgUrl: component['imgUrl'],
+                            description: component['description'],
+                            stock: component['stock'],
+                            unit: component['unit'],
+                            onTapEdit: () {
+                              controller
+                                  .onEditComponentClicked(component['id']);
+                            },
+                            onTapDelete: () {
+                              controller.onDeleteComponentClicked(
+                                component['id'],
+                                !controller.isGetComponent,
+                              );
+                            },
+                          );
                   },
                 );
               }
@@ -140,8 +163,10 @@ class ListComponentsView extends GetView<ListComponentsController> {
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Visibility(
-        visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+        visible: MediaQuery.of(context).viewInsets.bottom == 0.0 &&
+            !controller.isGetComponent,
         child: FloatingActionButton(
           onPressed: () {
             controller.onAddComponentClicked();

@@ -185,7 +185,7 @@ class EditComponentsView extends GetView<EditComponentsController> {
 
   _buildDropDown({
     required BuildContext context,
-    required List<String> listRack,
+    required var listRack,
     required String rackName,
     required void Function(String? value) onChangedRackName,
   }) {
@@ -227,94 +227,76 @@ class EditComponentsView extends GetView<EditComponentsController> {
             height: 150.h,
             child: Stack(
               children: [
-                isLoadingImage
-                    ? Shimmer.fromColors(
-                        baseColor: const Color.fromARGB(255, 148, 148, 148),
-                        highlightColor: const Color.fromARGB(255, 102, 95, 95),
-                        child: Container(
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: networkImage != null && networkImage != ''
+                      ? Image.network(
+                          networkImage,
                           width: 150.h,
                           height: 150.h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey.withOpacity(0.5),
-                          ),
-                        ),
-                      )
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: networkImage != null && networkImage != ''
-                            ? Image.network(
-                                networkImage,
-                                width: 150.h,
-                                height: 150.h,
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Shimmer.fromColors(
-                                      baseColor: const Color.fromARGB(
-                                          255, 148, 148, 148),
-                                      highlightColor: const Color.fromARGB(
-                                          255, 102, 95, 95),
-                                      child: Container(
-                                        width: 150.h,
-                                        height: 150.h,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.grey.withOpacity(0.5),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 150.h,
-                                    width: 150.h,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.grey,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.image_not_supported,
-                                        size: 90,
-                                        color: Color.fromARGB(255, 53, 53, 53),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )
-                            : imageFileController != null
-                                ? Image.file(
-                                    File(
-                                      imageFileController.path,
-                                    ),
-                                    width: 150.h,
-                                    height: 150.h,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Container(
-                                    width: 150.h,
-                                    height: 150.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.add_a_photo,
-                                      size: 60.sp,
-                                    ),
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Shimmer.fromColors(
+                                baseColor:
+                                    const Color.fromARGB(255, 148, 148, 148),
+                                highlightColor:
+                                    const Color.fromARGB(255, 102, 95, 95),
+                                child: Container(
+                                  width: 150.h,
+                                  height: 150.h,
+                                  decoration: BoxDecoration(
+                                    // shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(10),
+
+                                    color: Colors.grey.withOpacity(0.5),
                                   ),
-                      ),
-                // const Align(
-                //   alignment: Alignment.bottomRight,
-                //   child: Icon(
-                //     Icons.add,
-                //   ),
-                // ),
+                                ),
+                              );
+                            }
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 150.h,
+                              width: 150.h,
+                              decoration: const BoxDecoration(
+                                color: Colors.grey,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  size: 90,
+                                  color: Color.fromARGB(255, 53, 53, 53),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : imageFileController != null
+                          ? Image.file(
+                              File(
+                                imageFileController.path,
+                              ),
+                              width: 150.h,
+                              height: 150.h,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              width: 150.h,
+                              height: 150.h,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                              ),
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.add_a_photo,
+                                size: 60.sp,
+                              ),
+                            ),
+                ),
               ],
             ),
           ),
