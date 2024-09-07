@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/add_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/edit_tools_view.dart';
+import 'package:gudang_elektrikal/app/utils/logging.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
+import 'package:uuid/uuid.dart';
 
 class ToolsController extends GetxController {
   TextEditingController searchController = TextEditingController();
@@ -12,9 +15,12 @@ class ToolsController extends GetxController {
   RxMap<String, List<Map<String, dynamic>>> categorizedTools =
       <String, List<Map<String, dynamic>>>{}.obs;
 
+  String? userName;
+
   @override
   void onInit() {
     super.onInit();
+    _getUserData();
     fetchTools();
   }
 
@@ -82,7 +88,16 @@ class ToolsController extends GetxController {
 
   Future<void> onDeleteToolsClicked(String categoryName, String toolsId) async {
     try {
-      // Delete
+      // Ambil data tools berdasarkan categoryName dan toolsId
+      final toolsDoc = await FirebaseFirestore.instance
+          .collection('tools')
+          .doc(categoryName)
+          .get();
+
+      final toolsMap = toolsDoc.data();
+      final toolsData = toolsMap?[toolsId] as Map<String, dynamic>? ?? {};
+
+      // Hapus tools
       await FirebaseFirestore.instance
           .collection('tools')
           .doc(categoryName)
@@ -90,15 +105,22 @@ class ToolsController extends GetxController {
         toolsId: FieldValue.delete(),
       });
 
+      // Log data alat yang dihapus ke dalam riwayat aktivitas
+      final logData = {
+        toolsId: toolsData,
+      };
+
+      await _logHistoryActivity(logData);
+
       Get.back();
-      // Show success snackbar
+      // Tampilkan snackbar sukses
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
         message: 'Alat Berhasil Dihapus',
       ).showSnackbar();
 
-      // Update the tools list
+      // Perbarui daftar alat
       await fetchTools();
     } catch (e) {
       print('Error deleting tools: $e');
@@ -107,6 +129,64 @@ class ToolsController extends GetxController {
         title: 'Gagal',
         message: 'Gagal Menghapus Alat',
       ).showSnackbar();
+    }
+  }
+
+  Future<void> _getUserData() async {
+    try {
+      update();
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        update();
+
+        // Convert DocumentSnapshot to Map<String, dynamic>
+        Map<String, dynamic> data =
+            userData.data() as Map<String, dynamic>? ?? {};
+
+        // Check if the document exists
+        if (userData.exists) {
+          userName = data['name'] ?? '';
+          update();
+        } else {
+          // Handle case where document does not exist
+          userName = '';
+          update();
+        }
+      }
+      update();
+    } catch (e) {
+      print('Error getting profile data: $e');
+    } finally {
+      update();
+    }
+  }
+
+  Future<void> _logHistoryActivity(
+    Map<String, dynamic> toolsData,
+  ) async {
+    try {
+      final activityId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .set({
+        activityId: {
+          'user': userName,
+          'itemType': "tools",
+          'actionType': "delete",
+          'itemData': toolsData,
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
     }
   }
 

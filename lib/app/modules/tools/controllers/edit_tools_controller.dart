@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,12 +28,16 @@ class EditToolsController extends GetxController {
   Rx<File?> imageFileController = RxNullable<File?>().setNull();
   Rx<String?> networkImage = RxNullable<String?>().setNull();
 
+  String? userName;
+
   // Reactive stock value
   RxInt stock = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
+
+    _getUserData();
 
     nameController.text = tools['name'] ?? '';
     descriptionController.text = tools['description'] ?? '';
@@ -127,13 +132,11 @@ class EditToolsController extends GetxController {
     try {
       isLoadingEditTools.value = true;
 
-      // Upload image to Firebase Storage if an image is picked
       String? imageUrl;
       if (imageFileController.value != null) {
         imageUrl = await _uploadImage(imageFileController.value!);
       }
 
-      // Create tools data
       Map<String, dynamic> toolsData = {
         toolsId: {
           'name': nameController.text,
@@ -165,9 +168,10 @@ class EditToolsController extends GetxController {
         return;
       }
 
-      // Update the tools in Firestore within the specific category
       await _updateToolsInCategory(toolsData);
-      Get.back(); // Go back to the previous screen
+      await _logHistoryActivity(toolsData);
+
+      Get.back();
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
@@ -185,7 +189,6 @@ class EditToolsController extends GetxController {
     }
   }
 
-  // Upload image to Firebase Storage
   Future<String> _uploadImage(File imageFile) async {
     try {
       String fileName = const Uuid().v4();
@@ -202,15 +205,71 @@ class EditToolsController extends GetxController {
 
   Future<void> _updateToolsInCategory(Map<String, dynamic> toolsData) async {
     try {
-      // Mengambil dokumen kategori
       DocumentReference categoryRef =
           FirebaseFirestore.instance.collection('tools').doc(categoryId);
 
-      // Update tools yang ada dalam map pada dokumen kategori
       await categoryRef.update(toolsData);
     } catch (e) {
       log.e('Error updating tools in category: $e');
       throw Exception('Failed to update tools in category');
+    }
+  }
+
+  Future<void> _getUserData() async {
+    try {
+      update();
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        update();
+
+        // Convert DocumentSnapshot to Map<String, dynamic>
+        Map<String, dynamic> data =
+            userData.data() as Map<String, dynamic>? ?? {};
+
+        // Check if the document exists
+        if (userData.exists) {
+          userName = data['name'] ?? '';
+          update();
+        } else {
+          // Handle case where document does not exist
+          userName = '';
+          update();
+        }
+      }
+      update();
+    } catch (e) {
+      print('Error getting profile data: $e');
+    } finally {
+      update();
+    }
+  }
+
+  Future<void> _logHistoryActivity(
+    Map<String, dynamic> toolsData,
+  ) async {
+    try {
+      final activityId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .set({
+        activityId: {
+          'user': userName,
+          'itemType': "tools",
+          'actionType': "edit",
+          'itemData': toolsData,
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
     }
   }
 }
