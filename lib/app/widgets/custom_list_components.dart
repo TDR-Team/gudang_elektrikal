@@ -30,9 +30,6 @@ class CustomListComponents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-      'Description: $description , isEmpty: ${description!.isEmpty}',
-    );
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () {
@@ -89,8 +86,8 @@ class CustomListComponents extends StatelessWidget {
                                 highlightColor:
                                     const Color.fromARGB(255, 102, 95, 95),
                                 child: Container(
-                                  height: 60.h,
-                                  width: 60.w,
+                                  height: 200.h,
+                                  width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(20),
@@ -101,7 +98,7 @@ class CustomListComponents extends StatelessWidget {
                           },
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
-                              height: 250.h,
+                              height: 200.h,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Colors.grey,
