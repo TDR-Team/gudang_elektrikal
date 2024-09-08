@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
@@ -14,6 +15,17 @@ class EditProfileView extends GetView<EditProfileController> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              padding: const EdgeInsets.all(16),
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 24.sp,
+                color: Colors.black,
+              ),
+            ),
             title: const Text('Ubah Profil'),
             centerTitle: true,
           ),
@@ -23,60 +35,72 @@ class EditProfileView extends GetView<EditProfileController> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () => controller.pickImage(),
-                        child: Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.grey.withOpacity(0.4),
-                              backgroundImage: controller.image != null
-                                  ? FileImage(controller.image!)
-                                  : controller.profileImageUrl != null
-                                      ? NetworkImage(
-                                              controller.profileImageUrl!)
-                                          as ImageProvider
-                                      : null,
-                              child: (controller.image == null &&
-                                      controller.profileImageUrl == null)
-                                  ? Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: kColorScheme.surface,
-                                    )
-                                  : null, // Hanya tampilkan Icon jika tidak ada gambar
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: CircleAvatar(
-                                radius: 14,
-                                backgroundColor: kColorScheme.secondary,
-                                child: Icon(
-                                  Icons.edit,
-                                  size: 16,
-                                  color: kColorScheme.onSecondary,
-                                ),
-                              ),
-                            )
-                          ],
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: AppColors.primaryColors[0],
+                        child: Text(
+                          // Check if the nameController has text and extract the first letter
+                          controller.nameController.text.isNotEmpty
+                              ? controller.nameController.text[0].toUpperCase()
+                              : 'N', // Default to 'N' if name is empty
+                          style: mediumText48.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextField(
                         controller: controller.nameController,
                         style: semiBoldText14,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Nama',
+                          disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColors[0],
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColors[0],
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColors[0],
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
+                      const SizedBox(height: 20),
                       TextField(
-                        controller: controller.phoneController,
-                        style: semiBoldText14,
-                        decoration: const InputDecoration(
-                          labelText: 'Nomor Hp',
+                        controller: controller.emailController,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
                         ),
-                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: const TextStyle(color: Colors.grey),
+                          disabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        readOnly: true,
+                        enabled: false,
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
