@@ -1,40 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/data/model/borrowed.dart';
-import 'package:gudang_elektrikal/app/utils/logging.dart';
 
 class HistoryController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  final isLoggedIn = true.obs;
   final isLoadingBorrowed = false.obs;
-  final isLoadingHistory = false.obs;
-  // final isLoadingActive = false.obs;
-  // final isLoadingWaiting = true.obs;
-  // final isLoadingOffering = true.obs;
-  // final isLoadingHistory = true.obs;
+  final isLoadingActivities = false.obs;
 
-  // final dataBorrowed = <Activity>[].obs;
-  final dataBorrowed = listDummyBorrowed.obs;
-  final dataHistory = listDummyBorrowed.obs;
-
-  // final jobDataActive = <JobData>[].obs;
-  // final jobDataWaiting = <JobData>[].obs;
-  // final jobDataOffering = <JobData>[].obs;
-  // final jobDataHistory = <JobData>[].obs;
-  // final jobData = <JobData>[].obs;
+  final activitiesList = [].obs;
+  final borrowedList = [].obs;
 
   final selectedIndex = 0.obs;
   late TabController tabController;
-
-  final selectedStatus = 'Semua Status'.obs;
 
   @override
   void onInit() {
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(_handleTabChange);
-    // checkLoginStatus();
+    fetchActivities();
+    fetchBorrowed();
     super.onInit();
-    loadDataForTab(0);
   }
 
   @override
@@ -44,76 +29,71 @@ class HistoryController extends GetxController
     super.onClose();
   }
 
-  void _handleTabChange() {
-    if (!tabController.indexIsChanging) {
-      loadDataForTab(tabController.index);
-    }
-  }
+  void _handleTabChange() {}
 
-  Future<void> loadDataForTab(int index) async {
-    switch (index) {
-      case 0:
-        await fetchActivity(
-          status: 'pinjaman',
-          isLoading: isLoadingBorrowed,
-          dataList: dataBorrowed,
-        );
-        break;
-      case 1:
-        await fetchActivity(
-          status: 'riwayat',
-          isLoading: isLoadingHistory,
-          dataList: dataHistory,
-        );
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  // Future<void> checkLoginStatus() async {
-  //   var token = await get_utils.GetUtils().getUserToken();
-  //   isLoggedIn.value = token.isNotEmpty;
-  // }
-
-  Future<void> fetchActivity({
-    required String status,
-    required RxBool isLoading,
-    required RxList<Borrowed> dataList,
-    String statusFilter = '',
-  }) async {
-    isLoading.value = true;
+  Future<void> fetchActivities() async {
+    isLoadingActivities.value = true;
     try {
-      // final activityService = ActivityService();
-      // var data = await activityService.getActivity(status: status);
+      final snapshot = await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        activitiesList.clear();
 
-      // ac.value = statusFilter != ''
-      //     ? data
-      //         .where(
-      //             (element) => element.statusName.toUpperCase() == statusFilter)
-      //         .toList()
-      //     : data;
+        data.forEach((activityId, activityData) {
+          activitiesList.add({
+            'id': activityId,
+            'user': activityData['user'],
+            'actionType': activityData['actionType'],
+            'itemType': activityData['itemType'],
+            'timestamp': activityData['timestamp'],
+            'itemData': activityData['itemData']
+          });
+        });
+      }
     } catch (e) {
-      log.e('Error fetching $status: $e');
+      Get.snackbar('Error', 'Failed to fetch activities data: $e');
     } finally {
-      isLoading.value = false;
+      isLoadingActivities.value = false;
     }
+  }
+
+  Future<void> fetchBorrowed() async {
+    isLoadingBorrowed.value = true;
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('history')
+          .doc('borrowed')
+          .get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        borrowedList.clear();
+
+        data.forEach((borrowedId, borrowedData) {
+          borrowedList.add({
+            'id': borrowedId,
+            'user': borrowedData['user'],
+            'actionType': borrowedData['actionType'],
+            'itemType': borrowedData['itemType'],
+            'timestamp': borrowedData['timestamp'],
+            'itemData': borrowedData['itemData']
+          });
+        });
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch borrowed data: $e');
+    } finally {
+      isLoadingBorrowed.value = false;
+    }
+  }
+
+  Future<void> onRefreshActivities() async {
+    await fetchActivities();
   }
 
   Future<void> onRefreshBorrowed() async {
-    await fetchActivity(
-      status: 'pinjaman',
-      isLoading: isLoadingBorrowed,
-      dataList: dataBorrowed,
-    );
-  }
-
-  Future<void> onRefreshHistory() async {
-    await fetchActivity(
-      status: 'riwayat',
-      isLoading: isLoadingHistory,
-      dataList: dataHistory,
-    );
+    await fetchBorrowed();
   }
 }
