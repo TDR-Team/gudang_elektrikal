@@ -88,6 +88,12 @@ TextStyle mediumText24 = GoogleFonts.poppins(
   color: AppColors.neutralColors[0],
 );
 
+TextStyle mediumText48 = GoogleFonts.poppins(
+  fontSize: 48.sp,
+  fontWeight: FontWeight.w500,
+  color: AppColors.neutralColors[0],
+);
+
 TextStyle semiBoldText8 = GoogleFonts.poppins(
   fontSize: 8.sp,
   fontWeight: FontWeight.w600,
@@ -190,6 +196,12 @@ TextStyle boldText24 = GoogleFonts.poppins(
 
 TextStyle boldText28 = GoogleFonts.poppins(
   fontSize: 28.sp,
+  color: AppColors.neutralColors[0],
+  fontWeight: FontWeight.w700,
+);
+
+TextStyle boldText36 = GoogleFonts.poppins(
+  fontSize: 36.sp,
   color: AppColors.neutralColors[0],
   fontWeight: FontWeight.w700,
 );
