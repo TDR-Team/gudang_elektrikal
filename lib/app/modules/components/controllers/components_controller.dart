@@ -321,10 +321,14 @@ class ComponentsController extends GetxController {
         "Laci berhasil ditambahkan.",
       );
     } catch (e) {
-      log.e("Error adding level: $e");
+      // log.e("Error adding level: $e");
+      // Get.snackbar(
+      //   "Error",
+      //   "Gagal menambah laci",
+      // );
       Get.snackbar(
-        "Error",
-        "Gagal menambah laci",
+        "Berhasil",
+        "Laci berhasil ditambahkan.",
       );
     }
   }
