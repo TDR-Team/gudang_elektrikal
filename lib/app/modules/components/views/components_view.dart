@@ -180,26 +180,14 @@ class ComponentsView extends GetView<ComponentsController> {
                     controller: controller,
                   );
                 } else {
-                  return Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
+                  return Stack(
                     children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          controller.addLevel();
-                        },
-                        label: const Text('Tambah Laci'),
-                        icon: const Icon(Icons.add),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Text(
-                              'Tidak ada level untuk rak ini.',
-                              style: semiBoldText20,
-                            ),
-                          ),
-                        ],
+                      _buildAddLevelButton(controller),
+                      Center(
+                        child: Text(
+                          'Tidak ada laci di rak ini.',
+                          style: semiBoldText20,
+                        ),
                       ),
                     ],
                   );
@@ -209,6 +197,29 @@ class ComponentsView extends GetView<ComponentsController> {
           ),
         ],
       ),
+    );
+  }
+
+  Row _buildAddLevelButton(ComponentsController controller) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll<Color>(
+              AppColors.secondaryColors[0],
+            ),
+            foregroundColor: WidgetStatePropertyAll<Color>(
+              AppColors.neutralColors[0],
+            ),
+          ),
+          onPressed: () {
+            controller.addLevel();
+          },
+          label: const Text('Tambah Laci'),
+          icon: const Icon(Icons.add),
+        ),
+      ],
     );
   }
 
@@ -311,13 +322,7 @@ class ComponentsView extends GetView<ComponentsController> {
       ),
       itemBuilder: (context, index) {
         if (index == 0) {
-          return TextButton.icon(
-            onPressed: () {
-              controller.addLevel();
-            },
-            label: const Text('Tambah Laci'),
-            icon: const Icon(Icons.add),
-          );
+          return _buildAddLevelButton(controller);
         }
 
         // For other levels
