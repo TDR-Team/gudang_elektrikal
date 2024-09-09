@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/list_components_view.dart';
 
 import '../../../utils/logging.dart';
-import '../../../widgets/custom_snackbar.dart';
 
 class GetComponentsController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
