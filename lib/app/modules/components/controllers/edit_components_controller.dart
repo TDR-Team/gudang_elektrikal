@@ -31,7 +31,7 @@ class EditComponentsController extends GetxController {
   RxString selectedLevel = ''.obs;
 
   final unitName = 'Pcs'.obs;
-  final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack'];
+  final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack', 'Roll'];
 
   // Reactive stock value
   RxInt stock = 0.obs;

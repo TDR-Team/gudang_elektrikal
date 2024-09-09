@@ -62,6 +62,23 @@ class ProfileView extends GetView<ProfileController> {
                                   decoration: BoxDecoration(
                                     color: kColorScheme.primary,
                                   ),
+                                  child: CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.white,
+
+                                    child: controller.profileImageUrl == null
+                                        ? Text(
+                                            controller.name != null &&
+                                                    controller.name!.isNotEmpty
+                                                ? controller.name![0]
+                                                    .toUpperCase()
+                                                : 'N', // Default to 'N' if name is empty
+                                            style: mediumText48.copyWith(
+                                              color: AppColors.primaryColors[0],
+                                            ),
+                                          )
+                                        : null, // If profile image exists, do not show text
+                                  ),
                                 ),
                                 const SizedBox(height: 20),
                                 Padding(
@@ -117,22 +134,7 @@ class ProfileView extends GetView<ProfileController> {
                                       Divider(
                                         color: Colors.grey.withOpacity(0.3),
                                       ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        'Nomor Hp',
-                                        style: regularText12.copyWith(
-                                          color: Colors.black.withOpacity(0.7),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        controller.phone != null
-                                            ? '0${controller.phone.toString()}'
-                                            : 'Belum mengisi Nomor HP',
-                                        // 'Belum mengisi Nomor Hp',
-                                        style: mediumText16,
-                                      ),
-                                      const SizedBox(height: 10),
+
                                       // Divider(
                                       //   color: Colors.grey.withOpacity(0.3),
                                       // ),

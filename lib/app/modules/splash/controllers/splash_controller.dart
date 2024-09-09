@@ -1,23 +1,27 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class SplashController extends GetxController {
-  //TODO: Implement SplashController
-
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    startTimer();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  void startTimer() {
+    User? user = FirebaseAuth.instance.currentUser;
 
-  @override
-  void onClose() {
-    super.onClose();
+    Timer(
+      const Duration(seconds: 3),
+      () async {
+        if (user != null) {
+          Get.offAllNamed('/dashboard');
+        } else {
+          Get.offAllNamed('/login');
+        }
+      },
+    );
   }
-
-  void increment() => count.value++;
 }

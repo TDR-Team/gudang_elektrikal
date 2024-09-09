@@ -30,7 +30,7 @@ class AddComponentsController extends GetxController {
   RxString selectedLevel = ''.obs;
 
   final unitName = 'Pcs'.obs;
-  final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack'];
+  final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack', 'Roll'];
 
   void onChangedRackName(String? value) {
     unitName.value = value ?? "";

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import '../common/styles/colors.dart';
 
 void showImagePickerBottomSheet({
@@ -16,17 +18,34 @@ void showImagePickerBottomSheet({
     builder: (context) {
       return SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.only(
+            left: 24,
+            right: 24,
+            bottom: 24,
+            top: 8,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 80.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: AppColors.neutralColors[3],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
               Text(
                 'Ambil Foto atau Gambar',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: kColorScheme.primary,
-                  fontWeight: FontWeight.bold,
+                style: boldText14.copyWith(
+                  color: AppColors.primaryColors[0],
                 ),
               ),
               const SizedBox(
@@ -48,7 +67,9 @@ void showImagePickerBottomSheet({
                   child: const Text(
                     'Kamera',
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w500),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

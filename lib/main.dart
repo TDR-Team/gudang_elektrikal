@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/network/injection/network_injection.dart';
 import 'package:gudang_elektrikal/firebase_options.dart';
 import 'app/routes/app_pages.dart';
 
@@ -11,6 +12,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
+  NetworkInjection.init();
 }
 
 class MyApp extends StatelessWidget {
