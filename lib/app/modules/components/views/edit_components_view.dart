@@ -55,12 +55,12 @@ class EditComponentsView extends GetView<EditComponentsController> {
                 const SizedBox(height: 20),
                 CustomTextField(
                   label: 'Nama Komponen',
-                  controller: controller.nameComponent,
+                  controller: controller.nameController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
                   label: 'Deskripsi',
-                  controller: controller.descriptionComponent,
+                  controller: controller.descriptionController,
                   textInputType: TextInputType.multiline,
                   maxLines: 4,
                   maxLength: 100,

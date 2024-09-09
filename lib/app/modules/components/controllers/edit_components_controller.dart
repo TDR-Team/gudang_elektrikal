@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,8 +20,8 @@ class EditComponentsController extends GetxController {
   final String componentId =
       Get.arguments['componentId']; // Get the component ID
 
-  TextEditingController nameComponent = TextEditingController();
-  TextEditingController descriptionComponent = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   TextEditingController stockController = TextEditingController();
   FocusNode stockFocusNode = FocusNode();
   RxBool isLoadingImage = false.obs;
@@ -29,6 +30,8 @@ class EditComponentsController extends GetxController {
   Rx<String?> networkImage = RxNullable<String?>().setNull();
   RxString selectedRack = ''.obs;
   RxString selectedLevel = ''.obs;
+
+  String? userName;
 
   final unitName = 'Pcs'.obs;
   final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack', 'Roll'];
@@ -39,9 +42,10 @@ class EditComponentsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getUserData();
 
-    nameComponent.text = component['name'] ?? '';
-    descriptionComponent.text = component['description'] ?? '';
+    nameController.text = component['name'] ?? '';
+    descriptionController.text = component['description'] ?? '';
     stockController.text = component['stock'].toString();
     networkImage.value = component['imgUrl'];
     unitName.value = component['unit'] ?? 'Pcs';
@@ -73,8 +77,8 @@ class EditComponentsController extends GetxController {
 
   @override
   void onClose() {
-    nameComponent.dispose();
-    descriptionComponent.dispose();
+    nameController.dispose();
+    descriptionController.dispose();
     stockController.dispose();
     stockFocusNode.dispose();
     super.onClose();
@@ -153,18 +157,20 @@ class EditComponentsController extends GetxController {
       }
 
       // Create component data
-      Map<String, dynamic> componentData = {
-        'id': componentId,
-        'name': nameComponent.text,
-        'description': descriptionComponent.text,
-        'stock': stock.value,
-        'unit': unitName.value,
-        'imgUrl': imageUrl ??
-            networkImage.value, // Include existing imageUrl if no new image
+      Map<String, dynamic> componentsData = {
+        levelName: {
+          'id': componentId,
+          'name': nameController.text,
+          'description': descriptionController.text,
+          'stock': stock.value,
+          'unit': unitName.value,
+          'imgUrl': imageUrl ?? networkImage.value,
+          'updatedAt': FieldValue.serverTimestamp(),
+        }
       };
 
       // Validation checks
-      if (nameComponent.text.isEmpty) {
+      if (nameController.text.isEmpty) {
         isLoadingAddComponent.value = false;
         const CustomSnackbar(
           success: false,
@@ -192,7 +198,8 @@ class EditComponentsController extends GetxController {
         return;
       }
 
-      await _addOrUpdateComponent(componentData);
+      await _updateComponentsToRack(componentsData);
+      await _logHistoryActivity(componentsData);
       Get.back();
 
       const CustomSnackbar(
@@ -227,22 +234,77 @@ class EditComponentsController extends GetxController {
     }
   }
 
-  Future<void> _addOrUpdateComponent(Map<String, dynamic> componentData) async {
+  Future<void> _updateComponentsToRack(
+      Map<String, dynamic> componentsData) async {
     try {
       // Reference to the specific rack document
-      DocumentReference rackDocRef =
+      DocumentReference rackRef =
           FirebaseFirestore.instance.collection('components').doc(rackName);
 
-      // The data to update or add
-      Map<String, dynamic> levelData = {
-        levelName: {componentId: componentData}
-      };
-
-      // Update or add component data within the document
-      await rackDocRef.set(levelData, SetOptions(merge: true));
+      await rackRef.set(componentsData, SetOptions(merge: true));
     } catch (e) {
       log.e('Error adding/updating component: $e');
       throw Exception('Failed to add/update component');
+    }
+  }
+
+  Future<void> _getUserData() async {
+    try {
+      update();
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        update();
+
+        // Convert DocumentSnapshot to Map<String, dynamic>
+        Map<String, dynamic> data =
+            userData.data() as Map<String, dynamic>? ?? {};
+
+        // Check if the document exists
+        if (userData.exists) {
+          userName = data['name'] ?? '';
+          update();
+        } else {
+          // Handle case where document does not exist
+          userName = '';
+          update();
+        }
+      }
+      update();
+    } catch (e) {
+      print('Error getting profile data: $e');
+    } finally {
+      update();
+    }
+  }
+
+  Future<void> _logHistoryActivity(
+    Map<String, dynamic> componentsData,
+  ) async {
+    try {
+      final activityId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .set({
+        activityId: {
+          'user': userName,
+          'itemType': "components",
+          'racks': rackName,
+          'level': levelName,
+          'actionType': "edit",
+          'itemData': componentsData,
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
     }
   }
 }
