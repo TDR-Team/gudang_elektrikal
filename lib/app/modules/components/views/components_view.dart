@@ -289,7 +289,6 @@ class ComponentsView extends GetView<ComponentsController> {
                 Get.snackbar('Error', 'Nomor rak tidak boleh kosong.');
                 return;
               }
-              String newRackName = 'Rak $newRackNumber';
               controller.onEditRack(currentRackName, newRackNumber);
               Navigator.pop(Get.context!);
             },

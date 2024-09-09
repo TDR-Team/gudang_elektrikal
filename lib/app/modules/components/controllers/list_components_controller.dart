@@ -74,6 +74,7 @@ class ListComponentsController extends GetxController {
           };
         }).toList();
 
+        // ignore: invalid_use_of_protected_member
         filteredComponents.value = components.value;
       } else {
         components.value = [];
