@@ -159,13 +159,14 @@ class EditComponentsController extends GetxController {
       // Create component data
       Map<String, dynamic> componentsData = {
         levelName: {
-          'id': componentId,
-          'name': nameController.text,
-          'description': descriptionController.text,
-          'stock': stock.value,
-          'unit': unitName.value,
-          'imgUrl': imageUrl ?? networkImage.value,
-          'updatedAt': FieldValue.serverTimestamp(),
+          componentId: {
+            'name': nameController.text,
+            'description': descriptionController.text,
+            'stock': stock.value,
+            'unit': unitName.value,
+            'imgUrl': imageUrl ?? networkImage.value,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }
         }
       };
 
