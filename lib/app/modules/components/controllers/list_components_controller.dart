@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
+import 'package:uuid/uuid.dart';
 import '../../../utils/logging.dart';
 import '../../../widgets/custom_snackbar.dart';
 
@@ -10,6 +12,9 @@ class ListComponentsController extends GetxController {
   final String levelName = Get.arguments['levelName'];
   final String rackName = Get.arguments['rackName'];
   final bool isGetComponent = Get.arguments['isGetComponent'] ?? false;
+
+  TextEditingController stockController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
 
   RxBool isLoading = true.obs;
   RxList<Map<String, dynamic>> components = <Map<String, dynamic>>[].obs;
@@ -19,12 +24,12 @@ class ListComponentsController extends GetxController {
   FocusNode stockFocusNode = FocusNode();
   RxInt stock = 1.obs;
 
-  TextEditingController stockController = TextEditingController();
-  TextEditingController searchController = TextEditingController();
+  String? userName;
 
   @override
   void onInit() {
     super.onInit();
+    _getUserData();
     fetchComponents();
     FocusScope.of(Get.context!).requestFocus(FocusNode());
     stockController.text = '1';
@@ -106,12 +111,25 @@ class ListComponentsController extends GetxController {
   }
 
   Future<void> onDeleteComponentClicked(
-      String componentId, bool isGetComponent) async {
+      String componentsId, bool isGetComponent) async {
     try {
-      DocumentReference rackDocRef =
+      final componentsDoc = await FirebaseFirestore.instance
+          .collection('tools')
+          .doc(rackName)
+          .get();
+      final componentsMap = componentsDoc.data();
+      final componentsData =
+          componentsMap?[componentsId] as Map<String, dynamic>? ?? {};
+      DocumentReference rackRef =
           FirebaseFirestore.instance.collection('components').doc(rackName);
 
-      await rackDocRef.update({'$levelName.$componentId': FieldValue.delete()});
+      await rackRef.update({'$levelName.$componentsId': FieldValue.delete()});
+
+      final logData = {
+        componentsId: componentsData,
+      };
+
+      await _logHistoryActivity(logData);
 
       Get.back();
       CustomSnackbar(
@@ -268,5 +286,71 @@ class ListComponentsController extends GetxController {
       searchController.clear();
       await fetchComponents();
     });
+  }
+
+  Future<void> _getUserData() async {
+    try {
+      update();
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        update();
+
+        // Convert DocumentSnapshot to Map<String, dynamic>
+        Map<String, dynamic> data =
+            userData.data() as Map<String, dynamic>? ?? {};
+
+        // Check if the document exists
+        if (userData.exists) {
+          userName = data['name'] ?? '';
+          update();
+        } else {
+          // Handle case where document does not exist
+          userName = '';
+          update();
+        }
+      }
+      update();
+    } catch (e) {
+      print('Error getting profile data: $e');
+    } finally {
+      update();
+    }
+  }
+
+  Future<void> _logHistoryActivity(
+    Map<String, dynamic> componentsData,
+  ) async {
+    try {
+      final activityId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .set({
+        activityId: {
+          'user': userName,
+          'itemType': "components",
+          'actionType': "delete",
+          'itemData': componentsData,
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
+    }
+  }
+
+  void onUnderDev() {
+    const CustomSnackbar(
+      success: false,
+      title: 'Mohon maaf',
+      message: 'Fitur ini sedang dalam pengembangan',
+    ).showSnackbar();
   }
 }
