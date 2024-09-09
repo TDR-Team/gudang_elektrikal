@@ -200,8 +200,8 @@ class EditComponentsController extends GetxController {
 
       await _updateComponentsToRack(componentsData);
       await _logHistoryActivity(componentsData);
-      Get.back();
 
+      Get.back();
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
