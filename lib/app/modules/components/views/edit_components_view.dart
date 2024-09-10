@@ -169,7 +169,7 @@ class EditComponentsView extends GetView<EditComponentsController> {
               onPressed: () async {
                 await controller.onEditComponentClicked();
               },
-              text: 'Ubah',
+              text: 'Simpan',
               buttonStyle: primary300Button.copyWith(
                 padding: const WidgetStatePropertyAll(
                   EdgeInsets.only(left: 16),

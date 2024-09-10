@@ -24,7 +24,7 @@ class EditToolsView extends GetView<EditToolsController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Komponen'),
+        title: const Text('Edit Alat'),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -136,7 +136,7 @@ class EditToolsView extends GetView<EditToolsController> {
             onPressed: () async {
               await controller.onEditToolsClicked();
             },
-            text: 'Edit',
+            text: 'Simpan',
             buttonStyle: primary300Button.copyWith(
               overlayColor: WidgetStateProperty.all<Color>(
                 const Color.fromARGB(255, 13, 97, 128),
