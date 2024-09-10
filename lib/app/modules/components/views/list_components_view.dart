@@ -150,10 +150,62 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                   .onEditComponentClicked(component['id']);
                             },
                             onTapDelete: () {
-                              controller.onDeleteComponentClicked(
-                                component['id'],
-                                !controller.isGetComponent,
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Apakah anda yakin?',
+                                      style: semiBoldText16,
+                                    ),
+                                    content: Text(
+                                      'Komponen ini akan dihapus',
+                                      style: regularText12,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          controller.onDeleteComponentClicked(
+                                            component['id'],
+                                            !controller.isGetComponent,
+                                          );
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 8,
+                                            horizontal: 16,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            border: Border.all(
+                                              color: kColorScheme.error,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Hapus',
+                                            style: semiBoldText12.copyWith(
+                                              color: kColorScheme.error,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: Text(
+                                          'Kembali',
+                                          style: semiBoldText12,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
+                              // controller.onDeleteComponentClicked(
+                              //   component['id'],
+                              //   !controller.isGetComponent,
+                              // );
                             },
                           );
                   },
