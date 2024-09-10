@@ -42,16 +42,28 @@ class HistoryController extends GetxController
         final data = snapshot.data()!;
         activitiesList.clear();
 
-        data.forEach((activityId, activityData) {
-          activitiesList.add({
-            'id': activityId,
-            'user': activityData['user'],
-            'actionType': activityData['actionType'],
-            'itemType': activityData['itemType'],
-            'timestamp': activityData['timestamp'],
-            'itemData': activityData['itemData']
-          });
+        // Convert data map to a list and sort it by timestamp
+        final sortedActivities = data.entries.map((entry) {
+          return {
+            'id': entry.key,
+            'user': entry.value['user'],
+            'actionType': entry.value['actionType'],
+            'itemType': entry.value['itemType'],
+            'timestamp': entry.value['timestamp'],
+            'itemData': entry.value['itemData'],
+          };
+        }).toList();
+
+        sortedActivities.sort((a, b) {
+          final timestampA =
+              (a['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now();
+          final timestampB =
+              (b['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now();
+          return timestampB
+              .compareTo(timestampA); // Sort descending by timestamp
         });
+
+        activitiesList.addAll(sortedActivities);
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch activities data: $e');
