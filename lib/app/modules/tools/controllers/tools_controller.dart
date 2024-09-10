@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/add_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/edit_tools_view.dart';
@@ -14,6 +14,7 @@ class ToolsController extends GetxController {
   RxBool isLoading = true.obs;
   RxMap<String, List<Map<String, dynamic>>> categorizedTools =
       <String, List<Map<String, dynamic>>>{}.obs;
+  Map<String, List<Map<String, dynamic>>> toolsData = {};
 
   String? userName;
 
@@ -22,6 +23,8 @@ class ToolsController extends GetxController {
     super.onInit();
     _getUserData();
     fetchTools();
+    searchController.clear();
+    searchController.addListener(_onSearchChanged);
   }
 
   Future<void> fetchTools() async {
@@ -29,8 +32,6 @@ class ToolsController extends GetxController {
     try {
       final QuerySnapshot categorySnapshot =
           await FirebaseFirestore.instance.collection('tools').get();
-
-      Map<String, List<Map<String, dynamic>>> toolsData = {};
 
       for (var categoryDoc in categorySnapshot.docs) {
         String categoryName = categoryDoc.id;
@@ -58,6 +59,30 @@ class ToolsController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void _onSearchChanged() {
+    final query = searchController.text.toLowerCase();
+
+    if (query.isEmpty) {
+      categorizedTools.value = toolsData;
+      return;
+    }
+
+    final filteredTools = <String, List<Map<String, dynamic>>>{};
+
+    toolsData.forEach((categoryName, toolsList) {
+      final matchingTools = toolsList.where((tool) {
+        final toolName = tool['name'].toString().toLowerCase();
+        return toolName.contains(query);
+      }).toList();
+
+      if (matchingTools.isNotEmpty) {
+        filteredTools[categoryName] = matchingTools;
+      }
+    });
+
+    categorizedTools.value = filteredTools;
   }
 
   void onAddToolsClicked() {
