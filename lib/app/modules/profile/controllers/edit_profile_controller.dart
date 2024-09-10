@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileController extends GetxController {
@@ -127,12 +128,20 @@ class EditProfileController extends GetxController {
       // Get.offAll(const BottomNavBarView(index: 1))!
       //     .then((value) => getUserData());
       Get.back();
-      Get.snackbar('Berhasil', 'Berhasil mengubah profil');
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Profil berhasil disimpan.',
+      ).showSnackbar();
 
       update();
       // }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to save user data');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Profil gagal disimpan.',
+      ).showSnackbar();
       print('errrrorr $e');
     } finally {
       isLoadingSaveEdit = false;
