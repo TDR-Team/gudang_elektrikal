@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/common/helpers/custom_timeago.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_job_horizontal.dart';
@@ -404,6 +405,7 @@ class HistoryView extends GetView<HistoryController> {
   }
 
   String formatTimestamp(Timestamp timestamp) {
-    return timeago.format(timestamp.toDate(), locale: 'en_short');
+    timeago.setLocaleMessages('id', CustomIdMessages());
+    return timeago.format(timestamp.toDate(), locale: 'id');
   }
 }
