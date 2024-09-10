@@ -22,7 +22,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => AddComponentsController());
     final controller = Get.find<AddComponentsController>();
-    controller.setRackAndLevel(); // Set the rack and level
+    controller.setRackAndLevel(); 
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -56,32 +56,6 @@ class AddComponentsView extends GetView<AddComponentsController> {
                       imageFileController: controller.imageFileController.value,
                       networkImage: controller.networkImage.value,
                       onPickImage: controller.onPickImage,
-        
-                  ),
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  label: 'Nama Komponen',
-                  controller: controller.nameController,
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  label: 'Deskripsi',
-                  controller: controller.descriptionController,
-                  textInputType: TextInputType.multiline,
-                  maxLines: 4,
-                  maxLength: 100,
-                  isRequired: false,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        'Stok',
-                        style: semiBoldText16,
-                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
