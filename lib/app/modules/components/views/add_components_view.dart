@@ -22,7 +22,7 @@ class AddComponentsView extends GetView<AddComponentsController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => AddComponentsController());
     final controller = Get.find<AddComponentsController>();
-    controller.setRackAndLevel(); // Set the rack and level
+    controller.setRackAndLevel(); 
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

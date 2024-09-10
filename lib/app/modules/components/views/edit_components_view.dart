@@ -21,7 +21,7 @@ class EditComponentsView extends GetView<EditComponentsController> {
     Get.lazyPut(() => EditComponentsController());
 
     final controller = Get.find<EditComponentsController>();
-    controller.setRackAndLevel(); // Set the rack and level
+    controller.setRackAndLevel();
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
