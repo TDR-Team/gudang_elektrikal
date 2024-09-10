@@ -21,7 +21,7 @@ class CustomSearch extends StatelessWidget {
       ),
       onTap: onTap,
       child: TextField(
-        
+        autofocus: false,
         autocorrect: false,
         controller: searchController,
         cursorColor: AppColors.primaryColors[1],
