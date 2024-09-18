@@ -71,10 +71,11 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                   backgroundColor: kColorScheme.secondary,
                   elevation: 0,
-                  child: Icon(
-                    Icons.add_rounded,
-                    color: kColorScheme.onSecondary,
-                    size: 30.h,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/img_logoApp.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   onPressed: () {
                     _buildAddComponentsAndTools(context);

@@ -53,12 +53,10 @@ class HistoryView extends GetView<HistoryController> {
                             isLoading: controller.isLoadingActivities.value,
                             onRefreshActivities: controller.onRefreshActivities,
                           ),
-                          // _buildTabContentBorrowed(
-                          //   isLoading: controller.isLoadingBorrowed.value,
-                          //   isActive: true,
-                          //   listJob: controller.dataBorrowed,
-                          //   onRefreshActivity: controller.onRefreshBorrowed,
-                          // ),
+                          _buildTabContentBorrowed(
+                            isLoading: controller.isLoadingBorrowed.value,
+                            onRefreshBorrowed: controller.onRefreshBorrowed,
+                          ),
                         ],
                       ),
                     ),
@@ -219,6 +217,35 @@ class HistoryView extends GetView<HistoryController> {
                     ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTabContentBorrowed({
+    required bool isLoading,
+    required Future<void> Function() onRefreshBorrowed,
+  }) {
+    return RefreshIndicator(
+      onRefresh: onRefreshBorrowed,
+      child: Column(children: [
+        const SizedBox(height: 8.0),
+        Expanded(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/images/img_waiting.svg'),
+                Text(
+                  'Belum ada Pinjaman',
+                  style: boldText16.copyWith(
+                    color: kColorScheme.primary,
+                  ),
+                ),
+                const SizedBox(height: 150),
+              ],
+            ),
+          ),
+        ),
+      ]),
     );
   }
 

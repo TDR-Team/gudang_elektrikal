@@ -65,7 +65,7 @@ class GetComponentsController extends GetxController {
         });
 
         List<String> levels = levelsData.keys.toList();
-        levels.sort((a, b) => int.parse(b).compareTo(int.parse(a)));
+        levels.sort((a, b) => int.parse(a).compareTo(int.parse(b)));
 
         log.i("Fetched and Sorted Levels for $selectedRackName: $levels");
 
