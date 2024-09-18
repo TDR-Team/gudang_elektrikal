@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../common/styles/colors.dart';
 import '../../../common/theme/font.dart';
@@ -156,9 +157,20 @@ class ComponentsView extends GetView<ComponentsController> {
                 // Check if a rack is selected
                 if (controller.rackName.value.isEmpty) {
                   return Center(
-                    child: Text(
-                      'Pilih Rak untuk melihat level',
-                      style: semiBoldText20,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/shelf-stock.svg",
+                          width: MediaQuery.sizeOf(context).width / 1.5,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Pilih Rak untuk melihat level',
+                          style: semiBoldText20,
+                        ),
+                        const SizedBox(height: 80),
+                      ],
                     ),
                   );
                 }
