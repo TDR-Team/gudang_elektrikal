@@ -170,7 +170,7 @@ class ListComponentsController extends GetxController {
       } else {
         const CustomSnackbar(
           success: false,
-          title: 'Sudah Maximal',
+          title: 'Sudah Maksimal',
           message:
               'Tidak dapat mengambil komponen melebihi batas stok yang tersedia',
         ).showSnackbar();

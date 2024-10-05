@@ -12,8 +12,7 @@ class ComponentsView extends GetView<ComponentsController> {
 
   @override
   Widget build(BuildContext context) {
-    ComponentsController controller = Get.put(ComponentsController());
-
+    Get.lazyPut(() => ComponentsController());
     return Scaffold(
       backgroundColor: kColorScheme.surface,
       extendBodyBehindAppBar: true,

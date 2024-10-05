@@ -8,7 +8,7 @@ import 'package:gudang_elektrikal/app/utils/logging.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
 import 'package:uuid/uuid.dart';
 
-class ToolsController extends GetxController {
+class GetToolsController extends GetxController {
   TextEditingController stockController = TextEditingController();
   TextEditingController searchController = TextEditingController();
 
