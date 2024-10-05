@@ -3,23 +3,36 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
+import 'package:gudang_elektrikal/app/modules/tools/controllers/get_tools_controller.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_get_tools.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_tools.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 
 import '../../../common/theme/font.dart';
 import '../controllers/tools_controller.dart';
 
-class ToolsView extends GetView<ToolsController> {
-  const ToolsView({super.key});
+class GetToolsView extends GetView<GetToolsController> {
+  const GetToolsView({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => ToolsController());
+    Get.lazyPut(() => GetToolsController());
     return Scaffold(
       backgroundColor: kColorScheme.surface,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          padding: const EdgeInsets.all(16),
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 24.sp,
+            color: Colors.black,
+          ),
+        ),
         title: Text(
-          'Alat',
+          'Pinjam Alat',
           style: semiBoldText20,
         ),
         surfaceTintColor: Colors.transparent,
@@ -114,7 +127,7 @@ class ToolsView extends GetView<ToolsController> {
                         ),
                         SizedBox(height: 5.h),
                         ...toolsList.map((tools) {
-                          return CustomListTools(
+                          return CustomGetTools(
                             id: tools['id'],
                             name: tools['name'],
                             imgUrl: tools['imgUrl'] ??
@@ -124,14 +137,18 @@ class ToolsView extends GetView<ToolsController> {
                             stock: tools['stock'],
                             tStock: tools['tStock'],
                             isStatus: tools['stock'] != 0,
-                            onTapEdit: () {
-                              controller.onEditToolsClicked(
-                                  categoryName, tools['id']);
+                            onTapGetTools: () {
+                              controller.onGetToolsClicked(
+                                  controller.categorizedTools.toString(),
+                                  tools['id']);
                             },
-                            onTapDelete: () {
-                              controller.onDeleteToolsClicked(
-                                  categoryName, tools['id']);
+                            stockController: controller.stockController,
+                            stockFocusNode: controller.stockFocusNode,
+                            onIncrementButton: () {
+                              controller.increment(tools['id']);
                             },
+                            onDecrementButton: () =>
+                                controller.decrement(tools['id']),
                           );
                         }),
                         const SizedBox(height: 20),

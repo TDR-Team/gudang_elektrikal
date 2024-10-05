@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/history/views/history_view.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/get_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
@@ -150,7 +151,9 @@ class DashboardView extends GetView<DashboardController> {
                   InkWell(
                     borderRadius: BorderRadius.circular(20),
                     splashColor: Colors.blue,
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => const GetToolsView());
+                    },
                     child: Ink(
                       child: Row(
                         children: [
