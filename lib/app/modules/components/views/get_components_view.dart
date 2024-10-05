@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/get_components_controller.dart';
@@ -91,13 +92,23 @@ class GetComponentsView extends GetView<GetComponentsController> {
                 // Check if a rack is selected
                 if (controller.rackName.value.isEmpty) {
                   return Center(
-                    child: Text(
-                      'Pilih Rak untuk melihat level',
-                      style: semiBoldText20,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/shelf-stock.svg",
+                          width: MediaQuery.sizeOf(context).width / 1.5,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Pilih Rak untuk melihat level',
+                          style: semiBoldText20,
+                        ),
+                        const SizedBox(height: 80),
+                      ],
                     ),
                   );
                 }
-
                 // If levels are loading
                 if (controller.isLoadingLevels.value) {
                   return const Center(
