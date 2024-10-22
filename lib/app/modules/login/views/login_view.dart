@@ -7,6 +7,7 @@ import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/register/views/register_view.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
 
+import '../../../widgets/custom_elevated_button.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -63,7 +64,18 @@ class LoginView extends GetView<LoginController> {
                     onPressedIconPassword: controller.onPressedIconPassword,
                     // validator: validatorPassword,
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 4),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Forget your password?',
+                        style: mediumText12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   InkWell(
                     onTap: () => controller.onLoginClicked(),
                     child: Container(
@@ -90,7 +102,65 @@ class LoginView extends GetView<LoginController> {
                               ),
                             ),
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: AppColors.neutralColors[3],
+                          thickness: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          'or login with',
+                          style: regularText10,
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: AppColors.neutralColors[3],
+                          thickness: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomElevatedButton(
+                      onPressed: () {
+                        controller.signInWithGoogle();
+                      },
+                      text: 'with Google',
+                      textStyle: mediumText14,
+                      buttonStyle: ButtonStyle(
+                        elevation: const WidgetStatePropertyAll(0),
+                        shadowColor:
+                            const WidgetStatePropertyAll(Colors.transparent),
+                        padding: const WidgetStatePropertyAll(
+                          EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                        ),
+                        backgroundColor: const WidgetStatePropertyAll(
+                          Colors.white,
+                        ),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: AppColors.neutralColors[3],
+                            ),
+                          ),
+                        ),
+                      ),
+                      icon: SvgPicture.asset('assets/icons/ic_google.svg'),
+                    ),
+                  ),
                 ],
               ),
             ),
