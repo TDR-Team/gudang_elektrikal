@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/history/views/history_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/get_tools_view.dart';
