@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gudang_elektrikal/app/routes/app_pages.dart';
 import 'package:gudang_elektrikal/app/utils/validation_helpers.dart';
+
+import '../../../utils/logging.dart';
 
 class LoginController extends GetxController {
   User? user; // Firebase User object
@@ -135,5 +139,45 @@ class LoginController extends GetxController {
   void onPressedIconPassword() {
     isPasswordHide = !isPasswordHide;
     update();
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      await GoogleSignIn().signOut();
+
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      log.i('Profile ${userCredential.user}');
+      user = userCredential.user;
+
+      if (userCredential.user != null) {
+        Get.snackbar('Berhasil', 'Berhasil masuk dengan Google');
+        Get.offAllNamed<void>(Routes.DASHBOARD);
+      } else {
+        Get.snackbar('Gagal', 'Mohon coba lagi.');
+      }
+    } catch (e) {
+      log.e('Error $e');
+      Get.snackbar('Error', 'Error Sign In with Google!');
+    }
+  }
+
+  Future<void> signOutGoogle() async {
+    await FirebaseAuth.instance.signOut();
+    Get.snackbar('Keluar dari Akun', 'Berhasil keluar dari akun Google');
   }
 }
