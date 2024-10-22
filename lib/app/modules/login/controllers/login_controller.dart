@@ -1,10 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gudang_elektrikal/app/utils/validation_helpers.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gudang_elektrikal/app/common/helpers/error_message_firebase_helper.dart';
+import 'package:gudang_elektrikal/app/routes/app_pages.dart';
+
+import '../../../utils/logging.dart';
 
 class LoginController extends GetxController {
-  User? user; // Firebase User object
+  User? user;
   bool isLoading = false;
   bool isPasswordHide = true;
   bool formValid = false;
@@ -13,123 +18,93 @@ class LoginController extends GetxController {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String? errorCode; // Variable to hold Firebase error code
+  String? errorCode;
 
   @override
   void onInit() {
     super.onInit();
-    // Check if user is already signed in
     user = FirebaseAuth.instance.currentUser;
   }
 
-  LoginController() {
-    _addListeners();
-    update();
+  @override
+  void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.onClose();
   }
 
-  void _addListeners() {
-    _addControllerListener(
-      emailController,
-      ValidationHelpers.validateEmail,
-      correctEmail,
-    );
-    _addControllerListener(
-      passwordController,
-      (text) => ValidationHelpers.validatePassword(
-        value: text,
-        isRegister: false,
-      ),
-      correctPassword,
-    );
-  }
-
-  void _addControllerListener(
-    TextEditingController controller,
-    String? Function(String) validator,
-    bool correct,
-  ) {
-    controller.addListener(
-      () {
-        String? textValidate = validator(controller.text);
-        correct = textValidate == null;
-        formValid = _isFormValid();
-        print('formValid $formValid');
-        update();
-      },
-    );
-  }
-
-  bool _isFormValid() {
-    return correctEmail && correctPassword;
-  }
-
-  String getMessageFromErrorCode(String errorCode) {
-    switch (errorCode) {
-      case "ERROR_EMAIL_ALREADY_IN_USE":
-      case "account-exists-with-different-credential":
-      case "email-already-in-use":
-        return "Email already used. Go to login page.";
-      case "ERROR_WRONG_PASSWORD":
-      case "wrong-password":
-        return "Wrong email/password combination.";
-      case "ERROR_USER_NOT_FOUND":
-      case "user-not-found":
-        return "No user found with this email.";
-      case "ERROR_USER_DISABLED":
-      case "user-disabled":
-        return "User disabled.";
-      case "ERROR_TOO_MANY_REQUESTS":
-      case "operation-not-allowed":
-        return "Too many requests to log into this account.";
-      case "ERROR_OPERATION_NOT_ALLOWED":
-        return "Server error, please try again later.";
-      case "operation-not-allowed":
-        return "Server error, please try again later.";
-      case "channel-error":
-        return "Belum Mengisi";
-      case "invalid-email":
-        return "Email anda invalid";
-      case "invalid-credential":
-        return "Email atau Password anda salah";
-      default:
-        return "Gagal Masuk. Mohon coba lagi";
-    }
-  }
-
-  Future<void> onLoginClicked() async {
+  Future<void> signIn() async {
     try {
       isLoading = true;
       update();
 
-      // Perform Firebase sign in
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-
-      // Update local user object
       user = userCredential.user;
-
-      // Navigate to home or profile screen
-      Get.offAllNamed('/dashboard'); // Change '/home' to your desired route
-    } on FirebaseAuthException catch (e) {
-      errorCode = e.code; // Capture Firebase error code
-      print('errorrr : $errorCode');
-      String errorMessage = getMessageFromErrorCode(errorCode!);
+      Get.offAllNamed(Routes.DASHBOARD);
+    } on FirebaseAuthException catch (e, st) {
+      errorCode = e.code;
+      log.e('Error : $errorCode, location: $st');
+      String errorMessage =
+          ErrorMessageFirebaseHelper().getMessageFromErrorCode(errorCode!);
       Get.snackbar(
         'Terjadi Kesalahan',
         errorMessage,
       );
     } finally {
       isLoading = false;
-      update(); // Set isLoading to false when login process ends (success or error)
+      update();
     }
   }
 
-  bool isValid() {
-    return emailController.value.text.isNotEmpty &&
-        passwordController.value.text.isNotEmpty;
+  Future<void> signInWithGoogle() async {
+    try {
+      await GoogleSignIn().signOut();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+
+      user = FirebaseAuth.instance.currentUser;
+
+      await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
+        'name': user!.displayName,
+        'email': user!.email,
+      });
+
+      if (userCredential.user != null) {
+        Get.snackbar('Berhasil', 'Berhasil masuk dengan Google');
+        Get.offAllNamed(Routes.DASHBOARD);
+      } else {
+        Get.snackbar('Gagal', 'Mohon coba lagi.');
+      }
+      update();
+    } catch (e) {
+      log.e('Error $e');
+      Get.snackbar('Error', 'Error Sign In with Google!');
+    }
+  }
+
+  Future<void> signOutGoogle() async {
+    await FirebaseAuth.instance.signOut();
+    Get.snackbar('Keluar dari Akun', 'Berhasil keluar dari akun Google');
   }
 
   void onPressedIconPassword() {

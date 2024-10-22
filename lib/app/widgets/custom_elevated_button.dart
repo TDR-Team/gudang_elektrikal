@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gudang_elektrikal/app/common/styles/colors.dart';
-import 'package:gudang_elektrikal/app/common/theme/font.dart';
+
+import '../common/styles/colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -10,45 +9,42 @@ class CustomElevatedButton extends StatelessWidget {
   final ButtonStyle buttonStyle;
   final bool isLoading;
   final Color? progressColor;
+  final Widget? icon;
 
   const CustomElevatedButton({
     super.key,
     required this.onPressed,
     required this.text,
-    // this.textStyle = const TextStyle(
-    //   fontSize: 16,
-    //   fontWeight: FontWeight.w600,
-    //   color: Colors.white,
-    // ),
     this.textStyle,
     required this.buttonStyle,
     this.isLoading = false,
     this.progressColor = Colors.white,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    final theme = Theme.of(context);
+    return ElevatedButton.icon(
       onPressed: onPressed,
       style: buttonStyle,
-      child: Center(
-        child: isLoading
-            ? SizedBox(
-                width: 24.w,
-                height: 24.h,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  color: progressColor,
-                ),
-              )
-            : Text(
-                text,
-                style: textStyle ??
-                    semiBoldText16.copyWith(
-                      color: kColorScheme.surface,
-                    ),
+      icon: icon,
+      label: isLoading
+          ? SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: progressColor,
               ),
-      ),
+            )
+          : Text(
+              text,
+              style: textStyle ??
+                  theme.textTheme.titleLarge?.copyWith(
+                    color: AppColors.neutralColors[5],
+                  ),
+            ),
     );
   }
 }

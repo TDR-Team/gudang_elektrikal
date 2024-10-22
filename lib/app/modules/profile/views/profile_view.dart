@@ -30,11 +30,11 @@ class ProfileView extends GetView<ProfileController> {
           body: controller.isLoading
               ? Center(
                   child: CircularProgressIndicator(
-                    color: kColorScheme.surface,
+                    color: kColorScheme.primary,
                   ),
                 )
               : RefreshIndicator(
-                  color: kColorScheme.surface,
+                  color: kColorScheme.primary,
                   onRefresh: () async {
                     await controller.getUserData();
                   },
@@ -49,7 +49,7 @@ class ProfileView extends GetView<ProfileController> {
                         // backgroundColor: Colors.transparent,
                       ),
                       ListView(
-                          physics: const ClampingScrollPhysics(),
+                          // physics: const ClampingScrollPhysics(),
                           // shrinkWrap: true,
                           children: [
                             Column(
@@ -72,7 +72,7 @@ class ProfileView extends GetView<ProfileController> {
                                                     controller.name!.isNotEmpty
                                                 ? controller.name![0]
                                                     .toUpperCase()
-                                                : 'N', // Default to 'N' if name is empty
+                                                : 'N',
                                             style: mediumText48.copyWith(
                                               color: AppColors.primaryColors[0],
                                             ),
