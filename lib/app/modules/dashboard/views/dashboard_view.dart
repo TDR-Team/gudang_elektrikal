@@ -69,12 +69,18 @@ class DashboardView extends GetView<DashboardController> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  backgroundColor: kColorScheme.secondary,
+                  backgroundColor: Colors.amber,
                   elevation: 0,
-                  child: Icon(
-                    Icons.add_rounded,
-                    color: kColorScheme.onSecondary,
-                    size: 30.h,
+                  // child: Icon(
+                  //   Icons.,
+                  //   color: kColorScheme.onSecondary,
+                  //   size: 30.h,
+                  // ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/img_logoApp.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   onPressed: () {
                     _buildAddComponentsAndTools(context);
