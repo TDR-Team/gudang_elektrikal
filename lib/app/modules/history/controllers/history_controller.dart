@@ -75,25 +75,26 @@ class HistoryController extends GetxController
   Future<void> fetchBorrowed() async {
     isLoadingBorrowed.value = true;
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('history')
-          .doc('borrowed')
-          .get();
-      if (snapshot.exists) {
-        final data = snapshot.data()!;
-        borrowedList.clear();
+      borrowedList.add({});
+      // final snapshot = await FirebaseFirestore.instance
+      //     .collection('history')
+      //     .doc('borrowed')
+      //     .get();
+      // if (snapshot.exists) {
+      //   final data = snapshot.data()!;
+      //   borrowedList.clear();
 
-        data.forEach((borrowedId, borrowedData) {
-          borrowedList.add({
-            'id': borrowedId,
-            'user': borrowedData['user'],
-            'actionType': borrowedData['actionType'],
-            'itemType': borrowedData['itemType'],
-            'timestamp': borrowedData['timestamp'],
-            'itemData': borrowedData['itemData']
-          });
-        });
-      }
+      //   data.forEach((borrowedId, borrowedData) {
+      //     borrowedList.add({
+      //       'id': borrowedId,
+      //       'user': borrowedData['user'],
+      //       'actionType': borrowedData['actionType'],
+      //       'itemType': borrowedData['itemType'],
+      //       'timestamp': borrowedData['timestamp'],
+      //       'itemData': borrowedData['itemData']
+      //     });
+      //   });
+      // }
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch borrowed data: $e');
     } finally {

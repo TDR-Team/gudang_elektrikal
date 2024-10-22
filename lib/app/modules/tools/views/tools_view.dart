@@ -19,7 +19,7 @@ class ToolsView extends GetView<ToolsController> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
-          'Pinjam Alat',
+          'Alat',
           style: semiBoldText20,
         ),
         surfaceTintColor: Colors.transparent,

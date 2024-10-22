@@ -9,12 +9,18 @@ import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
 import 'package:uuid/uuid.dart';
 
 class ToolsController extends GetxController {
+  TextEditingController stockController = TextEditingController();
   TextEditingController searchController = TextEditingController();
 
   RxBool isLoading = true.obs;
   RxMap<String, List<Map<String, dynamic>>> categorizedTools =
       <String, List<Map<String, dynamic>>>{}.obs;
+  RxList<Map<String, dynamic>> tools = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> filteredTools = <Map<String, dynamic>>[].obs;
   Map<String, List<Map<String, dynamic>>> toolsData = {};
+
+  FocusNode stockFocusNode = FocusNode();
+  RxInt stock = 1.obs;
 
   String? userName;
 
@@ -23,8 +29,19 @@ class ToolsController extends GetxController {
     super.onInit();
     _getUserData();
     fetchTools();
+    FocusScope.of(Get.context!).requestFocus(FocusNode());
+    stockController.text = '1';
     searchController.clear();
     searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void onClose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    stockController.dispose();
+    stockFocusNode.dispose();
+    super.onClose();
   }
 
   Future<void> fetchTools() async {
@@ -46,6 +63,18 @@ class ToolsController extends GetxController {
             'stock': entry.value['stock'] ?? 0,
             'tStock': entry.value['tStock'] ?? 0,
             'imgUrl': entry.value['imgUrl'] ?? '',
+          };
+        }).toList();
+
+        tools.value = toolsMap.entries.map((entry) {
+          var toolsData = entry.value as Map<String, dynamic>;
+          return {
+            'id': entry.key,
+            'name': toolsData['name'] ?? 'No name',
+            'description': toolsData['description'] ?? '',
+            'stock': toolsData['stock'] ?? 0,
+            'tStock': toolsData['tStock'] ?? 0,
+            'imgUrl': toolsData['imgUrl'] ?? '',
           };
         }).toList();
 
@@ -154,6 +183,122 @@ class ToolsController extends GetxController {
         title: 'Gagal',
         message: 'Gagal Menghapus Alat',
       ).showSnackbar();
+    }
+  }
+
+  // GET TOOLS
+  void increment(String toolsId) {
+    // Find the selected tools based on toolsId
+    final selectedToolsIndex = tools.indexWhere(
+      (tools) => tools['id'] == toolsId,
+    );
+
+    if (selectedToolsIndex != -1) {
+      int currentStock = tools[selectedToolsIndex]['selectedStock'] ?? 1;
+      int availableStock = tools[selectedToolsIndex]['stock'];
+
+      if (currentStock < availableStock) {
+        tools[selectedToolsIndex]['selectedStock'] = currentStock + 1;
+        stockController.text =
+            tools[selectedToolsIndex]['selectedStock'].toString();
+      } else {
+        const CustomSnackbar(
+          success: false,
+          title: 'Sudah Maksimal',
+          message:
+              'Tidak dapat mengambil komponen melebihi batas stok yang tersedia',
+        ).showSnackbar();
+      }
+    }
+  }
+
+  void decrement(String toolsId) {
+    final selectedToolsIndex = tools.indexWhere(
+      (tools) => tools['id'] == toolsId,
+    );
+
+    if (selectedToolsIndex != -1) {
+      int currentStock = tools[selectedToolsIndex]['selectedStock'] ?? 1;
+
+      if (currentStock > 1) {
+        tools[selectedToolsIndex]['selectedStock'] = currentStock - 1;
+        stockController.text =
+            tools[selectedToolsIndex]['selectedStock'].toString();
+      }
+    }
+  }
+
+  void onGetToolsClicked(String categoryName, String toolsId) async {
+    try {
+      final selectedToolsIndex = tools.indexWhere(
+        (tool) => tool['id'] == toolsId,
+      );
+
+      if (selectedToolsIndex != -1) {
+        int selectedStock = tools[selectedToolsIndex]['selectedStock'] ?? 1;
+        int availableStock = tools[selectedToolsIndex]['stock'] ?? 0;
+
+        if (selectedStock > 0) {
+          int newStock = availableStock - selectedStock;
+
+          DocumentReference toolsRef =
+              FirebaseFirestore.instance.collection('tools').doc(categoryName);
+
+          if (newStock <= 0) {
+            await toolsRef.update({
+              '$categoryName.$toolsId': FieldValue.delete(),
+              '$categoryName.$toolsId.deleteAt': FieldValue.serverTimestamp(),
+            });
+
+            tools.removeAt(selectedToolsIndex);
+            filteredTools.removeWhere((tools) => tools['id'] == toolsId);
+
+            onDeleteToolsClicked(categoryName, toolsId);
+          }
+          if (newStock > 0) {
+            await toolsRef.update({
+              '$categoryName.$toolsId.stock': newStock,
+              '$categoryName.$toolsId.updateAt': FieldValue.serverTimestamp(),
+            });
+
+            tools[selectedToolsIndex]['stock'] = newStock;
+            tools[selectedToolsIndex]['selectedStock'] = 0;
+            filteredTools[selectedToolsIndex]['stock'] = newStock;
+            filteredTools[selectedToolsIndex]['selectedStock'] = 0;
+
+            Get.back();
+            const CustomSnackbar(
+              success: true,
+              title: 'Berhasil',
+              message: 'Komponen berhasil diambil.',
+            ).showSnackbar();
+          }
+
+          await fetchTools();
+        } else {
+          const CustomSnackbar(
+            success: false,
+            title: 'Gagal',
+            message: 'Stok yang diambil tidak valid.',
+          ).showSnackbar();
+          Get.back();
+        }
+      } else {
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Komponen tidak ditemukan.',
+        ).showSnackbar();
+        Get.back();
+      }
+    } catch (e) {
+      log.e('Error getting tools: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal mengambil komponen.',
+      ).showSnackbar();
+      Get.back();
     }
   }
 
