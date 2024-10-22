@@ -62,7 +62,9 @@ class RegisterView extends GetView<RegisterController> {
                     controller: controller.passwordController,
                     isPassword: true,
                     isPasswordHide: controller.isPasswordHide,
-                    onPressedIconPassword: controller.onPressedIconPassword,
+                    onPressedIconPassword: () {
+                      controller.onPressedIconPassword(isPassword: true);
+                    },
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
@@ -70,14 +72,16 @@ class RegisterView extends GetView<RegisterController> {
                     hintText: 'Masukkan ulang kata sandi',
                     controller: controller.confirmPasswordController,
                     isPassword: true,
-                    isPasswordHide: controller.isPasswordHide,
-                    onPressedIconPassword: controller.onPressedIconPassword,
+                    isPasswordHide: controller.isConfirmPasswordHide,
+                    onPressedIconPassword: () {
+                      controller.onPressedIconPassword(isPassword: false);
+                    },
                   ),
                   const SizedBox(height: 75),
                   InkWell(
                     onTap: () => controller.register(),
                     child: Container(
-                      height: 50,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       width: double.infinity,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
