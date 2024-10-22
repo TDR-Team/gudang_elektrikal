@@ -10,6 +10,7 @@ import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_job_horizontal.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../../data/model/borrowed.dart';
 import '../controllers/history_controller.dart';
 
 class HistoryView extends GetView<HistoryController> {
@@ -53,12 +54,13 @@ class HistoryView extends GetView<HistoryController> {
                             isLoading: controller.isLoadingActivities.value,
                             onRefreshActivities: controller.onRefreshActivities,
                           ),
-                          // _buildTabContentBorrowed(
-                          //   isLoading: controller.isLoadingBorrowed.value,
-                          //   isActive: true,
-                          //   listJob: controller.dataBorrowed,
-                          //   onRefreshActivity: controller.onRefreshBorrowed,
-                          // ),
+                          _buildTabContentBorrowed(
+                            isLoading: controller.isLoadingBorrowed.value,
+                            isActive: true,
+                            // listJob: controller.dataBorrowed,
+                            listJob: [],
+                            onRefreshActivity: controller.onRefreshBorrowed,
+                          ),
                         ],
                       ),
                     ),
@@ -222,161 +224,161 @@ class HistoryView extends GetView<HistoryController> {
     );
   }
 
-  // Widget _buildTabContentBorrowed({
-  //   required List<Borrowed> listJob,
-  //   required bool isLoading,
-  //   bool isActive = false,
-  //   bool isHistory = false,
-  //   String selectedStatus = '',
-  //   List<String?> listElementStatus = const [],
-  //   void Function(String? status)? onChangedStatus,
-  //   required Future<void> Function() onRefreshActivity,
-  // }) {
-  //   return RefreshIndicator(
-  //     onRefresh: onRefreshActivity,
-  //     child: Column(
-  //       children: [
-  //         const SizedBox(height: 8.0),
-  //         isLoading
-  //             ? Expanded(
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-  //                   child: SingleChildScrollView(
-  //                     child: Column(
-  //                         children: List.generate(
-  //                       5,
-  //                       (index) => Padding(
-  //                         padding: const EdgeInsets.all(8.0),
-  //                         child: ShimmerJobHorizontal(),
-  //                       ),
-  //                     )),
-  //                   ),
-  //                 ),
-  //               )
-  //             : listJob.isEmpty
-  //                 ? Expanded(
-  //                     child: Center(
-  //                       child: Column(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           SvgPicture.asset('assets/images/img_waiting.svg'),
-  //                           Text(
-  //                             'Belum ada Aktivitas',
-  //                             style: boldText16.copyWith(
-  //                               color: kColorScheme.primary,
-  //                             ),
-  //                           ),
-  //                           const SizedBox(height: 150),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   )
-  //                 : Expanded(
-  //                     child: ListView.separated(
-  //                       shrinkWrap: true,
-  //                       padding: const EdgeInsets.only(
-  //                         top: 8,
-  //                         left: 16,
-  //                         right: 16,
-  //                         bottom: 0,
-  //                       ),
-  //                       itemBuilder: (context, index) {
-  //                         return Column(
-  //                           mainAxisAlignment: MainAxisAlignment.end,
-  //                           children: [
-  //                             Row(
-  //                               mainAxisAlignment:
-  //                                   MainAxisAlignment.spaceBetween,
-  //                               children: [
-  //                                 Flexible(
-  //                                   flex: 2,
-  //                                   child: Container(
-  //                                     padding: const EdgeInsets.all(
-  //                                       15,
-  //                                     ),
-  //                                     margin:
-  //                                         const EdgeInsets.only(right: 10.0),
-  //                                     decoration: BoxDecoration(
-  //                                         color: Colors.red,
-  //                                         borderRadius:
-  //                                             BorderRadius.circular(10)),
-  //                                     child: const Icon(
-  //                                       Icons.troubleshoot,
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 Flexible(
-  //                                   flex: 5,
-  //                                   child: Container(
-  //                                     margin: const EdgeInsets.only(right: 7.0),
-  //                                     child: Column(
-  //                                       crossAxisAlignment:
-  //                                           CrossAxisAlignment.start,
-  //                                       children: [
-  //                                         Text(
-  //                                           'Pinjam Tools',
-  //                                           style: semiBoldText14,
-  //                                         ),
-  //                                         // enih harusnya style di pisah buat nama dan keterangan
-  //                                         Text(
-  //                                           'Agus - meminjam Kunci 8',
-  //                                           style: regularText12.copyWith(
-  //                                               color: Colors.grey),
-  //                                         )
-  //                                       ],
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 Flexible(
-  //                                   flex: 3,
-  //                                   child: Column(
-  //                                     crossAxisAlignment:
-  //                                         CrossAxisAlignment.end,
-  //                                     children: [
-  //                                       Text(
-  //                                         '8 menit lalu',
-  //                                         style: regularText10,
-  //                                       ),
-  //                                       const SizedBox(height: 8.0),
-  //                                       InkWell(
-  //                                         onTap: () {},
-  //                                         borderRadius:
-  //                                             BorderRadius.circular(10),
-  //                                         child: Container(
-  //                                             padding:
-  //                                                 const EdgeInsets.symmetric(
-  //                                               vertical: 6,
-  //                                               horizontal: 12,
-  //                                             ),
-  //                                             decoration: BoxDecoration(
-  //                                               color: Colors.amber,
-  //                                               borderRadius:
-  //                                                   BorderRadius.circular(10),
-  //                                             ),
-  //                                             child: Text(
-  //                                               'Kembalikan',
-  //                                               style: mediumText12,
-  //                                             )),
-  //                                       ),
-  //                                     ],
-  //                                   ),
-  //                                 )
-  //                               ],
-  //                             ),
-  //                           ],
-  //                         );
-  //                       },
-  //                       separatorBuilder: (context, index) => Divider(
-  //                         indent: 50.w,
-  //                         height: 20.h,
-  //                       ),
-  //                       itemCount: 0,
-  //                     ),
-  //                   ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _buildTabContentBorrowed({
+    required List<Borrowed> listJob,
+    required bool isLoading,
+    bool isActive = false,
+    bool isHistory = false,
+    String selectedStatus = '',
+    List<String?> listElementStatus = const [],
+    void Function(String? status)? onChangedStatus,
+    required Future<void> Function() onRefreshActivity,
+  }) {
+    return RefreshIndicator(
+      onRefresh: onRefreshActivity,
+      child: Column(
+        children: [
+          const SizedBox(height: 8.0),
+          isLoading
+              ? Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                          children: List.generate(
+                        5,
+                        (index) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ShimmerJobHorizontal(),
+                        ),
+                      )),
+                    ),
+                  ),
+                )
+              : listJob.isEmpty
+                  ? Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset('assets/images/img_waiting.svg'),
+                            Text(
+                              'Belum ada Pinjaman',
+                              style: boldText16.copyWith(
+                                color: kColorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 150),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.only(
+                          top: 8,
+                          left: 16,
+                          right: 16,
+                          bottom: 0,
+                        ),
+                        itemBuilder: (context, index) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(
+                                        15,
+                                      ),
+                                      margin:
+                                          const EdgeInsets.only(right: 10.0),
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: const Icon(
+                                        Icons.troubleshoot,
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 5,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 7.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Pinjam Tools',
+                                            style: semiBoldText14,
+                                          ),
+                                          // enih harusnya style di pisah buat nama dan keterangan
+                                          Text(
+                                            'Agus - meminjam Kunci 8',
+                                            style: regularText12.copyWith(
+                                                color: Colors.grey),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 3,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '8 menit lalu',
+                                          style: regularText10,
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        InkWell(
+                                          onTap: () {},
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 6,
+                                                horizontal: 12,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.amber,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                'Kembalikan',
+                                                style: mediumText12,
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                        separatorBuilder: (context, index) => Divider(
+                          indent: 50.w,
+                          height: 20.h,
+                        ),
+                        itemCount: 0,
+                      ),
+                    ),
+        ],
+      ),
+    );
+  }
 
   String formatActionType(String actionType) {
     switch (actionType) {
