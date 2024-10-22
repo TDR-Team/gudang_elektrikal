@@ -5,8 +5,6 @@ import 'package:gudang_elektrikal/app/modules/components/controllers/edit_compon
 import 'package:gudang_elektrikal/app/modules/components/controllers/get_components_controller.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/list_components_controller.dart';
 
-import '../controllers/components_controller.dart';
-
 class ComponentsBinding extends Bindings {
   @override
   void dependencies() {
@@ -21,9 +19,6 @@ class ComponentsBinding extends Bindings {
     );
     Get.lazyPut<ListComponentsController>(
       () => ListComponentsController(),
-    );
-    Get.lazyPut<ComponentsController>(
-      () => ComponentsController(),
     );
   }
 }
