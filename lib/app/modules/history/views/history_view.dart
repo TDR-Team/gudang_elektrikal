@@ -80,6 +80,7 @@ class HistoryView extends GetView<HistoryController> {
   }) {
     return RefreshIndicator(
       onRefresh: onRefreshActivities,
+      color: kColorScheme.primary,
       child: Column(
         children: [
           const SizedBox(height: 8.0),
@@ -236,6 +237,7 @@ class HistoryView extends GetView<HistoryController> {
   }) {
     return RefreshIndicator(
       onRefresh: onRefreshActivity,
+      color: kColorScheme.primary,
       child: Column(
         children: [
           const SizedBox(height: 8.0),
