@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/login/views/forgot_password_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/bindings/tools_binding.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 
@@ -45,6 +46,11 @@ class AppPages {
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORGOT_PASSWORD,
+      page: () => const ForgotPasswordView(),
+      // binding: LoginBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE,
