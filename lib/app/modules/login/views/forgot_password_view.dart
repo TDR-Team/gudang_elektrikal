@@ -41,7 +41,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                   controller.sendPasswordResetLink(
                     email: controller.emailController.value.text,
                   );
-                  print('send password tap');
+                  print('send password tapd');
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
