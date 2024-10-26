@@ -18,6 +18,7 @@ class GetToolsController extends GetxController {
   RxList<Map<String, dynamic>> tools = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> filteredTools = <Map<String, dynamic>>[].obs;
   Map<String, List<Map<String, dynamic>>> toolsData = {};
+  List<Map<String, dynamic>> toolsList = [];
 
   FocusNode stockFocusNode = FocusNode();
   RxInt stock = 1.obs;
@@ -55,7 +56,7 @@ class GetToolsController extends GetxController {
 
         final toolsMap = categoryDoc.data() as Map<String, dynamic>;
 
-        List<Map<String, dynamic>> toolsList = toolsMap.entries.map((entry) {
+        toolsList = toolsMap.entries.map((entry) {
           return {
             'id': entry.key,
             'name': entry.value['name'] ?? 'No name',
@@ -63,20 +64,22 @@ class GetToolsController extends GetxController {
             'stock': entry.value['stock'] ?? 0,
             'tStock': entry.value['tStock'] ?? 0,
             'imgUrl': entry.value['imgUrl'] ?? '',
+            'selectedStock': 1,
           };
         }).toList();
 
-        tools.value = toolsMap.entries.map((entry) {
-          var toolsData = entry.value as Map<String, dynamic>;
-          return {
-            'id': entry.key,
-            'name': toolsData['name'] ?? 'No name',
-            'description': toolsData['description'] ?? '',
-            'stock': toolsData['stock'] ?? 0,
-            'tStock': toolsData['tStock'] ?? 0,
-            'imgUrl': toolsData['imgUrl'] ?? '',
-          };
-        }).toList();
+        // tools.value = toolsMap.entries.map((entry) {
+        //   var toolsData = entry.value as Map<String, dynamic>;
+        //   return {
+        //     'id': entry.key,
+        //     'name': toolsData['name'] ?? 'No name',
+        //     'description': toolsData['description'] ?? '',
+        //     'stock': toolsData['stock'] ?? 0,
+        //     'tStock': toolsData['tStock'] ?? 0,
+        //     'imgUrl': toolsData['imgUrl'] ?? '',
+        //     'selectedStock': 1,
+        //   };
+        // }).toList();
 
         toolsData[categoryName] = toolsList;
       }

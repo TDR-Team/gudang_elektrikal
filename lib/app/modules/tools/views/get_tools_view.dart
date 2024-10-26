@@ -5,11 +5,9 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/modules/tools/controllers/get_tools_controller.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_get_tools.dart';
-import 'package:gudang_elektrikal/app/widgets/custom_list_tools.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
 
 import '../../../common/theme/font.dart';
-import '../controllers/tools_controller.dart';
 
 class GetToolsView extends GetView<GetToolsController> {
   const GetToolsView({super.key});
@@ -117,7 +115,6 @@ class GetToolsView extends GetView<GetToolsController> {
                   children: controller.categorizedTools.entries.map((entry) {
                     String categoryName = entry.key;
                     List<Map<String, dynamic>> toolsList = entry.value;
-
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
