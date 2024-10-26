@@ -1,16 +1,14 @@
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/login/views/forgot_password_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/bindings/tools_binding.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 
-import '../modules/history/bindings/history_binding.dart';
 import '../modules/history/views/history_view.dart';
 import '../modules/components/bindings/components_binding.dart';
 import '../modules/components/views/components_view.dart';
 import '../modules/components/views/list_components_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
-import '../modules/home/bindings/home_binding.dart';
-import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -33,11 +31,6 @@ class AppPages {
 
   static final routes = [
     GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-    ),
-    GetPage(
       name: _Paths.REGISTER,
       page: () => const RegisterView(),
       binding: RegisterBinding(),
@@ -46,6 +39,11 @@ class AppPages {
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORGOT_PASSWORD,
+      page: () => const ForgotPasswordView(),
+      // binding: LoginBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE,
@@ -65,7 +63,7 @@ class AppPages {
     GetPage(
       name: _Paths.ACTIVITY,
       page: () => const HistoryView(),
-      binding: HistoryBinding(),
+      // binding: HistoryBinding(),
     ),
     GetPage(
       name: _Paths.COMPONENTS,

@@ -25,6 +25,14 @@ class EditProfileController extends GetxController {
     getUserData();
   }
 
+  @override
+  void onClose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.onClose();
+  }
+
   Future<void> getUserData() async {
     try {
       isLoading = true;
@@ -59,7 +67,7 @@ class EditProfileController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error getting profile data: $e');
+      debugPrint('Error getting profile data: $e');
       Get.snackbar('Error', 'Failed to fetch user data');
     } finally {
       isLoading = false;
@@ -142,7 +150,7 @@ class EditProfileController extends GetxController {
         title: 'Gagal',
         message: 'Profil gagal disimpan.',
       ).showSnackbar();
-      print('errrrorr $e');
+      debugPrint('errrrorr $e');
     } finally {
       isLoadingSaveEdit = false;
       update();

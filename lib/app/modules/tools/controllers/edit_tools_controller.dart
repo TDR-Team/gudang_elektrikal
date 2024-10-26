@@ -244,7 +244,7 @@ class EditToolsController extends GetxController {
       }
       update();
     } catch (e) {
-      print('Error getting profile data: $e');
+      debugPrint('Error getting profile data: $e');
     } finally {
       update();
     }

@@ -6,12 +6,14 @@ class CustomSnackbar extends StatelessWidget {
   final bool success;
   final String title;
   final String message;
+  final int? duration;
 
   const CustomSnackbar({
     super.key,
     required this.success,
     required this.title,
     required this.message,
+    this.duration,
   });
 
   @override
@@ -20,6 +22,9 @@ class CustomSnackbar extends StatelessWidget {
   }
 
   void showSnackbar() {
+    if (Get.isSnackbarOpen) {
+      Get.closeCurrentSnackbar();
+    }
     Get.showSnackbar(
       GetSnackBar(
         snackPosition: SnackPosition.TOP,
@@ -49,7 +54,7 @@ class CustomSnackbar extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: boldText16,
+                      style: boldText12,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -65,7 +70,7 @@ class CustomSnackbar extends StatelessWidget {
             ],
           ),
         ),
-        duration: const Duration(seconds: 3),
+        duration: Duration(seconds: duration ?? 3),
         barBlur: 2,
         backgroundColor: Colors.grey[200]!.withOpacity(0.4),
         snackStyle: SnackStyle.FLOATING,

@@ -109,6 +109,9 @@ class CustomTextField extends StatelessWidget {
           maxLength: maxLength,
           textAlign: textAlign!,
           focusNode: focusNode,
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           decoration: InputDecoration(
             hintText: hintText,
             border: OutlineInputBorder(

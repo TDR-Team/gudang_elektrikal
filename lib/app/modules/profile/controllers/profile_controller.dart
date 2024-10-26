@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
+import 'package:gudang_elektrikal/app/routes/app_pages.dart';
+import 'package:gudang_elektrikal/app/utils/logging.dart';
 
 class ProfileController extends GetxController {
   bool isLoading = false;
@@ -11,13 +12,12 @@ class ProfileController extends GetxController {
   String? name;
   String? email;
   int? phone;
-  String? profileImageUrl; // Add this line to store profile image URL
+  String? profileImageUrl;
 
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addPostFrameCallback((_) => getUserData());
-
     user = FirebaseAuth.instance.currentUser!;
     getUserData();
   }
@@ -34,53 +34,34 @@ class ProfileController extends GetxController {
       update();
 
       User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        DocumentSnapshot userData = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
 
-        update();
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
 
-        // Convert DocumentSnapshot to Map<String, dynamic>
-        Map<String, dynamic> data =
-            userData.data() as Map<String, dynamic>? ?? {};
+      Map<String, dynamic> data =
+          userData.data() as Map<String, dynamic>? ?? {};
 
-        // Check if the document exists
-        if (userData.exists) {
-          name = data['name'] ?? '';
-          email = user.email ?? '';
-          update();
+      if (userData.exists) {
+        name = data['name'] ?? '';
+        email = user.email ?? '';
 
-          // Check for phone number
-          if (data.containsKey('phone')) {
-            phone = data['phone'];
-          } else {
-            phone = null; // Handle case where 'phone' is not provided
-          }
-          update();
-
-          // Check for profile image URL
-          if (data.containsKey('photoUrl')) {
-            profileImageUrl = data['photoUrl'];
-          } else {
-            profileImageUrl =
-                null; // Handle case where 'photoUrl' is not provided
-          }
-          update();
+        if (data.containsKey('photoUrl')) {
+          profileImageUrl = data['photoUrl'];
         } else {
-          // Handle case where document does not exist
-          name = '';
-          email = '';
-          phone = null;
           profileImageUrl = null;
-          update();
         }
+        update();
+      } else {
+        name = '';
+        email = '';
+        phone = null;
+        profileImageUrl = null;
+        update();
       }
-      update();
-    } catch (e) {
-      print('Error getting profile data: $e');
-      // Handle error appropriately, e.g., show snackbar or log error
+    } catch (e, st) {
+      log.e('Error getting profile data: $e, location: $st');
     } finally {
       isLoading = false;
       update();
@@ -90,10 +71,9 @@ class ProfileController extends GetxController {
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
-      Get.offAll(const LoginView()); // Navigate to LoginView after sign out
-    } catch (e) {
-      // Handle sign-out errors
-      print('Error signing out: $e');
+      Get.offAllNamed<void>(Routes.LOGIN);
+    } catch (e, st) {
+      log.e('Error signing out: $e, location $st');
     }
   }
 
@@ -104,22 +84,17 @@ class ProfileController extends GetxController {
 
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Delete user document from Firestore
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .delete();
 
-        // Delete user from Firebase Authentication
         await user.delete();
-
-        // Sign out the user
-
-        Get.offAll(const LoginView());
+        Get.offAllNamed(Routes.LOGIN);
       }
-    } catch (e) {
-      print('Error deleting account: $e');
-      Get.snackbar('Error', 'Failed to delete account');
+    } catch (e, st) {
+      log.e('Error deleting account: $e, location: $st');
+      Get.snackbar('Error', 'Gagal menghapus Akun');
     } finally {
       isLoading = false;
       update();

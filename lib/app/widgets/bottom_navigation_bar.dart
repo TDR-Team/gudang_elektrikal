@@ -25,6 +25,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       unselectedItemColor: Colors.grey,
       showSelectedLabels: true,
       showUnselectedLabels: true,
+      unselectedLabelStyle: const TextStyle(overflow: TextOverflow.visible),
       items: [
         BottomNavigationBarItem(
           icon: Icon(
@@ -52,10 +53,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Visibility(
-            visible: false,
+            visible: true,
             child: Icon(
               Icons.chat_rounded,
               size: 24.h,
+              color: Colors.transparent,
             ),
           ),
           activeIcon: Visibility(
@@ -66,6 +68,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               color: kColorScheme.surface,
             ),
           ),
+          // label: 'Ambil Komponen & Pinjam Alat',
           label: '',
         ),
         BottomNavigationBarItem(
