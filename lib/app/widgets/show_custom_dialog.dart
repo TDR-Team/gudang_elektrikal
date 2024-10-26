@@ -188,7 +188,7 @@ Visibility _buildNegativeAndPositiveButton({
                 color: color,
                 width: 2,
               ),
-              color: kColorScheme.background,
+              color: kColorScheme.onPrimary,
             ),
             child: Text(
               falseButtonText,
@@ -215,7 +215,7 @@ Visibility _buildNegativeAndPositiveButton({
             child: Text(
               trueButtonText,
               style: semiBoldText14.copyWith(
-                color: kColorScheme.background,
+                color: kColorScheme.onPrimary,
               ),
             ),
           ),
