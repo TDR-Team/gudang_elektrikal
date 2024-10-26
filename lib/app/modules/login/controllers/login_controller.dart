@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gudang_elektrikal/app/common/helpers/error_message_firebase_helper.dart';
 import 'package:gudang_elektrikal/app/routes/app_pages.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
 
 import '../../../utils/logging.dart';
 
@@ -44,16 +45,25 @@ class LoginController extends GetxController {
         password: passwordController.text,
       );
       user = userCredential.user;
+
+      const CustomSnackbar(
+        success: true,
+        title: 'Selamat datang',
+        message: 'Mari mengatur komponen dan alat di Gudang Elektrikal!',
+        duration: 5,
+      ).showSnackbar();
       Get.offAllNamed(Routes.DASHBOARD);
     } on FirebaseAuthException catch (e, st) {
       errorCode = e.code;
       log.e('Error : $errorCode, location: $st');
       String errorMessage =
           ErrorMessageFirebaseHelper().getMessageFromErrorCode(errorCode!);
-      Get.snackbar(
-        'Terjadi Kesalahan',
-        errorMessage,
-      );
+
+      CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: errorMessage,
+      ).showSnackbar();
     } finally {
       isLoading = false;
       update();
@@ -90,21 +100,33 @@ class LoginController extends GetxController {
       });
 
       if (userCredential.user != null) {
-        Get.snackbar('Berhasil', 'Berhasil masuk dengan Google');
+        const CustomSnackbar(
+          success: true,
+          title: 'Selamat datang',
+          message: 'Mari mengatur komponen dan alat di Gudang Elektrikal!',
+          duration: 5,
+        ).showSnackbar();
         Get.offAllNamed(Routes.DASHBOARD);
       } else {
-        Get.snackbar('Gagal', 'Mohon coba lagi.');
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Mohon coba masuk kembali',
+        ).showSnackbar();
       }
       update();
     } catch (e) {
       log.e('Error $e');
-      Get.snackbar('Error', 'Error Sign In with Google!');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Mohon coba masuk kembali',
+      ).showSnackbar();
     }
   }
 
   Future<void> signOutGoogle() async {
     await FirebaseAuth.instance.signOut();
-    Get.snackbar('Keluar dari Akun', 'Berhasil keluar dari akun Google');
   }
 
   void onPressedIconPassword() {
