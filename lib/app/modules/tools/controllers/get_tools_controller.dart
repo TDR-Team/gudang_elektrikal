@@ -18,6 +18,7 @@ class GetToolsController extends GetxController {
   RxList<Map<String, dynamic>> tools = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> filteredTools = <Map<String, dynamic>>[].obs;
   Map<String, List<Map<String, dynamic>>> toolsData = {};
+  List<Map<String, dynamic>> toolsList = [];
 
   FocusNode stockFocusNode = FocusNode();
   RxInt stock = 1.obs;
@@ -55,7 +56,7 @@ class GetToolsController extends GetxController {
 
         final toolsMap = categoryDoc.data() as Map<String, dynamic>;
 
-        List<Map<String, dynamic>> toolsList = toolsMap.entries.map((entry) {
+        toolsList = toolsMap.entries.map((entry) {
           return {
             'id': entry.key,
             'name': entry.value['name'] ?? 'No name',
@@ -63,20 +64,22 @@ class GetToolsController extends GetxController {
             'stock': entry.value['stock'] ?? 0,
             'tStock': entry.value['tStock'] ?? 0,
             'imgUrl': entry.value['imgUrl'] ?? '',
+            'selectedStock': 1,
           };
         }).toList();
 
-        tools.value = toolsMap.entries.map((entry) {
-          var toolsData = entry.value as Map<String, dynamic>;
-          return {
-            'id': entry.key,
-            'name': toolsData['name'] ?? 'No name',
-            'description': toolsData['description'] ?? '',
-            'stock': toolsData['stock'] ?? 0,
-            'tStock': toolsData['tStock'] ?? 0,
-            'imgUrl': toolsData['imgUrl'] ?? '',
-          };
-        }).toList();
+        // tools.value = toolsMap.entries.map((entry) {
+        //   var toolsData = entry.value as Map<String, dynamic>;
+        //   return {
+        //     'id': entry.key,
+        //     'name': toolsData['name'] ?? 'No name',
+        //     'description': toolsData['description'] ?? '',
+        //     'stock': toolsData['stock'] ?? 0,
+        //     'tStock': toolsData['tStock'] ?? 0,
+        //     'imgUrl': toolsData['imgUrl'] ?? '',
+        //     'selectedStock': 1,
+        //   };
+        // }).toList();
 
         toolsData[categoryName] = toolsList;
       }
@@ -187,20 +190,21 @@ class GetToolsController extends GetxController {
   }
 
   // GET TOOLS
-  void increment(String toolsId) {
-    // Find the selected tools based on toolsId
-    final selectedToolsIndex = tools.indexWhere(
-      (tools) => tools['id'] == toolsId,
+  // Increment Function
+  void increment(String categoryName, String toolsId) {
+    // Cari item berdasarkan categoryName dan toolsId
+    final tool = categorizedTools[categoryName]?.firstWhere(
+      (tool) => tool['id'] == toolsId,
     );
 
-    if (selectedToolsIndex != -1) {
-      int currentStock = tools[selectedToolsIndex]['selectedStock'] ?? 1;
-      int availableStock = tools[selectedToolsIndex]['stock'];
+    if (tool != null) {
+      int currentStock = tool['selectedStock'] ?? 1;
+      int availableStock = tool['stock'] ?? 0;
 
       if (currentStock < availableStock) {
-        tools[selectedToolsIndex]['selectedStock'] = currentStock + 1;
-        stockController.text =
-            tools[selectedToolsIndex]['selectedStock'].toString();
+        tool['selectedStock'] = currentStock + 1;
+        stockController.text = tool['selectedStock'].toString();
+        categorizedTools.refresh(); // Refresh untuk memperbarui UI
       } else {
         const CustomSnackbar(
           success: false,
@@ -212,82 +216,96 @@ class GetToolsController extends GetxController {
     }
   }
 
-  void decrement(String toolsId) {
-    final selectedToolsIndex = tools.indexWhere(
-      (tools) => tools['id'] == toolsId,
+// Decrement Function
+  void decrement(String categoryName, String toolsId) {
+    final tool = categorizedTools[categoryName]?.firstWhere(
+      (tool) => tool['id'] == toolsId,
     );
 
-    if (selectedToolsIndex != -1) {
-      int currentStock = tools[selectedToolsIndex]['selectedStock'] ?? 1;
+    if (tool != null) {
+      int currentStock = tool['selectedStock'] ?? 1;
 
       if (currentStock > 1) {
-        tools[selectedToolsIndex]['selectedStock'] = currentStock - 1;
-        stockController.text =
-            tools[selectedToolsIndex]['selectedStock'].toString();
+        tool['selectedStock'] = currentStock - 1;
+        stockController.text = tool['selectedStock'].toString();
+        categorizedTools.refresh(); // Refresh untuk memperbarui UI
       }
     }
   }
 
   void onGetToolsClicked(String categoryName, String toolsId) async {
     try {
-      final selectedToolsIndex = tools.indexWhere(
+      if (!categorizedTools.containsKey(categoryName)) {
+        debugPrint('Category not found in categorizedTools');
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Kategori tidak ditemukan.',
+        ).showSnackbar();
+        return;
+      }
+
+      // Cari alat berdasarkan `toolsId`
+      final toolIndex = categorizedTools[categoryName]?.indexWhere(
         (tool) => tool['id'] == toolsId,
       );
 
-      if (selectedToolsIndex != -1) {
-        int selectedStock = tools[selectedToolsIndex]['selectedStock'] ?? 1;
-        int availableStock = tools[selectedToolsIndex]['stock'] ?? 0;
-
-        if (selectedStock > 0) {
-          int newStock = availableStock - selectedStock;
-
-          DocumentReference toolsRef =
-              FirebaseFirestore.instance.collection('tools').doc(categoryName);
-
-          if (newStock <= 0) {
-            await toolsRef.update({
-              '$categoryName.$toolsId': FieldValue.delete(),
-              '$categoryName.$toolsId.deleteAt': FieldValue.serverTimestamp(),
-            });
-
-            tools.removeAt(selectedToolsIndex);
-            filteredTools.removeWhere((tools) => tools['id'] == toolsId);
-
-            onDeleteToolsClicked(categoryName, toolsId);
-          }
-          if (newStock > 0) {
-            await toolsRef.update({
-              '$categoryName.$toolsId.stock': newStock,
-              '$categoryName.$toolsId.updateAt': FieldValue.serverTimestamp(),
-            });
-
-            tools[selectedToolsIndex]['stock'] = newStock;
-            tools[selectedToolsIndex]['selectedStock'] = 0;
-            filteredTools[selectedToolsIndex]['stock'] = newStock;
-            filteredTools[selectedToolsIndex]['selectedStock'] = 0;
-
-            Get.back();
-            const CustomSnackbar(
-              success: true,
-              title: 'Berhasil',
-              message: 'Komponen berhasil diambil.',
-            ).showSnackbar();
-          }
-
-          await fetchTools();
-        } else {
-          const CustomSnackbar(
-            success: false,
-            title: 'Gagal',
-            message: 'Stok yang diambil tidak valid.',
-          ).showSnackbar();
-          Get.back();
-        }
-      } else {
+      if (toolIndex == null || toolIndex == -1) {
+        debugPrint('Tool ID not found in the category tools');
         const CustomSnackbar(
           success: false,
           title: 'Gagal',
           message: 'Komponen tidak ditemukan.',
+        ).showSnackbar();
+        return;
+      }
+
+      final selectedTool = categorizedTools[categoryName]![toolIndex];
+      int selectedStock = selectedTool['selectedStock'] ?? 1;
+      int availableStock = selectedTool['stock'] ?? 0;
+
+      if (selectedStock > 0) {
+        int newStock = availableStock - selectedStock;
+
+        // Referensi ke dokumen di Firebase berdasarkan categoryName
+        DocumentReference toolsRef =
+            FirebaseFirestore.instance.collection('tools').doc(categoryName);
+
+        if (newStock <= 0) {
+          // Jika stok baru kurang dari atau sama dengan nol, hapus item dari Firebase
+          await toolsRef.update({
+            toolsId: FieldValue.delete(),
+            '$toolsId.deleteAt': FieldValue.serverTimestamp(),
+          });
+
+          // Hapus item dari daftar lokal
+          categorizedTools[categoryName]!.removeAt(toolIndex);
+        } else {
+          // Jika stok masih tersisa, perbarui stok di Firebase
+          await toolsRef.update({
+            '$toolsId.stock': newStock,
+            '$toolsId.updatedAt': FieldValue.serverTimestamp(),
+          });
+
+          // Perbarui stok di data lokal
+          categorizedTools[categoryName]![toolIndex]['stock'] = newStock;
+          categorizedTools[categoryName]![toolIndex]['selectedStock'] = 1;
+        }
+
+        // Refresh UI dan tampilkan pesan sukses
+        categorizedTools.refresh();
+        Get.back();
+        const CustomSnackbar(
+          success: true,
+          title: 'Berhasil',
+          message: 'Komponen berhasil diambil.',
+        ).showSnackbar();
+      } else {
+        // Tampilkan pesan jika stok tidak valid
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Stok yang diambil tidak valid.',
         ).showSnackbar();
         Get.back();
       }
