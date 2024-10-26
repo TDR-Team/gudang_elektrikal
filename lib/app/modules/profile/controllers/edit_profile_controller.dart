@@ -25,6 +25,14 @@ class EditProfileController extends GetxController {
     getUserData();
   }
 
+  @override
+  void onClose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.onClose();
+  }
+
   Future<void> getUserData() async {
     try {
       isLoading = true;

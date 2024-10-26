@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
@@ -8,6 +7,7 @@ import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
 
 class ForgotPasswordView extends GetView<ForgotPasswordController> {
   const ForgotPasswordView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ForgotPasswordController>(
@@ -36,31 +36,33 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
               ),
               const SizedBox(height: 40),
               InkWell(
-                onTap: () {
-                  controller.sendPasswordResetLink();
-                },
+                onTap: controller.isSendButtonDisabled
+                    ? null
+                    : () => controller.sendPasswordResetLink(),
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: kColorScheme.secondary,
+                    color: controller.isSendButtonDisabled
+                        ? Colors.grey
+                        : kColorScheme.secondary,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: controller.isLoading
                       ? const Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 3,
-                          ),
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
+                          padding: EdgeInsets.symmetric(vertical: 3),
+                          child: CircularProgressIndicator(color: Colors.white),
                         )
                       : Text(
-                          'Kirim',
+                          controller.timerSeconds > 0
+                              ? 'Kirim Ulang 00:${controller.timerSeconds}'
+                              : 'Kirim',
                           style: mediumText18.copyWith(
-                            color: Colors.black,
+                            color: controller.isSendButtonDisabled
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                 ),
