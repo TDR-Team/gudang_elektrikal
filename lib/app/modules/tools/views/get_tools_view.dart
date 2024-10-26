@@ -136,16 +136,15 @@ class GetToolsView extends GetView<GetToolsController> {
                             isStatus: tools['stock'] != 0,
                             onTapGetTools: () {
                               controller.onGetToolsClicked(
-                                  controller.categorizedTools.toString(),
-                                  tools['id']);
+                                  categoryName, tools['id']);
                             },
                             stockController: controller.stockController,
                             stockFocusNode: controller.stockFocusNode,
                             onIncrementButton: () {
-                              controller.increment(tools['id']);
+                              controller.increment(categoryName, tools['id']);
                             },
                             onDecrementButton: () =>
-                                controller.decrement(tools['id']),
+                                controller.decrement(categoryName, tools['id']),
                           );
                         }),
                         const SizedBox(height: 20),
