@@ -8,6 +8,7 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const REGISTER = _Paths.REGISTER;
   static const LOGIN = _Paths.LOGIN;
+  static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
   static const GET_COMPONENTS = _Paths.GET_COMPONENTS;
   static const PROFILE = _Paths.PROFILE;
   static const BORROW_TOOLS = _Paths.BORROW_TOOLS;
@@ -22,6 +23,7 @@ abstract class _Paths {
   static const HOME = '/home';
   static const REGISTER = '/register';
   static const LOGIN = '/login';
+  static const FORGOT_PASSWORD = '/forgot-password';
   static const GET_COMPONENTS = '/get-components';
   static const PROFILE = '/profile';
   static const EDIT_PROFILE = '/edit-profile';

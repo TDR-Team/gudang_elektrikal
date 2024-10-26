@@ -68,7 +68,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
               color: kColorScheme.surface,
             ),
           ),
-          label: 'Ambil Komponen & Pinjam Alat',
+          // label: 'Ambil Komponen & Pinjam Alat',
+          label: '',
         ),
         BottomNavigationBarItem(
           icon: Icon(

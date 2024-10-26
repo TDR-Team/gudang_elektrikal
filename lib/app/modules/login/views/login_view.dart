@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/register/views/register_view.dart';
+import 'package:gudang_elektrikal/app/routes/app_pages.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
 
 import '../../../widgets/custom_elevated_button.dart';
@@ -20,6 +20,7 @@ class LoginView extends GetView<LoginController> {
       builder: (controller) {
         return Scaffold(
           backgroundColor: Colors.white,
+          
           body: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -76,7 +77,9 @@ class LoginView extends GetView<LoginController> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(Routes.FORGOT_PASSWORD);
+                          },
                           child: Text(
                             'Lupa password?',
                             style: mediumText12,

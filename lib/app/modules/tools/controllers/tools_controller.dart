@@ -83,7 +83,7 @@ class ToolsController extends GetxController {
 
       categorizedTools.value = toolsData;
     } catch (e) {
-      print('Error fetching tools: $e');
+      debugPrint('Error fetching tools: $e');
       categorizedTools.value = {};
     } finally {
       isLoading.value = false;
@@ -177,7 +177,7 @@ class ToolsController extends GetxController {
       // Perbarui daftar alat
       await fetchTools();
     } catch (e) {
-      print('Error deleting tools: $e');
+      debugPrint('Error deleting tools: $e');
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
@@ -331,7 +331,7 @@ class ToolsController extends GetxController {
       }
       update();
     } catch (e) {
-      print('Error getting profile data: $e');
+      debugPrint('Error getting profile data: $e');
     } finally {
       update();
     }
