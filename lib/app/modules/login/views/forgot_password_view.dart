@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/login/controllers/forgot_password_controller.dart';
-import 'package:gudang_elektrikal/app/widgets/custom_app_bar.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
 
 class ForgotPasswordView extends GetView<ForgotPasswordController> {
@@ -38,10 +37,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
               const SizedBox(height: 40),
               InkWell(
                 onTap: () {
-                  controller.sendPasswordResetLink(
-                    email: controller.emailController.value.text,
-                  );
-                  print('send password tapd');
+                  controller.sendPasswordResetLink();
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
