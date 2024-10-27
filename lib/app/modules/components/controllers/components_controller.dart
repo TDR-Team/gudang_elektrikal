@@ -21,6 +21,14 @@ class ComponentsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchRackNames();
+    onChangedRackNames('Rak 1');
+  }
+
+  @override
+  void onClose() {
+    customLevelController.dispose();
+    customRackController.dispose();
+    super.onClose();
   }
 
   //RACK (RAK)
@@ -358,7 +366,7 @@ class ComponentsController extends GetxController {
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
-        message: 'Gagal menambah lac',
+        message: 'Gagal menambah laci',
       ).showSnackbar();
     }
   }
@@ -371,20 +379,19 @@ class ComponentsController extends GetxController {
 
       await rackDocRef.update({levelName: FieldValue.delete()});
 
-      Get.back();
-      const CustomSnackbar(
+      CustomSnackbar(
         success: true,
         title: 'Berhasil',
-        message: 'Laci Berhasil Dihapus',
+        message: 'Laci $levelName Berhasil Dihapus',
       ).showSnackbar();
 
       fetchLevelByRack(selectedRackName);
     } catch (e) {
       log.i('Error deleting level: $e');
-      const CustomSnackbar(
+      CustomSnackbar(
         success: false,
         title: 'Gagal',
-        message: 'Gagal Menghapus Laci',
+        message: 'Gagal Menghapus Laci $levelName',
       ).showSnackbar();
     }
   }
