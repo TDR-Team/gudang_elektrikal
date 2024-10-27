@@ -57,30 +57,8 @@ class GetComponentsView extends GetView<GetComponentsController> {
                     ),
                   ),
                 ),
-                // Obx(
-                //   () {
-                //     // return _buildDropDown(
-                //     //   listRack: controller.rackNames,
-                //     //   onChangedRackName: controller.onChangedRackNames,
-                //     // );
-                //     return _buildDropDown(
-                //       listRack: controller.rackNames,
-                //       // onChangedRackName: (value) {
-                //       //   if (value != null) {
-                //       //     controller.onChangedRackNames(value);
-                //       //   }
-                //       // },
-                //       onChangedRackName: controller.onChangedRackNames,
-                //     );
-                //   },
-                // ),
                 _buildDropDown(
                   listRack: controller.listRackNames,
-                  // onChangedRackName: (value) {
-                  //   if (value != null) {
-                  //     controller.onChangedRackNames(value);
-                  //   }
-                  // },
                   onChangedRackName: controller.onChangedRackNames,
                 ),
               ],
@@ -144,8 +122,6 @@ class GetComponentsView extends GetView<GetComponentsController> {
     required var listRack,
     required void Function(String? value) onChangedRackName,
   }) {
-    // List<String> updatedListRack = List.from(listRack)..add('Tambah Rak');
-
     return Positioned(
       left: 0,
       right: 0,
@@ -155,9 +131,6 @@ class GetComponentsView extends GetView<GetComponentsController> {
         child: DropDown(
           listElement: listRack,
           hintText: 'Pilih Rak',
-          // onChange: (value) {
-          //   onChangedRackName(value);
-          // },
           onChange: onChangedRackName,
           itemBuilder: (context, rackName, isSelected) {
             return ListTile(
