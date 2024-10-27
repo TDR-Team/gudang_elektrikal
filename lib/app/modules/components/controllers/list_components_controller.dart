@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gudang_elektrikal/app/common/helpers/schedule_daily_push_notif_helper.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
-import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:uuid/uuid.dart';
 import '../../../utils/logging.dart';
 import '../../../widgets/custom_snackbar.dart';
@@ -82,6 +82,15 @@ class ListComponentsController extends GetxController {
 
         // ignore: invalid_use_of_protected_member
         filteredComponents.value = components.value;
+
+        // Check for low stock and trigger notification if conditions are met
+        for (var component in filteredComponents) {
+          int stock = component['stock'];
+          if (stock > 0 && stock <= 3) {
+            ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+                ' ${component['name']}');
+          }
+        }
       } else {
         components.value = [];
         filteredComponents.value = [];
@@ -251,17 +260,11 @@ class ListComponentsController extends GetxController {
 
           debugPrint(
               'stock sisa: ${filteredComponents[selectedComponentIndex]['stock']}');
-          if (filteredComponents[selectedComponentIndex]['stock'] > 1 &&
+
+          if (filteredComponents[selectedComponentIndex]['stock'] > 0 &&
               filteredComponents[selectedComponentIndex]['stock'] <= 3) {
-            DateTime scheduledDate = DateTime.now().add(
-              const Duration(seconds: 5),
-            );
-            NotificationService.scheduleNotification(
-              0,
-              'Stok komponen sudah mau habis',
-              'Ayo re-stok pada komponen ${filteredComponents[selectedComponentIndex]['name']} sebelum habis',
-              scheduledDate,
-            );
+            ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+                ' ${filteredComponents[selectedComponentIndex]}');
           }
         } else {
           const CustomSnackbar(
