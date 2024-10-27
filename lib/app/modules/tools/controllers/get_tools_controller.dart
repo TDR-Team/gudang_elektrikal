@@ -68,19 +68,6 @@ class GetToolsController extends GetxController {
           };
         }).toList();
 
-        // tools.value = toolsMap.entries.map((entry) {
-        //   var toolsData = entry.value as Map<String, dynamic>;
-        //   return {
-        //     'id': entry.key,
-        //     'name': toolsData['name'] ?? 'No name',
-        //     'description': toolsData['description'] ?? '',
-        //     'stock': toolsData['stock'] ?? 0,
-        //     'tStock': toolsData['tStock'] ?? 0,
-        //     'imgUrl': toolsData['imgUrl'] ?? '',
-        //     'selectedStock': 1,
-        //   };
-        // }).toList();
-
         toolsData[categoryName] = toolsList;
       }
 
@@ -236,7 +223,6 @@ class GetToolsController extends GetxController {
   void onGetToolsClicked(String categoryName, String toolsId) async {
     try {
       if (!categorizedTools.containsKey(categoryName)) {
-        debugPrint('Category not found in categorizedTools');
         const CustomSnackbar(
           success: false,
           title: 'Gagal',
@@ -251,7 +237,6 @@ class GetToolsController extends GetxController {
       );
 
       if (toolIndex == null || toolIndex == -1) {
-        debugPrint('Tool ID not found in the category tools');
         const CustomSnackbar(
           success: false,
           title: 'Gagal',
@@ -263,6 +248,7 @@ class GetToolsController extends GetxController {
       final selectedTool = categorizedTools[categoryName]![toolIndex];
       int selectedStock = selectedTool['selectedStock'] ?? 1;
       int availableStock = selectedTool['stock'] ?? 0;
+      String name = selectedTool['name'];
 
       if (selectedStock > 0) {
         int newStock = availableStock - selectedStock;
@@ -294,6 +280,17 @@ class GetToolsController extends GetxController {
 
         // Refresh UI dan tampilkan pesan sukses
         categorizedTools.refresh();
+
+        final logData = {
+          toolsId: {
+            'name': name,
+            'stock': newStock,
+          },
+        };
+
+        await _logHistoryActivity(logData);
+        await _logHistoryBorrowed(logData, name, selectedStock, categoryName);
+
         Get.back();
         const CustomSnackbar(
           success: true,
@@ -368,8 +365,37 @@ class GetToolsController extends GetxController {
         activityId: {
           'user': userName,
           'itemType': "tools",
-          'actionType': "delete",
+          'actionType': "borrow",
           'itemData': toolsData,
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
+    }
+  }
+
+  Future<void> _logHistoryBorrowed(
+    Map<String, dynamic> toolsData,
+    String name,
+    int amount,
+    String categoryName,
+  ) async {
+    try {
+      final borrowedId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('borrowed')
+          .set({
+        borrowedId: {
+          'user': userName,
+          'itemType': "tools",
+          'actionType': "borrow",
+          'itemData': toolsData,
+          'amount': amount,
+          'name': name,
+          'categoryName': categoryName,
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

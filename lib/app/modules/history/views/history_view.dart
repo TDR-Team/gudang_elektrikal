@@ -55,11 +55,8 @@ class HistoryView extends GetView<HistoryController> {
                             onRefreshActivities: controller.onRefreshActivities,
                           ),
                           _buildTabContentBorrowed(
-                            isLoading: controller.isLoadingBorrowed.value,
-                            isActive: true,
-                            // listJob: controller.dataBorrowed,
-                            listJob: [],
-                            onRefreshActivity: controller.onRefreshBorrowed,
+                            isLoading: controller.isLoadingActivities.value,
+                            onRefreshBorrowed: controller.onRefreshActivities,
                           ),
                         ],
                       ),
@@ -226,17 +223,11 @@ class HistoryView extends GetView<HistoryController> {
   }
 
   Widget _buildTabContentBorrowed({
-    required List<Borrowed> listJob,
     required bool isLoading,
-    bool isActive = false,
-    bool isHistory = false,
-    String selectedStatus = '',
-    List<String?> listElementStatus = const [],
-    void Function(String? status)? onChangedStatus,
-    required Future<void> Function() onRefreshActivity,
+    required Future<void> Function() onRefreshBorrowed,
   }) {
     return RefreshIndicator(
-      onRefresh: onRefreshActivity,
+      onRefresh: onRefreshBorrowed,
       color: kColorScheme.primary,
       child: Column(
         children: [
@@ -257,7 +248,7 @@ class HistoryView extends GetView<HistoryController> {
                     ),
                   ),
                 )
-              : listJob.isEmpty
+              : controller.borrowedList.isEmpty
                   ? Expanded(
                       child: Center(
                         child: Column(
@@ -265,7 +256,7 @@ class HistoryView extends GetView<HistoryController> {
                           children: [
                             SvgPicture.asset('assets/images/img_waiting.svg'),
                             Text(
-                              'Belum ada Pinjaman',
+                              'Belum ada Peminjaman',
                               style: boldText16.copyWith(
                                 color: kColorScheme.primary,
                               ),
@@ -285,6 +276,7 @@ class HistoryView extends GetView<HistoryController> {
                           bottom: 0,
                         ),
                         itemBuilder: (context, index) {
+                          final borrowed = controller.borrowedList[index];
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -321,12 +313,55 @@ class HistoryView extends GetView<HistoryController> {
                                             'Pinjam Tools',
                                             style: semiBoldText14,
                                           ),
-                                          // enih harusnya style di pisah buat nama dan keterangan
-                                          Text(
-                                            'Agus - meminjam Kunci 8',
-                                            style: regularText12.copyWith(
-                                                color: Colors.grey),
-                                          )
+                                          RichText(
+                                            text: TextSpan(
+                                              text: borrowed['user'],
+                                              style: semiBoldText12.copyWith(
+                                                  color: AppColors
+                                                      .neutralColors[1]),
+                                              children: [
+                                                TextSpan(
+                                                  text: ' ',
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[2]),
+                                                ),
+                                                TextSpan(
+                                                  text: formatActionType(
+                                                      borrowed['actionType']),
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[2]),
+                                                ),
+                                                TextSpan(
+                                                  text: " ",
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[2]),
+                                                ),
+                                                TextSpan(
+                                                  text: borrowed['amount']
+                                                      .toString(),
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[1]),
+                                                ),
+                                                TextSpan(
+                                                  text: borrowed['name'],
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[1]),
+                                                ),
+                                                // TextSpan(
+                                                //   text: formatItemType(
+                                                //       borrowed['itemType']),
+                                                //   style: regularText12.copyWith(
+                                                //       color: AppColors
+                                                //           .neutralColors[1]),
+                                                // ),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -338,12 +373,17 @@ class HistoryView extends GetView<HistoryController> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          '8 menit lalu',
+                                          formatTimestamp(
+                                              borrowed['timestamp']),
                                           style: regularText10,
                                         ),
                                         const SizedBox(height: 8.0),
                                         InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            controller.onReturnClicked(
+                                                borrowed['id']);
+                                            print(borrowed['id']);
+                                          },
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           child: Container(
@@ -374,7 +414,7 @@ class HistoryView extends GetView<HistoryController> {
                           indent: 50.w,
                           height: 20.h,
                         ),
-                        itemCount: 0,
+                        itemCount: controller.borrowedList.length,
                       ),
                     ),
         ],
@@ -392,6 +432,10 @@ class HistoryView extends GetView<HistoryController> {
         return 'menghapus';
       case 'take':
         return 'mengambil';
+      case 'borrow':
+        return 'meminjam';
+      case 'return':
+        return 'mengembalikan';
       default:
         return actionType;
     }
