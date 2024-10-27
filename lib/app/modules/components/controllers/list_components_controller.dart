@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
+import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:uuid/uuid.dart';
 import '../../../utils/logging.dart';
 import '../../../widgets/custom_snackbar.dart';
@@ -247,6 +248,21 @@ class ListComponentsController extends GetxController {
           }
 
           await fetchComponents();
+
+          debugPrint(
+              'stock sisa: ${filteredComponents[selectedComponentIndex]['stock']}');
+          if (filteredComponents[selectedComponentIndex]['stock'] > 1 &&
+              filteredComponents[selectedComponentIndex]['stock'] <= 3) {
+            DateTime scheduledDate = DateTime.now().add(
+              const Duration(seconds: 5),
+            );
+            NotificationService.scheduleNotification(
+              0,
+              'Stok komponen sudah mau habis',
+              'Ayo re-stok pada komponen ${filteredComponents[selectedComponentIndex]['name']} sebelum habis',
+              scheduledDate,
+            );
+          }
         } else {
           const CustomSnackbar(
             success: false,
