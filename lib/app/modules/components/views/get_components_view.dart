@@ -69,6 +69,15 @@ class GetComponentsView extends GetView<GetComponentsController> {
               Expanded(
                 child: Obx(
                   () {
+                    // If levels are loading
+                    if (controller.isLoadingLevels.value) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: kColorScheme.primary,
+                        ),
+                      );
+                    }
+
                     // Check if a rack is selected
                     if (controller.rackName.value.isEmpty) {
                       return Center(
@@ -87,12 +96,6 @@ class GetComponentsView extends GetView<GetComponentsController> {
                             const SizedBox(height: 80),
                           ],
                         ),
-                      );
-                    }
-                    // If levels are loading
-                    if (controller.isLoadingLevels.value) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
                       );
                     }
 
@@ -136,6 +139,9 @@ class GetComponentsView extends GetView<GetComponentsController> {
           listElement: listRack,
           hintText: 'Pilih Rak',
           onChange: onChangedRackName,
+          selectedItem: controller.rackName.value.isNotEmpty
+              ? controller.rackName.value
+              : 'Pilih Rak',
           itemBuilder: (context, rackName, isSelected) {
             return ListTile(
               title: Text(rackName!),
@@ -149,48 +155,133 @@ class GetComponentsView extends GetView<GetComponentsController> {
   Widget _buildRackLevels({
     required String rackName,
     required BuildContext context,
-    required RxList levels,
+    required List levels,
     required void Function(String rackName, String levelName) onLevelClicked,
+    // required ComponentsController controller,
   }) {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(
-        top: 12,
-        right: 0,
-        left: 0,
-        bottom: 100,
-      ),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () => onLevelClicked(rackName, levels[index]),
-          child: UnconstrainedBox(
-            child: Container(
-              width: MediaQuery.sizeOf(context).width / 1.1,
-              decoration: BoxDecoration(
-                color: kColorScheme.primary,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Stack(
-                children: [
-                  Align(
+    return RefreshIndicator(
+      color: kColorScheme.primary,
+      onRefresh: () async {
+        controller.fetchRackNames();
+        controller.fetchLevelByRack(rackName);
+      },
+      child: ListView.separated(
+        shrinkWrap: true,
+        padding: const EdgeInsets.only(
+          top: 12,
+          right: 0,
+          left: 0,
+          bottom: 100,
+        ),
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 3,
+                  blurRadius: 10,
+                  offset: const Offset(0, 0), // changes position of shadow
+                ),
+              ],
+              color: const Color.fromARGB(255, 249, 253, 255),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            margin: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: 86.h,
+                    decoration: BoxDecoration(
+                      color: kColorScheme.primary,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20),
+                      ),
+                    ),
                     alignment: Alignment.center,
                     child: Text(
                       levels[index],
-                      textAlign: TextAlign.center,
                       style: boldText28.copyWith(
-                        color: Colors.white,
-                        fontSize: 75.sp,
+                        fontSize: 45.sp,
+                        color: kColorScheme.secondary,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Laci ${levels[index]}',
+                        style: boldText20.copyWith(
+                          color: kColorScheme.primary,
+                        ),
+                      ),
+                      Divider(
+                        color: kColorScheme.primary,
+                        height: 1,
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: TextButton.icon(
+                            onPressed: () {
+                              onLevelClicked(rackName, levels[index]);
+                            },
+                            style: ButtonStyle(
+                              foregroundColor: const WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
+                              backgroundColor: WidgetStatePropertyAll(
+                                kColorScheme.secondary,
+                              ),
+                              padding: const WidgetStatePropertyAll(
+                                EdgeInsetsDirectional.only(
+                                  start: 12,
+                                  end: 16,
+                                ),
+                              ),
+                            ),
+                            label: Text(
+                              'Ambil',
+                              style: semiBoldText14.copyWith(
+                                color: kColorScheme.primary,
+                              ),
+                            ),
+                            icon: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              size: 18.sp,
+                              color: kColorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                      .marginSymmetric(
+                        horizontal: 16,
+                      )
+                      .paddingOnly(bottom: 4),
+                ),
+              ],
             ),
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
-      itemCount: levels.length,
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(height: 20),
+        itemCount: levels.length,
+      ),
     );
   }
 }
