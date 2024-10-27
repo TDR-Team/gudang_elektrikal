@@ -19,6 +19,7 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DashboardController>(
+      init: DashboardController(),
       builder: (controller) {
         return Scaffold(
           extendBody: true,
@@ -170,7 +171,7 @@ class DashboardView extends GetView<DashboardController> {
                     borderRadius: BorderRadius.circular(20),
                     splashColor: kColorScheme.primary,
                     onTap: () {
-                      Get.toNamed(Routes.BORROW_TOOLS);
+                      Get.toNamed(Routes.GET_TOOLS);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

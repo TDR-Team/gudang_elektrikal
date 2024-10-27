@@ -14,107 +14,111 @@ class GetComponentsView extends GetView<GetComponentsController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => GetComponentsController());
-    return Scaffold(
-      backgroundColor: kColorScheme.surface,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        leading: IconButton(
-          padding: const EdgeInsets.all(16),
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 24.sp,
-            color: Colors.black,
-          ),
-        ),
-        title: Text(
-          'Ambil Komponen',
-          style: semiBoldText20,
-        ),
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 150.h,
-            child: Stack(
-              children: [
-                Container(
-                  height: 130.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: kColorScheme.primary,
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(30),
-                    ),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/img_bgAppbar.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                _buildDropDown(
-                  listRack: controller.listRackNames,
-                  onChangedRackName: controller.onChangedRackNames,
-                ),
-              ],
+    return GetBuilder<GetComponentsController>(
+      init: GetComponentsController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: kColorScheme.surface,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            leading: IconButton(
+              padding: const EdgeInsets.all(16),
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 24.sp,
+                color: Colors.black,
+              ),
             ),
+            title: Text(
+              'Ambil Komponen',
+              style: semiBoldText20,
+            ),
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
           ),
-          Expanded(
-            child: Obx(
-              () {
-                // Check if a rack is selected
-                if (controller.rackName.value.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/shelf-stock.svg",
-                          width: MediaQuery.sizeOf(context).width / 1.5,
+          body: Column(
+            children: [
+              SizedBox(
+                height: 150.h,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 130.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: kColorScheme.primary,
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(30),
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Pilih Rak untuk melihat level',
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/img_bgAppbar.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    _buildDropDown(
+                      listRack: controller.listRackNames,
+                      onChangedRackName: controller.onChangedRackNames,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Obx(
+                  () {
+                    // Check if a rack is selected
+                    if (controller.rackName.value.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/shelf-stock.svg",
+                              width: MediaQuery.sizeOf(context).width / 1.5,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Pilih Rak untuk melihat level',
+                              style: semiBoldText20,
+                            ),
+                            const SizedBox(height: 80),
+                          ],
+                        ),
+                      );
+                    }
+                    // If levels are loading
+                    if (controller.isLoadingLevels.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    // If levels are fetched
+                    if (controller.listLevels.isNotEmpty) {
+                      return _buildRackLevels(
+                        context: context,
+                        rackName: controller.rackName.value,
+                        levels: controller.listLevels,
+                        onLevelClicked: controller.onLevelClicked,
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          'Tidak ada laci untuk rak ini.',
                           style: semiBoldText20,
                         ),
-                        const SizedBox(height: 80),
-                      ],
-                    ),
-                  );
-                }
-                // If levels are loading
-                if (controller.isLoadingLevels.value) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                // If levels are fetched
-                if (controller.listLevels.isNotEmpty) {
-                  return _buildRackLevels(
-                    context: context,
-                    rackName: controller.rackName.value,
-                    levels: controller.listLevels,
-                    onLevelClicked: controller.onLevelClicked,
-                  );
-                } else {
-                  return Center(
-                    child: Text(
-                      'Tidak ada laci untuk rak ini.',
-                      style: semiBoldText20,
-                    ),
-                  );
-                }
-              },
-            ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
