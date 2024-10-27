@@ -156,6 +156,14 @@ class ComponentsView extends GetView<ComponentsController> {
               Expanded(
                 child: Obx(
                   () {
+                    // If levels are loading
+                    if (controller.isLoadingLevels.value) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: kColorScheme.primary,
+                        ),
+                      );
+                    }
                     if (controller.rackName.value.isEmpty) {
                       return Center(
                         child: Column(
@@ -173,13 +181,6 @@ class ComponentsView extends GetView<ComponentsController> {
                             const SizedBox(height: 80),
                           ],
                         ),
-                      );
-                    }
-
-                    // If levels are loading
-                    if (controller.isLoadingLevels.value) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
                       );
                     }
 

@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/components/views/get_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/forgot_password_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/bindings/tools_binding.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/get_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 
 import '../modules/history/views/history_view.dart';
@@ -56,8 +58,13 @@ class AppPages {
       binding: ProfileBinding(),
     ),
     GetPage(
-      name: _Paths.BORROW_TOOLS,
+      name: _Paths.TOOLS,
       page: () => const ToolsView(),
+      binding: ToolsBinding(),
+    ),
+    GetPage(
+      name: _Paths.GET_TOOLS,
+      page: () => const GetToolsView(),
       binding: ToolsBinding(),
     ),
     GetPage(
@@ -73,6 +80,11 @@ class AppPages {
     GetPage(
       name: _Paths.LIST_COMPONENTS,
       page: () => const ListComponentsView(),
+      binding: ComponentsBinding(),
+    ),
+    GetPage(
+      name: _Paths.GET_COMPONENTS,
+      page: () => const GetComponentsView(),
       binding: ComponentsBinding(),
     ),
     GetPage(

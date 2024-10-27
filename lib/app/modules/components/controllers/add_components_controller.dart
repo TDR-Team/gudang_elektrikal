@@ -50,6 +50,7 @@ class AddComponentsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    setRackAndLevel();
     _getUserData();
     // Initialize the stockController with the initial stock value
     stockController.text = stock.value.toString();
