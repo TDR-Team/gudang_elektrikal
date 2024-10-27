@@ -12,202 +12,207 @@ class ComponentsView extends GetView<ComponentsController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => ComponentsController());
-    return Scaffold(
-      backgroundColor: kColorScheme.surface,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text(
-          'Komponen',
-          style: semiBoldText20,
-        ),
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: PopupMenuButton<int>(
-              onSelected: (value) {
-                switch (value) {
-                  case 0:
-                    controller.addRack();
-                    break;
-                  case 1: // Edit Rack
-                    if (controller.rackName.value.isNotEmpty) {
-                      showEditRackDialog(
-                        controller.rackName.value,
-                        controller,
-                      );
-                    } else {
-                      Get.snackbar('Error', 'Pilih rak terlebih dahulu.');
-                    }
-                    break;
-
-                  case 2:
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Apakah anda yakin?',
-                            style: semiBoldText16,
-                          ),
-                          content: Text(
-                            'Rak ini akan dihapus',
-                            style: regularText12,
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => controller
-                                  .onDeleteRack(controller.rackName.value),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                    color: kColorScheme.error,
-                                  ),
-                                ),
-                                child: Text(
-                                  'Hapus',
-                                  style: semiBoldText12.copyWith(
-                                    color: kColorScheme.error,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: Text(
-                                'Kembali',
-                                style: semiBoldText12,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-
-                    break;
-                }
-              },
-              icon: Icon(
-                Icons.more_vert,
-                size: 24.sp,
-                color: Colors.black,
-              ),
-              itemBuilder: (context) => [
-                const PopupMenuItem<int>(
-                  value: 0,
-                  child: Text('Tambah Rak'),
-                ),
-                const PopupMenuItem<int>(
-                  value: 1,
-                  child: Text('Ubah Rak'),
-                ),
-                const PopupMenuItem<int>(
-                  value: 2,
-                  child: Text('Hapus Rak'),
-                ),
-              ],
+    return GetBuilder<ComponentsController>(
+      init: ComponentsController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: kColorScheme.surface,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            title: Text(
+              'Komponen',
+              style: semiBoldText20,
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 150.h,
-            child: Stack(
-              children: [
-                Container(
-                  height: 130.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: kColorScheme.primary,
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(30),
-                    ),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/img_bgAppbar.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                _buildDropDown(
-                  listRackNames: controller.listRackNames,
-                  onChangedRackName: (value) {
-                    if (value != null) {
-                      controller.onChangedRackNames(value);
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: PopupMenuButton<int>(
+                  onSelected: (value) {
+                    switch (value) {
+                      case 0:
+                        controller.addRack();
+                        break;
+                      case 1:
+                        if (controller.rackName.value.isNotEmpty) {
+                          showEditRackDialog(
+                            controller.rackName.value,
+                            controller,
+                          );
+                        } else {
+                          Get.snackbar('Error', 'Pilih rak terlebih dahulu.');
+                        }
+                        break;
+
+                      case 2:
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(
+                                'Apakah anda yakin?',
+                                style: semiBoldText16,
+                              ),
+                              content: Text(
+                                'Rak ini akan dihapus',
+                                style: regularText12,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => controller
+                                      .onDeleteRack(controller.rackName.value),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        color: kColorScheme.error,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Hapus',
+                                      style: semiBoldText12.copyWith(
+                                        color: kColorScheme.error,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: Text(
+                                    'Kembali',
+                                    style: semiBoldText12,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                        break;
                     }
                   },
-                  addRack: controller.addRack,
-                  rackName: controller.rackName,
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Obx(
-              () {
-                // Check if a rack is selected
-                if (controller.rackName.value.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/shelf-stock.svg",
-                          width: MediaQuery.sizeOf(context).width / 1.5,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Pilih Rak untuk melihat level',
-                          style: semiBoldText20,
-                        ),
-                        const SizedBox(height: 80),
-                      ],
+                  icon: Icon(
+                    Icons.more_vert,
+                    size: 24.sp,
+                    color: Colors.black,
+                  ),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text('Tambah Rak'),
                     ),
-                  );
-                }
-
-                // If levels are loading
-                if (controller.isLoadingLevels.value) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                // If levels are fetched
-                if (controller.listLevels.isNotEmpty) {
-                  return _buildRackLevels(
-                    context: context,
-                    rackName: controller.rackName.value,
-                    levels: controller.listLevels,
-                    onLevelClicked: controller.onLevelClicked,
-                    controller: controller,
-                  );
-                } else {
-                  return Stack(
-                    children: [
-                      _buildAddLevelButton(controller),
-                      Center(
-                        child: Text(
-                          'Tidak ada laci di rak ini.',
-                          style: semiBoldText20,
+                    const PopupMenuItem<int>(
+                      value: 1,
+                      child: Text('Ubah Rak'),
+                    ),
+                    const PopupMenuItem<int>(
+                      value: 2,
+                      child: Text('Hapus Rak'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          body: Column(
+            children: [
+              SizedBox(
+                height: 150.h,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 130.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: kColorScheme.primary,
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(30),
+                        ),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/img_bgAppbar.png'),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ],
-                  );
-                }
-              },
-            ),
+                    ),
+                    _buildDropDown(
+                      listRackNames: controller.listRackNames,
+                      onChangedRackName: (value) {
+                        if (value != null) {
+                          controller.onChangedRackNames(value);
+                        }
+                      },
+                      addRack: controller.addRack,
+                      rackName: controller.rackName,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Obx(
+                  () {
+                    // Check if a rack is selected
+                    if (controller.rackName.value.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/shelf-stock.svg",
+                              width: MediaQuery.sizeOf(context).width / 1.5,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Pilih Rak untuk melihat level',
+                              style: semiBoldText20,
+                            ),
+                            const SizedBox(height: 80),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // If levels are loading
+                    if (controller.isLoadingLevels.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    // If levels are fetched
+                    if (controller.listLevels.isNotEmpty) {
+                      return _buildRackLevels(
+                        context: context,
+                        rackName: controller.rackName.value,
+                        levels: controller.listLevels,
+                        onLevelClicked: controller.onLevelClicked,
+                        controller: controller,
+                      );
+                    } else {
+                      return Stack(
+                        children: [
+                          _buildAddLevelButton(controller),
+                          Center(
+                            child: Text(
+                              'Tidak ada laci di rak ini.',
+                              style: semiBoldText20,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -254,6 +259,7 @@ class ComponentsView extends GetView<ComponentsController> {
                 rackName.value.isNotEmpty ? rackName.value : 'Pilih Rak',
             onChange: (value) {
               onChangedRackName(value);
+              FocusManager.instance.primaryFocus?.unfocus();
             },
             itemAsString: (item) => item ?? '',
             itemBuilder: (context, rackName, isSelected) {
