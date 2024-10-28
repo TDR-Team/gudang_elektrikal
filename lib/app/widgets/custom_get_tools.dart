@@ -18,8 +18,8 @@ class CustomGetTools extends StatelessWidget {
   final void Function()? onDecrementButton;
   final void Function()? onIncrementButton;
   final TextEditingController stockController;
-
   final FocusNode? stockFocusNode;
+  final bool isLoading;
 
   const CustomGetTools({
     super.key,
@@ -36,6 +36,7 @@ class CustomGetTools extends StatelessWidget {
     this.onIncrementButton,
     required this.stockController,
     this.stockFocusNode,
+    required this.isLoading,
   });
 
   @override
@@ -263,12 +264,21 @@ class CustomGetTools extends StatelessWidget {
                             color: AppColors.secondaryColors[0],
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(
-                            'Pinjam',
-                            style: semiBoldText16.copyWith(
-                              color: AppColors.onSecondaryColors[2],
-                            ),
-                          ),
+                          child: isLoading
+                              ? const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 3,
+                                  ),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  'Pinjam',
+                                  style: semiBoldText16.copyWith(
+                                    color: AppColors.onSecondaryColors[2],
+                                  ),
+                                ),
                         ),
                       ),
                     ],

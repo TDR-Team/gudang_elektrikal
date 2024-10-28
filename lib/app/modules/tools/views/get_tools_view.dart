@@ -197,12 +197,11 @@ class GetToolsView extends GetView<GetToolsController> {
                                   },
                                   stockController: controller.stockController,
                                   stockFocusNode: controller.stockFocusNode,
-                                  onIncrementButton: () {
-                                    controller.increment(
-                                        categoryName, tools['id']);
-                                  },
+                                  onIncrementButton: () => controller.increment(
+                                      categoryName, tools['id']),
                                   onDecrementButton: () => controller.decrement(
                                       categoryName, tools['id']),
+                                  isLoading: controller.isLoadingGetTools.value,
                                 );
                               }),
                               const SizedBox(height: 20),

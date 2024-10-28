@@ -18,6 +18,7 @@ class ListComponentsController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   RxBool isLoading = true.obs;
+  RxBool isLoadingGetComponent = false.obs;
   RxList<Map<String, dynamic>> components = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> filteredComponents =
       <Map<String, dynamic>>[].obs;
@@ -208,6 +209,7 @@ class ListComponentsController extends GetxController {
   }
 
   void onGetComponentClicked(String componentId) async {
+    isLoadingGetComponent.value = true;
     try {
       final selectedComponentIndex = components.indexWhere(
         (component) => component['id'] == componentId,
@@ -262,7 +264,6 @@ class ListComponentsController extends GetxController {
 
           if (filteredComponents[selectedComponentIndex]['stock'] > 0 &&
               filteredComponents[selectedComponentIndex]['stock'] <= 3) {
-                
             ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
               ' ${filteredComponents[selectedComponentIndex]['name']}',
               0,
@@ -292,6 +293,8 @@ class ListComponentsController extends GetxController {
         message: 'Gagal mengambil komponen.',
       ).showSnackbar();
       Get.back();
+    } finally {
+      isLoadingGetComponent.value = false;
     }
   }
 

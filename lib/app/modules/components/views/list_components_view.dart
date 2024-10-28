@@ -178,11 +178,12 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                   },
                                   stockController: controller.stockController,
                                   stockFocusNode: controller.stockFocusNode,
-                                  onIncrementButton: () {
-                                    controller.increment(component['id']);
-                                  },
+                                  onIncrementButton: () =>
+                                      controller.increment(component['id']),
                                   onDecrementButton: () =>
                                       controller.decrement(component['id']),
+                                  isLoading:
+                                      controller.isLoadingGetComponent.value,
                                 )
                               : CustomListComponents(
                                   id: component['id'],
