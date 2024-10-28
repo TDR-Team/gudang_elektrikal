@@ -98,7 +98,8 @@ class HistoryController extends GetxController
             'timestamp': entry.value['timestamp'],
             'itemData': entry.value['itemData'],
             'amount': entry.value['amount'],
-            'categoryName': entry.value['categoryName']
+            'categoryName': entry.value['categoryName'],
+            'name': entry.value['name']
           };
         }).toList();
 
