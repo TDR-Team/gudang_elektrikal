@@ -207,6 +207,7 @@ class HistoryView extends GetView<HistoryController> {
                                           ],
                                         ),
                                         RichText(
+                                          overflow: TextOverflow.ellipsis,
                                           text: TextSpan(
                                             text: activity['user'],
                                             style: semiBoldText12.copyWith(
@@ -376,59 +377,66 @@ class HistoryView extends GetView<HistoryController> {
                                               'Pinjam Tools',
                                               style: semiBoldText14,
                                             ),
-                                            RichText(
-                                              text: TextSpan(
-                                                text: borrowed['user'],
-                                                style: semiBoldText12.copyWith(
-                                                    color: AppColors
-                                                        .neutralColors[1]),
-                                                children: [
-                                                  TextSpan(
-                                                    text: ' ',
-                                                    style: regularText12.copyWith(
-                                                        color: AppColors
-                                                            .neutralColors[2]),
-                                                  ),
-                                                  TextSpan(
-                                                    text: formatActionType(
-                                                        borrowed['actionType']),
-                                                    style: regularText12.copyWith(
-                                                        color: AppColors
-                                                            .neutralColors[2]),
-                                                  ),
-                                                  TextSpan(
-                                                    text: " ",
-                                                    style: regularText12.copyWith(
-                                                        color: AppColors
-                                                            .neutralColors[2]),
-                                                  ),
-                                                  TextSpan(
-                                                    text: borrowed['amount']
-                                                        .toString(),
-                                                    style: regularText12.copyWith(
-                                                        color: AppColors
-                                                            .neutralColors[1]),
-                                                  ),
-                                                  TextSpan(
-                                                    text: " ",
-                                                    style: regularText12.copyWith(
-                                                        color: AppColors
-                                                            .neutralColors[2]),
-                                                  ),
-                                                  TextSpan(
-                                                    text: borrowed['name'],
-                                                    style: regularText12.copyWith(
-                                                        color: AppColors
-                                                            .neutralColors[1]),
-                                                  ),
-                                                  // TextSpan(
-                                                  //   text: formatItemType(
-                                                  //       borrowed['itemType']),
-                                                  //   style: regularText12.copyWith(
-                                                  //       color: AppColors
-                                                  //           .neutralColors[1]),
-                                                  // ),
-                                                ],
+                                            SizedBox(
+                                              width: 160.w,
+                                              child: RichText(
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                text: TextSpan(
+                                                  text: formatUser(
+                                                      borrowed['user']),
+                                                  style: semiBoldText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[1]),
+                                                  children: [
+                                                    TextSpan(
+                                                      text: ' ',
+                                                      style: regularText12.copyWith(
+                                                          color: AppColors
+                                                              .neutralColors[2]),
+                                                    ),
+                                                    TextSpan(
+                                                      text: formatActionType(
+                                                          borrowed[
+                                                              'actionType']),
+                                                      style: regularText12.copyWith(
+                                                          color: AppColors
+                                                              .neutralColors[2]),
+                                                    ),
+                                                    TextSpan(
+                                                      text: " ",
+                                                      style: regularText12.copyWith(
+                                                          color: AppColors
+                                                              .neutralColors[2]),
+                                                    ),
+                                                    TextSpan(
+                                                      text: borrowed['amount']
+                                                          .toString(),
+                                                      style: regularText12.copyWith(
+                                                          color: AppColors
+                                                              .neutralColors[1]),
+                                                    ),
+                                                    TextSpan(
+                                                      text: " ",
+                                                      style: regularText12.copyWith(
+                                                          color: AppColors
+                                                              .neutralColors[2]),
+                                                    ),
+                                                    TextSpan(
+                                                      text: borrowed['name'],
+                                                      style: regularText12.copyWith(
+                                                          color: AppColors
+                                                              .neutralColors[1]),
+                                                    ),
+                                                    // TextSpan(
+                                                    //   text: formatItemType(
+                                                    //       borrowed['itemType']),
+                                                    //   style: regularText12.copyWith(
+                                                    //       color: AppColors
+                                                    //           .neutralColors[1]),
+                                                    // ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -520,6 +528,10 @@ class HistoryView extends GetView<HistoryController> {
       default:
         return itemType;
     }
+  }
+
+  String formatUser(String user) {
+    return user.split(" ").first;
   }
 
   String formatTimestamp(Timestamp timestamp) {
