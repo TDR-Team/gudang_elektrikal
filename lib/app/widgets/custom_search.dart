@@ -26,6 +26,9 @@ class CustomSearch extends StatelessWidget {
         controller: searchController,
         cursorColor: AppColors.primaryColors[1],
         style: regularText14,
+        onTapOutside: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         decoration: InputDecoration(
           fillColor: kColorScheme.onSecondary,
           filled: true,

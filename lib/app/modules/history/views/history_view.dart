@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/helpers/custom_timeago.dart';
@@ -10,7 +9,6 @@ import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_job_horizontal.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../data/model/borrowed.dart';
 import '../controllers/history_controller.dart';
 
 class HistoryView extends GetView<HistoryController> {
@@ -55,8 +53,8 @@ class HistoryView extends GetView<HistoryController> {
                             onRefreshActivities: controller.onRefreshActivities,
                           ),
                           _buildTabContentBorrowed(
-                            isLoading: controller.isLoadingActivities.value,
-                            onRefreshBorrowed: controller.onRefreshActivities,
+                            isLoading: controller.isLoadingBorrowed.value,
+                            onRefreshBorrowed: controller.onRefreshBorrowed,
                           ),
                         ],
                       ),
@@ -100,17 +98,43 @@ class HistoryView extends GetView<HistoryController> {
               : controller.activitiesList.isEmpty
                   ? Expanded(
                       child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: ListView(
+                          shrinkWrap: true,
                           children: [
-                            SvgPicture.asset('assets/images/img_waiting.svg'),
-                            Text(
-                              'Belum ada Aktivitas',
-                              style: boldText16.copyWith(
-                                color: kColorScheme.primary,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/img_empty.png',
+                                  fit: BoxFit.fitHeight,
+                                  height: 180.h,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: 180.h,
+                                      width: 80.w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(35),
+                                        color: Colors.grey,
+                                      ),
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        size: 75,
+                                        color: Color.fromARGB(255, 53, 53, 53),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Belum ada Aktivitas',
+                                  style: boldText16.copyWith(
+                                    color: kColorScheme.primary,
+                                  ),
+                                ),
+                                const SizedBox(height: 150),
+                              ],
                             ),
-                            const SizedBox(height: 150),
                           ],
                         ),
                       ),
@@ -251,17 +275,43 @@ class HistoryView extends GetView<HistoryController> {
               : controller.borrowedList.isEmpty
                   ? Expanded(
                       child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: ListView(
+                          shrinkWrap: true,
                           children: [
-                            SvgPicture.asset('assets/images/img_waiting.svg'),
-                            Text(
-                              'Belum ada Peminjaman',
-                              style: boldText16.copyWith(
-                                color: kColorScheme.primary,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/img_empty.png',
+                                  fit: BoxFit.fitHeight,
+                                  height: 180.h,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: 180.h,
+                                      width: 80.w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(35),
+                                        color: Colors.grey,
+                                      ),
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        size: 75,
+                                        color: Color.fromARGB(255, 53, 53, 53),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Belum ada Peminjaman',
+                                  style: boldText16.copyWith(
+                                    color: kColorScheme.primary,
+                                  ),
+                                ),
+                                const SizedBox(height: 150),
+                              ],
                             ),
-                            const SizedBox(height: 150),
                           ],
                         ),
                       ),
@@ -382,7 +432,7 @@ class HistoryView extends GetView<HistoryController> {
                                           onTap: () {
                                             controller.onReturnClicked(
                                                 borrowed['id']);
-                                            print(borrowed['id']);
+                                            debugPrint(borrowed['id']);
                                           },
                                           borderRadius:
                                               BorderRadius.circular(10),

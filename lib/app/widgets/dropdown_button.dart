@@ -39,7 +39,7 @@ class DropDown<T> extends StatelessWidget {
       autoValidateMode: AutovalidateMode.always,
 
       dropdownDecoratorProps: DropDownDecoratorProps(
-        baseStyle: regularText12,
+        baseStyle: mediumText14,
         dropdownSearchDecoration: InputDecoration(
           fillColor: fillColor ?? Colors.grey[200],
           filled: true,

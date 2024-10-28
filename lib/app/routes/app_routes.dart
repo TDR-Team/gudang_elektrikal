@@ -11,11 +11,13 @@ abstract class Routes {
   static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
   static const GET_COMPONENTS = _Paths.GET_COMPONENTS;
   static const PROFILE = _Paths.PROFILE;
-  static const BORROW_TOOLS = _Paths.BORROW_TOOLS;
+  static const TOOLS = _Paths.TOOLS;
+  static const GET_TOOLS = _Paths.GET_TOOLS;
   static const ACTIVITY = _Paths.ACTIVITY;
   static const COMPONENTS = _Paths.COMPONENTS;
   static const SPLASH = _Paths.SPLASH;
   static const DASHBOARD = _Paths.DASHBOARD;
+  static const LOADING = _Paths.LOADING;
 }
 
 abstract class _Paths {
@@ -27,10 +29,12 @@ abstract class _Paths {
   static const GET_COMPONENTS = '/get-components';
   static const PROFILE = '/profile';
   static const EDIT_PROFILE = '/edit-profile';
-  static const BORROW_TOOLS = '/borrow-tools';
+  static const TOOLS = '/tools';
+  static const GET_TOOLS = '/get-tools';
   static const ACTIVITY = '/activity';
   static const COMPONENTS = '/components';
   static const LIST_COMPONENTS = '/list-components';
   static const SPLASH = '/splash';
   static const DASHBOARD = '/dashboard';
+  static const LOADING = '/loading';
 }

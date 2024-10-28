@@ -122,12 +122,12 @@ class HistoryController extends GetxController
 
   void onReturnClicked(String borrowedId) async {
     try {
-      print('Memulai proses pengembalian barang untuk ID: $borrowedId');
+      debugPrint('Memulai proses pengembalian barang untuk ID: $borrowedId');
 
       // Temukan data barang yang dipinjam dari `borrowedList` berdasarkan `borrowedId`
       final borrowedItem = borrowedList
           .firstWhere((item) => item['id'] == borrowedId, orElse: () {
-        print(
+        debugPrint(
             'Data pinjaman tidak ditemukan dalam borrowedList untuk ID: $borrowedId');
         return null;
       });
@@ -171,11 +171,11 @@ class HistoryController extends GetxController
               'Error', 'Barang yang akan dikembalikan tidak ditemukan.');
         }
       } else {
-        print('Error: Data pinjaman tidak ditemukan.');
+        debugPrint('Error: Data pinjaman tidak ditemukan.');
         Get.snackbar('Error', 'Data pinjaman tidak ditemukan.');
       }
     } catch (e) {
-      print('Terjadi error saat mengembalikan barang: $e');
+      debugPrint('Terjadi error saat mengembalikan barang: $e');
       Get.snackbar('Error', 'Gagal mengembalikan barang: $e');
     }
   }

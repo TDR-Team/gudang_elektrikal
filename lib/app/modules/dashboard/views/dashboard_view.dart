@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/history/views/history_view.dart';
-import 'package:gudang_elektrikal/app/modules/tools/views/get_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
 import 'package:gudang_elektrikal/app/modules/profile/views/profile_view.dart';
+import 'package:gudang_elektrikal/app/routes/app_pages.dart';
 import 'package:gudang_elektrikal/app/widgets/bottom_navigation_bar.dart';
 
-import '../../components/views/get_components_view.dart';
 import '../controllers/dashboard_controller.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -19,6 +19,7 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DashboardController>(
+      init: DashboardController(),
       builder: (controller) {
         return Scaffold(
           extendBody: true,
@@ -129,41 +130,75 @@ class DashboardView extends GetView<DashboardController> {
                   ),
                   const SizedBox(height: 20),
                   InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    splashColor: kColorScheme.primary,
                     onTap: () {
-                      Get.to(() => const GetComponentsView());
+                      Get.toNamed(Routes.GET_COMPONENTS);
                     },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.all_inbox,
-                          size: 24.sp,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          'Ambil Komponen',
-                          style: mediumText18,
-                        ),
-                      ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: kColorScheme.primary),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: kColorScheme.primary,
+                            minRadius: 24.sp,
+                            child: Icon(
+                              Icons.all_inbox,
+                              size: 24.sp,
+                              color: kColorScheme.secondary,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            'Ambil Komponen',
+                            style: semiBoldText18.copyWith(
+                              color: kColorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   InkWell(
                     borderRadius: BorderRadius.circular(20),
-                    splashColor: Colors.blue,
+                    splashColor: kColorScheme.primary,
                     onTap: () {
-                      Get.to(() => const GetToolsView());
+                      Get.toNamed(Routes.GET_TOOLS);
                     },
-                    child: Ink(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: kColorScheme.primary),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.build_outlined,
-                            size: 24.h,
+                          CircleAvatar(
+                            backgroundColor: kColorScheme.primary,
+                            minRadius: 24.sp,
+                            child: Icon(
+                              Icons.build_outlined,
+                              size: 24.sp,
+                              color: kColorScheme.secondary,
+                            ),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 16),
                           Text(
                             'Pinjam Alat',
-                            style: mediumText18,
+                            style: semiBoldText18.copyWith(
+                              color: kColorScheme.primary,
+                            ),
                           ),
                         ],
                       ),

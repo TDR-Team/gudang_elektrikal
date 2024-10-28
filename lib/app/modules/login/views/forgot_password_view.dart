@@ -18,6 +18,12 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.white,
+            leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+              ),
+            ),
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -20,6 +20,7 @@ class GetComponentsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchRackNames();
+    onChangedRackNames('Rak 1');
   }
 
   void onChangedRackNames(String? value) {

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gudang_elektrikal/app/common/helpers/schedule_daily_push_notif_helper.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
 import 'package:uuid/uuid.dart';
@@ -56,6 +57,8 @@ class ListComponentsController extends GetxController {
 
   // COMPONENT
   Future<void> fetchComponents() async {
+    isLoading.value = true;
+    
     try {
       var levelSnapshot = await FirebaseFirestore.instance
           .collection('components')
@@ -81,6 +84,15 @@ class ListComponentsController extends GetxController {
 
         // ignore: invalid_use_of_protected_member
         filteredComponents.value = components.value;
+
+        // Check for low stock and trigger notification if conditions are met
+        for (var component in filteredComponents) {
+          int stock = component['stock'];
+          if (stock > 0 && stock <= 3) {
+            ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+                ' ${component['name']}');
+          }
+        }
       } else {
         components.value = [];
         filteredComponents.value = [];
@@ -247,6 +259,15 @@ class ListComponentsController extends GetxController {
           }
 
           await fetchComponents();
+
+          debugPrint(
+              'stock sisa: ${filteredComponents[selectedComponentIndex]['stock']}');
+
+          if (filteredComponents[selectedComponentIndex]['stock'] > 0 &&
+              filteredComponents[selectedComponentIndex]['stock'] <= 3) {
+            ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+                ' ${filteredComponents[selectedComponentIndex]}');
+          }
         } else {
           const CustomSnackbar(
             success: false,

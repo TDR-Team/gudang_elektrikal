@@ -21,6 +21,14 @@ class ComponentsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchRackNames();
+    onChangedRackNames('Rak 1');
+  }
+
+  @override
+  void onClose() {
+    customLevelController.dispose();
+    customRackController.dispose();
+    super.onClose();
   }
 
   //RACK (RAK)
@@ -71,10 +79,12 @@ class ComponentsController extends GetxController {
       String newRackName = 'Rak $nextRackNumber';
 
       if (existingRackNames.contains(newRackName)) {
-        Get.snackbar(
-          "Gagal",
-          "Rak dengan nomor $nextRackNumber sudah ada",
-        );
+        CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Rak dengan nomor $nextRackNumber sudah ada',
+        ).showSnackbar();
+
         return;
       }
 
@@ -116,7 +126,11 @@ class ComponentsController extends GetxController {
 
   void onEditRack(String oldRackName, String newRackNumber) async {
     if (newRackNumber.isEmpty) {
-      Get.snackbar('Error', 'Nomor rak tidak boleh kosong.');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Nomor rak tidak boleh kosong.',
+      ).showSnackbar();
       return;
     }
 
@@ -124,19 +138,31 @@ class ComponentsController extends GetxController {
     final newRackName = 'Rak $newRackNumber';
 
     if (oldRackNumberMatch == null) {
-      Get.snackbar('Error', 'Nama rak lama tidak valid.');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Nama rak lama tidak valid.',
+      ).showSnackbar();
       return;
     }
 
     final oldRackNumber = oldRackNumberMatch.group(1);
 
     if (oldRackNumber == newRackNumber) {
-      Get.snackbar('Info', 'Nomor rak tidak berubah.');
+      const CustomSnackbar(
+        success: false,
+        title: 'Info',
+        message: 'Nomor rak tidak berubah.',
+      ).showSnackbar();
       return;
     }
 
     if (listRackNames.contains(newRackName)) {
-      Get.snackbar('Error', 'Rak dengan nomor $newRackNumber sudah ada.');
+      CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Rak dengan nomor $newRackNumber sudah ada.',
+      ).showSnackbar();
       return;
     }
 
@@ -180,10 +206,17 @@ class ComponentsController extends GetxController {
         rackName.value = newRackName;
 
         fetchLevelByRack(newRackName);
-
-        Get.snackbar('Sukses', 'Nomor rak berhasil diubah.');
+        const CustomSnackbar(
+          success: true,
+          title: 'Berhasil',
+          message: 'Nomor rak berhasil diubah.',
+        ).showSnackbar();
       } else {
-        Get.snackbar('Error', 'Rak tidak ditemukan.');
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Rak tidak ditemukan.',
+        ).showSnackbar();
       }
 
       Get.back();
@@ -199,7 +232,11 @@ class ComponentsController extends GetxController {
 
   void onDeleteRack(String inputRackName) async {
     if (inputRackName.isEmpty) {
-      Get.snackbar('Error', 'Pilih rak terlebih dahulu.');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Pilih rak terlebih dahulu.',
+      ).showSnackbar();
       return;
     }
     try {
@@ -276,10 +313,12 @@ class ComponentsController extends GetxController {
           .get();
 
       if (!rackDoc.exists) {
-        Get.snackbar(
-          "Error",
-          "Rak tidak ditemukan.",
-        );
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Rak tidak ditemukan.',
+        ).showSnackbar();
+
         return;
       }
 
@@ -312,24 +351,23 @@ class ComponentsController extends GetxController {
 
       listLevels.add(newLevelName);
       listLevels.sort((a, b) => int.parse(a).compareTo(int.parse(b)));
-      levelData[newLevelName] = {};
+      levelData[newLevelName] = <String, dynamic>{};
 
       Get.back();
       customLevelController.clear();
-      Get.snackbar(
-        "Berhasil",
-        "Laci berhasil ditambahkan.",
-      );
-    } catch (e) {
-      // log.e("Error adding level: $e");
-      // Get.snackbar(
-      //   "Error",
-      //   "Gagal menambah laci",
-      // );
-      Get.snackbar(
-        "Berhasil",
-        "Laci berhasil ditambahkan.",
-      );
+
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Laci berhasil ditambahkan.',
+      ).showSnackbar();
+    } catch (e, st) {
+      log.e("Error adding level: $e, loc: $st");
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal menambah laci',
+      ).showSnackbar();
     }
   }
 
@@ -341,20 +379,19 @@ class ComponentsController extends GetxController {
 
       await rackDocRef.update({levelName: FieldValue.delete()});
 
-      Get.back();
-      const CustomSnackbar(
+      CustomSnackbar(
         success: true,
         title: 'Berhasil',
-        message: 'Laci Berhasil Dihapus',
+        message: 'Laci $levelName Berhasil Dihapus',
       ).showSnackbar();
 
       fetchLevelByRack(selectedRackName);
     } catch (e) {
       log.i('Error deleting level: $e');
-      const CustomSnackbar(
+      CustomSnackbar(
         success: false,
         title: 'Gagal',
-        message: 'Gagal Menghapus Laci',
+        message: 'Gagal Menghapus Laci $levelName',
       ).showSnackbar();
     }
   }
