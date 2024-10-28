@@ -9,7 +9,6 @@ import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/tools/controllers/edit_tools_controller.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_elevated_button.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_text_field.dart';
-import 'package:gudang_elektrikal/app/widgets/dropdown_button.dart';
 import 'package:gudang_elektrikal/app/widgets/show_image_picker_bottom_sheet.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -149,28 +148,28 @@ class EditToolsView extends GetView<EditToolsController> {
     );
   }
 
-  _buildDropDown({
-    required BuildContext context,
-    required List<String> listRack,
-    required String rackName,
-    required void Function(String? value) onChangedRackName,
-  }) {
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 20,
-        ),
-        child: DropDown(
-          showSearchBox: false,
-          listElement: listRack,
-          selectedItem: rackName,
-          onChange: onChangedRackName,
-          borderSide: const BorderSide(),
-          fillColor: Colors.white,
-        ),
-      ),
-    );
-  }
+  // _buildDropDown({
+  //   required BuildContext context,
+  //   required List<String> listRack,
+  //   required String rackName,
+  //   required void Function(String? value) onChangedRackName,
+  // }) {
+  //   return Flexible(
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(
+  //         bottom: 20,
+  //       ),
+  //       child: DropDown(
+  //         showSearchBox: false,
+  //         listElement: listRack,
+  //         selectedItem: rackName,
+  //         onChange: onChangedRackName,
+  //         borderSide: const BorderSide(),
+  //         fillColor: Colors.white,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _buildImagePicker({
     required bool isLoadingImage,
