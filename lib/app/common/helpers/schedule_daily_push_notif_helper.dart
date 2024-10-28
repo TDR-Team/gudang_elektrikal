@@ -29,7 +29,7 @@ class ScheduleDailyPuhNotifHelper {
       now.month,
       now.day,
       16,
-      54,
+      0,
       0,
     );
 
