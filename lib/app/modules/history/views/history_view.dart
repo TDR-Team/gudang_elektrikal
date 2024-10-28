@@ -21,8 +21,12 @@ class HistoryView extends GetView<HistoryController> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Riwayat'),
-            centerTitle: false,
+            title: Text(
+              'Riwayat',
+              style: semiBoldText20,
+            ),
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
           ),
           body: SafeArea(
             child: Obx(
@@ -404,6 +408,12 @@ class HistoryView extends GetView<HistoryController> {
                                                     style: regularText12.copyWith(
                                                         color: AppColors
                                                             .neutralColors[1]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: " ",
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[2]),
                                                   ),
                                                   TextSpan(
                                                     text: borrowed['name'],
