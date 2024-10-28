@@ -175,6 +175,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
         ),
         itemBuilder: (context, index) {
           return Container(
+            height: 86.h,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
