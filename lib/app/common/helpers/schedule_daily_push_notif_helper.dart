@@ -42,7 +42,7 @@ class ScheduleDailyPuhNotifHelper {
     NotificationService.scheduleNotification(
       id ?? 0,
       'Stok komponen sudah mau habis',
-      'Ayo re-stok pada komponen $name sebelum habis',
+      'Jangan lupa stok ulang komponen $name sebelum habis',
       morningNotification,
     );
 
