@@ -176,7 +176,7 @@ class CustomListComponents extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
-                                  'Edit',
+                                  'Ubah',
                                   style: semiBoldText16.copyWith(
                                     color: AppColors.onSecondaryColors[2],
                                   ),
