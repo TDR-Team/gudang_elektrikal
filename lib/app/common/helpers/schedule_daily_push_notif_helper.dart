@@ -1,7 +1,10 @@
 import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 
 class ScheduleDailyPuhNotifHelper {
-  static void scheduleDailyPushNotifHelper(String? name) {
+  static void scheduleDailyPushNotifHelper(
+    String? name,
+    int? id,
+  ) {
     // Set the times for 08:00 and 16:00 WIB.
     DateTime now = DateTime.now();
 
@@ -26,7 +29,7 @@ class ScheduleDailyPuhNotifHelper {
       now.month,
       now.day,
       16,
-      0,
+      54,
       0,
     );
 
@@ -37,17 +40,17 @@ class ScheduleDailyPuhNotifHelper {
 
     // Schedule the notifications
     NotificationService.scheduleNotification(
-      0,
+      id ?? 0,
       'Stok komponen sudah mau habis',
       'Ayo re-stok pada komponen $name sebelum habis',
       morningNotification,
     );
 
-    NotificationService.scheduleNotification(
-      1,
-      'Stok komponen sudah mau habis',
-      'Ayo re-stok pada komponen  $name sebelum habis',
-      afternoonNotification,
-    );
+    // NotificationService.scheduleNotification(
+    //   1,
+    //   'Stok komponen sudah mau habis',
+    //   'Ayo re-stok pada komponen  $name sebelum habis',
+    //   afternoonNotification,
+    // );
   }
 }
