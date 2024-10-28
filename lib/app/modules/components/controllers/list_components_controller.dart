@@ -58,7 +58,7 @@ class ListComponentsController extends GetxController {
   // COMPONENT
   Future<void> fetchComponents() async {
     isLoading.value = true;
-    
+
     try {
       var levelSnapshot = await FirebaseFirestore.instance
           .collection('components')
@@ -86,13 +86,13 @@ class ListComponentsController extends GetxController {
         filteredComponents.value = components.value;
 
         // Check for low stock and trigger notification if conditions are met
-        for (var component in filteredComponents) {
-          int stock = component['stock'];
-          if (stock > 0 && stock <= 3) {
-            ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
-                ' ${component['name']}');
-          }
-        }
+        // for (var component in filteredComponents) {
+        //   int stock = component['stock'];
+        //   if (stock > 0 && stock <= 3) {
+        //     ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+        //         ' ${component['name']}');
+        //   }
+        // }
       } else {
         components.value = [];
         filteredComponents.value = [];
@@ -261,12 +261,16 @@ class ListComponentsController extends GetxController {
           await fetchComponents();
 
           debugPrint(
+              'ini ni:  ${int.parse('${filteredComponents[selectedComponentIndex]}')}');
+          debugPrint(
               'stock sisa: ${filteredComponents[selectedComponentIndex]['stock']}');
 
           if (filteredComponents[selectedComponentIndex]['stock'] > 0 &&
               filteredComponents[selectedComponentIndex]['stock'] <= 3) {
             ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
-                ' ${filteredComponents[selectedComponentIndex]}');
+              ' ${filteredComponents[selectedComponentIndex]['name']}',
+              0,
+            );
           }
         } else {
           const CustomSnackbar(

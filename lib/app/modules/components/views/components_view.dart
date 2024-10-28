@@ -413,6 +413,7 @@ class ComponentsView extends GetView<ComponentsController> {
           }
           final levelIndex = index - 1;
           return Container(
+            height: 86.h,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
