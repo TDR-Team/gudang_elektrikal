@@ -57,6 +57,8 @@ class ListComponentsController extends GetxController {
 
   // COMPONENT
   Future<void> fetchComponents() async {
+    isLoading.value = true;
+    
     try {
       var levelSnapshot = await FirebaseFirestore.instance
           .collection('components')

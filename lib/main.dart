@@ -1,22 +1,16 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/modules/network/injection/network_injection.dart';
 import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
-import 'package:gudang_elektrikal/firebase_options.dart';
+import 'package:gudang_elektrikal/initializer.dart';
 import 'app/routes/app_pages.dart';
-import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init();
-  tz.initializeTimeZones();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Initializer.initFirebase();
+  await Initializer.init();
   runApp(const MyApp());
-  NetworkInjection.init();
 }
 
 class MyApp extends StatelessWidget {

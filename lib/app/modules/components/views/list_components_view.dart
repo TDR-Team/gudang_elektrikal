@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
@@ -95,21 +94,57 @@ class ListComponentsView extends GetView<ListComponentsController> {
                       ),
                     );
                   } else if (controller.filteredComponents.isEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/icons/ic_emptyBox.svg'),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            'Laci ${controller.levelName} belum memiliki komponen',
-                            style: semiBoldText16.copyWith(
-                              color: AppColors.primaryColors[1],
+                    return RefreshIndicator(
+                        color: kColorScheme.primary,
+                        onRefresh: () async {
+                          controller.fetchComponents();
+                        },
+                        child: Expanded(
+                          child: Center(
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/img_empty.png',
+                                      fit: BoxFit.fitHeight,
+                                      height: 180.h,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          height: 180.h,
+                                          width: 80.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(35),
+                                            color: Colors.grey,
+                                          ),
+                                          child: const Icon(
+                                            Icons.image_not_supported,
+                                            size: 75,
+                                            color:
+                                                Color.fromARGB(255, 53, 53, 53),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'Laci ${controller.levelName} belum memiliki komponen',
+                                      style: boldText16.copyWith(
+                                        color: kColorScheme.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 150),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
-                    );
+                        ));
                   } else {
                     return RefreshIndicator(
                       color: kColorScheme.primary,

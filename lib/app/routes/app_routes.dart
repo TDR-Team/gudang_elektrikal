@@ -17,6 +17,7 @@ abstract class Routes {
   static const COMPONENTS = _Paths.COMPONENTS;
   static const SPLASH = _Paths.SPLASH;
   static const DASHBOARD = _Paths.DASHBOARD;
+  static const LOADING = _Paths.LOADING;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const LIST_COMPONENTS = '/list-components';
   static const SPLASH = '/splash';
   static const DASHBOARD = '/dashboard';
+  static const LOADING = '/loading';
 }
