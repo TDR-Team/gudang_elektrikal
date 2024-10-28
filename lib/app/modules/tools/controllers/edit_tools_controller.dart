@@ -21,7 +21,9 @@ class EditToolsController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController stockController = TextEditingController();
+  TextEditingController tStockController = TextEditingController();
   FocusNode stockFocusNode = FocusNode();
+  FocusNode tStockFocusNode = FocusNode();
 
   RxBool isLoadingImage = false.obs;
   RxBool isLoadingEditTools = false.obs;
@@ -32,6 +34,7 @@ class EditToolsController extends GetxController {
 
   // Reactive stock value
   RxInt stock = 0.obs;
+  RxInt tStock = 0.obs;
 
   @override
   void onInit() {
@@ -41,17 +44,25 @@ class EditToolsController extends GetxController {
 
     nameController.text = tools['name'] ?? '';
     descriptionController.text = tools['description'] ?? '';
-    stockController.text = tools['tStock'].toString();
+    stockController.text = tools['stock'].toString();
+    tStockController.text = tools['tStock'].toString();
     networkImage.value = tools['imgUrl'];
 
     // Initialize stock value
     stock.value = tools['stock'] ?? 0;
+    tStock.value = tools['tStock'] ?? 0;
 
     // Listen to changes in stockController and update the stock value
     stockController.addListener(() {
       int? value = int.tryParse(stockController.text);
       if (value != null) {
         stock.value = value;
+      }
+    });
+    tStockController.addListener(() {
+      int? value = int.tryParse(tStockController.text);
+      if (value != null) {
+        tStock.value = value;
       }
     });
 
@@ -64,6 +75,14 @@ class EditToolsController extends GetxController {
         }
       }
     });
+    tStockFocusNode.addListener(() {
+      if (!tStockFocusNode.hasFocus) {
+        if (tStockController.text.isEmpty) {
+          tStock.value = 0;
+          tStockController.text = tStock.value.toString();
+        }
+      }
+    });
   }
 
   @override
@@ -71,7 +90,9 @@ class EditToolsController extends GetxController {
     nameController.dispose();
     descriptionController.dispose();
     stockController.dispose();
+    tStockController.dispose();
     stockFocusNode.dispose();
+    tStockFocusNode.dispose();
     super.onClose();
   }
 
@@ -83,11 +104,27 @@ class EditToolsController extends GetxController {
     }
   }
 
+  void tIncrement() {
+    int? currentStock = int.tryParse(tStockController.text);
+    if (currentStock != null) {
+      tStock.value = currentStock + 1;
+      tStockController.text = tStock.value.toString();
+    }
+  }
+
   void decrement() {
     int? currentStock = int.tryParse(stockController.text);
     if (currentStock != null && currentStock > 0) {
       stock.value = currentStock - 1;
       stockController.text = stock.value.toString();
+    }
+  }
+
+  void tDecrement() {
+    int? currentStock = int.tryParse(tStockController.text);
+    if (currentStock != null && currentStock > 0) {
+      tStock.value = currentStock - 1;
+      tStockController.text = tStock.value.toString();
     }
   }
 
@@ -127,8 +164,6 @@ class EditToolsController extends GetxController {
   }
 
   Future onEditToolsClicked() async {
-    int tempStock = tools['tStock'] - tools['stock'];
-
     try {
       isLoadingEditTools.value = true;
 
@@ -141,8 +176,8 @@ class EditToolsController extends GetxController {
         toolsId: {
           'name': nameController.text,
           'description': descriptionController.text,
-          'stock': stock.value - tempStock,
-          'tStock': stock.value,
+          'stock': stock.value,
+          'tStock': tStock.value,
           'imgUrl': imageUrl ?? networkImage.value,
           'updatedAt': FieldValue.serverTimestamp(),
         }
