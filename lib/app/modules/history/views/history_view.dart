@@ -406,6 +406,12 @@ class HistoryView extends GetView<HistoryController> {
                                                             .neutralColors[1]),
                                                   ),
                                                   TextSpan(
+                                                    text: " ",
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[2]),
+                                                  ),
+                                                  TextSpan(
                                                     text: borrowed['name'],
                                                     style: regularText12.copyWith(
                                                         color: AppColors
