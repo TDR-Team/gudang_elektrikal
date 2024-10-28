@@ -117,6 +117,67 @@ class EditToolsView extends GetView<EditToolsController> {
                       ],
                     ),
                     const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Total Stok',
+                            style: semiBoldText16,
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: kColorScheme.primary,
+                              // color: Colors.amber,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: controller.tDecrement,
+                                  icon: Icon(
+                                    Icons.remove,
+                                    color: kColorScheme.surface,
+                                    size: 24.sp,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    bottom: 4,
+                                  ),
+                                  width: 50.w,
+                                  child: CustomTextField(
+                                    label: '',
+                                    controller: controller.tStockController,
+                                    textAlign: TextAlign.center,
+                                    lengthInput: 3,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    textInputType: TextInputType.number,
+                                    focusNode: controller.stockFocusNode,
+                                    textStyle: semiBoldText16,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: controller.tIncrement,
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: kColorScheme.surface,
+                                    size: 24.sp,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
