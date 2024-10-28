@@ -54,7 +54,11 @@ class NotificationService {
   }
 
   static Future<void> scheduleNotification(
-      int id, String title, String body, DateTime scheduledTime) async {
+    int id,
+    String title,
+    String body,
+    DateTime scheduledTime,
+  ) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
