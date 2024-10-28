@@ -151,7 +151,7 @@ class HistoryView extends GetView<HistoryController> {
                           top: 8,
                           left: 16,
                           right: 16,
-                          bottom: 0,
+                          bottom: 30,
                         ),
                         itemBuilder: (context, index) {
                           final activity = controller.activitiesList[index];
@@ -334,7 +334,7 @@ class HistoryView extends GetView<HistoryController> {
                           top: 8,
                           left: 16,
                           right: 16,
-                          bottom: 0,
+                          bottom: 30,
                         ),
                         itemBuilder: (context, index) {
                           final borrowed = controller.borrowedList[index];
