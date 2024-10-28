@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/add_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/edit_tools_view.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
@@ -297,6 +298,19 @@ class GetToolsController extends GetxController {
           title: 'Berhasil',
           message: 'Komponen berhasil diambil.',
         ).showSnackbar();
+
+        if (categorizedTools[categoryName]![toolIndex]['stock'] > 0 &&
+            categorizedTools[categoryName]![toolIndex]['stock'] <= 3) {
+          DateTime scheduledDate = DateTime.now().add(
+            const Duration(seconds: 3),
+          );
+          NotificationService.scheduleNotification(
+            0,
+            'Stok alat sudah mau habis',
+            'Ayo re-stok pada komponen $name sebelum habis',
+            scheduledDate,
+          );
+        }
       } else {
         // Tampilkan pesan jika stok tidak valid
         const CustomSnackbar(
