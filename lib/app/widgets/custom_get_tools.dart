@@ -264,7 +264,7 @@ class CustomGetTools extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            'Ambil',
+                            'Pinjam',
                             style: semiBoldText16.copyWith(
                               color: AppColors.onSecondaryColors[2],
                             ),
