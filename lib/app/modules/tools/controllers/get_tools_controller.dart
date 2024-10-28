@@ -14,6 +14,8 @@ class GetToolsController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   RxBool isLoading = true.obs;
+  RxBool isLoadingGetTools = false.obs;
+
   RxMap<String, List<Map<String, dynamic>>> categorizedTools =
       <String, List<Map<String, dynamic>>>{}.obs;
   RxList<Map<String, dynamic>> tools = <Map<String, dynamic>>[].obs;
@@ -222,6 +224,7 @@ class GetToolsController extends GetxController {
   }
 
   void onGetToolsClicked(String categoryName, String toolsId) async {
+    isLoadingGetTools.value = true;
     try {
       if (!categorizedTools.containsKey(categoryName)) {
         const CustomSnackbar(
@@ -258,7 +261,8 @@ class GetToolsController extends GetxController {
         DocumentReference toolsRef =
             FirebaseFirestore.instance.collection('tools').doc(categoryName);
 
-        if (newStock <= 0) {
+        if (newStock <= -1) {
+          // skip
           // Jika stok baru kurang dari atau sama dengan nol, hapus item dari Firebase
           await toolsRef.update({
             toolsId: FieldValue.delete(),
@@ -296,7 +300,7 @@ class GetToolsController extends GetxController {
         const CustomSnackbar(
           success: true,
           title: 'Berhasil',
-          message: 'Komponen berhasil diambil.',
+          message: 'Alat berhasil dipinjam.',
         ).showSnackbar();
 
         if (categorizedTools[categoryName]![toolIndex]['stock'] > 0 &&
@@ -307,7 +311,7 @@ class GetToolsController extends GetxController {
           NotificationService.scheduleNotification(
             0,
             'Stok alat sudah mau habis',
-            'Ayo re-stok pada komponen $name sebelum habis',
+            'Jangan lupa untuk mengembalikan alat $name pada tempatnya.',
             scheduledDate,
           );
         }
@@ -316,7 +320,7 @@ class GetToolsController extends GetxController {
         const CustomSnackbar(
           success: false,
           title: 'Gagal',
-          message: 'Stok yang diambil tidak valid.',
+          message: 'Stok yang dipinjam tidak valid.',
         ).showSnackbar();
         Get.back();
       }
@@ -325,9 +329,11 @@ class GetToolsController extends GetxController {
       const CustomSnackbar(
         success: false,
         title: 'Gagal',
-        message: 'Gagal mengambil komponen.',
+        message: 'Gagal meminjam alat.',
       ).showSnackbar();
       Get.back();
+    } finally {
+      isLoadingGetTools.value = false;
     }
   }
 
