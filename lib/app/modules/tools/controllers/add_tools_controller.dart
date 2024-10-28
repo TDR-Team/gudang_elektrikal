@@ -35,7 +35,7 @@ class AddToolsController extends GetxController {
     'Kategori 2',
     'Kategori 3',
     'Kategori 4',
-    'Kategori 5'
+    'Kategori 5',
   ];
 
   void onChangedCategory(String? value) {
