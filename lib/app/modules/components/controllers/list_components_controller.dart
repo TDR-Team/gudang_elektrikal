@@ -260,13 +260,9 @@ class ListComponentsController extends GetxController {
 
           await fetchComponents();
 
-          debugPrint(
-              'ini ni:  ${int.parse('${filteredComponents[selectedComponentIndex]}')}');
-          debugPrint(
-              'stock sisa: ${filteredComponents[selectedComponentIndex]['stock']}');
-
           if (filteredComponents[selectedComponentIndex]['stock'] > 0 &&
               filteredComponents[selectedComponentIndex]['stock'] <= 3) {
+                
             ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
               ' ${filteredComponents[selectedComponentIndex]['name']}',
               0,
