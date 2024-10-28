@@ -438,7 +438,14 @@ class ComponentsView extends GetView<ComponentsController> {
                     flex: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: kColorScheme.primary,
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.centerRight,
+                          colors: [
+                            kColorScheme.primary,
+                            kColorScheme.primary.withOpacity(0.85),
+                          ],
+                        ),
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(20),
                           bottomLeft: Radius.circular(20),
