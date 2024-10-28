@@ -62,7 +62,7 @@ class AppPages {
     GetPage(
       name: _Paths.TOOLS,
       page: () => const ToolsView(),
-      binding: ToolsBinding(),
+      binding: DashboardBinding(),
     ),
     GetPage(
       name: _Paths.GET_TOOLS,
@@ -70,14 +70,14 @@ class AppPages {
       binding: ToolsBinding(),
     ),
     GetPage(
-      name: _Paths.ACTIVITY,
+      name: _Paths.HISTORY,
       page: () => const HistoryView(),
-      // binding: HistoryBinding(),
+      binding: DashboardBinding(),
     ),
     GetPage(
       name: _Paths.COMPONENTS,
       page: () => const ComponentsView(),
-      binding: ComponentsBinding(),
+      binding: DashboardBinding(),
     ),
     GetPage(
       name: _Paths.LIST_COMPONENTS,

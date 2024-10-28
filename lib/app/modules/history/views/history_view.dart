@@ -13,59 +13,65 @@ import '../controllers/history_controller.dart';
 
 class HistoryView extends GetView<HistoryController> {
   const HistoryView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Get.put(HistoryController());
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Riwayat'),
-        centerTitle: false,
-      ),
-      body: SafeArea(
-        child: Obx(
-          () {
-            if (true) {
-              return DefaultTabController(
-                initialIndex: 1,
-                length: 2,
-                child: Column(
-                  children: [
-                    TabBar(
-                      controller: controller.tabController,
-                      labelStyle: semiBoldText14,
-                      labelColor: kColorScheme.primary,
-                      padding: EdgeInsets.zero,
-                      labelPadding: EdgeInsets.zero,
-                      indicatorColor: const Color(0xFF0E5970),
-                      unselectedLabelColor:
-                          const Color.fromARGB(255, 25, 27, 27),
-                      tabs: const [
-                        Tab(text: 'Aktivitas'),
-                        Tab(text: 'Pinjaman'),
+    return GetBuilder<HistoryController>(
+      init: HistoryController(),
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Riwayat'),
+            centerTitle: false,
+          ),
+          body: SafeArea(
+            child: Obx(
+              () {
+                if (true) {
+                  return DefaultTabController(
+                    initialIndex: 1,
+                    length: 2,
+                    child: Column(
+                      children: [
+                        TabBar(
+                          controller: controller.tabController,
+                          labelStyle: semiBoldText14,
+                          labelColor: kColorScheme.primary,
+                          padding: EdgeInsets.zero,
+                          labelPadding: EdgeInsets.zero,
+                          indicatorColor: const Color(0xFF0E5970),
+                          unselectedLabelColor:
+                              const Color.fromARGB(255, 25, 27, 27),
+                          tabs: const [
+                            Tab(text: 'Aktivitas'),
+                            Tab(text: 'Peminjaman'),
+                          ],
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: controller.tabController,
+                            children: [
+                              _buildTabContentActivities(
+                                isLoading: controller.isLoadingActivities.value,
+                                onRefreshActivities:
+                                    controller.onRefreshActivities,
+                              ),
+                              _buildTabContentBorrowed(
+                                isLoading: controller.isLoadingBorrowed.value,
+                                onRefreshBorrowed: controller.onRefreshBorrowed,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: controller.tabController,
-                        children: [
-                          _buildTabContentActivities(
-                            isLoading: controller.isLoadingActivities.value,
-                            onRefreshActivities: controller.onRefreshActivities,
-                          ),
-                          _buildTabContentBorrowed(
-                            isLoading: controller.isLoadingBorrowed.value,
-                            onRefreshBorrowed: controller.onRefreshBorrowed,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
-      ),
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -132,7 +138,6 @@ class HistoryView extends GetView<HistoryController> {
                                     color: kColorScheme.primary,
                                   ),
                                 ),
-                                const SizedBox(height: 150),
                               ],
                             ),
                           ],
@@ -160,11 +165,18 @@ class HistoryView extends GetView<HistoryController> {
                                     padding: const EdgeInsets.all(15),
                                     margin: const EdgeInsets.only(right: 10),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue,
+                                      color: activity['itemType'] == 'tools'
+                                          ? kColorScheme.primary
+                                          : AppColors.secondaryColors[2],
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: const Icon(
-                                      Icons.troubleshoot,
+                                    child: Icon(
+                                      activity['itemType'] == 'tools'
+                                          ? Icons.build_outlined
+                                          : Icons.all_inbox,
+                                      color: activity['itemType'] == 'tools'
+                                          ? kColorScheme.secondary
+                                          : kColorScheme.primary,
                                     ),
                                   ),
                                   Expanded(
@@ -309,7 +321,6 @@ class HistoryView extends GetView<HistoryController> {
                                     color: kColorScheme.primary,
                                   ),
                                 ),
-                                const SizedBox(height: 150),
                               ],
                             ),
                           ],
@@ -334,90 +345,89 @@ class HistoryView extends GetView<HistoryController> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Flexible(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(
-                                        15,
-                                      ),
-                                      margin:
-                                          const EdgeInsets.only(right: 10.0),
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(15),
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        decoration: BoxDecoration(
+                                          color: kColorScheme.primary,
                                           borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: const Icon(
-                                        Icons.troubleshoot,
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Icon(
+                                          Icons.build_outlined,
+                                          color: kColorScheme.secondary,
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    flex: 5,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(right: 7.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Pinjam Tools',
-                                            style: semiBoldText14,
-                                          ),
-                                          RichText(
-                                            text: TextSpan(
-                                              text: borrowed['user'],
-                                              style: semiBoldText12.copyWith(
-                                                  color: AppColors
-                                                      .neutralColors[1]),
-                                              children: [
-                                                TextSpan(
-                                                  text: ' ',
-                                                  style: regularText12.copyWith(
-                                                      color: AppColors
-                                                          .neutralColors[2]),
-                                                ),
-                                                TextSpan(
-                                                  text: formatActionType(
-                                                      borrowed['actionType']),
-                                                  style: regularText12.copyWith(
-                                                      color: AppColors
-                                                          .neutralColors[2]),
-                                                ),
-                                                TextSpan(
-                                                  text: " ",
-                                                  style: regularText12.copyWith(
-                                                      color: AppColors
-                                                          .neutralColors[2]),
-                                                ),
-                                                TextSpan(
-                                                  text: borrowed['amount']
-                                                      .toString(),
-                                                  style: regularText12.copyWith(
-                                                      color: AppColors
-                                                          .neutralColors[1]),
-                                                ),
-                                                TextSpan(
-                                                  text: borrowed['name'],
-                                                  style: regularText12.copyWith(
-                                                      color: AppColors
-                                                          .neutralColors[1]),
-                                                ),
-                                                // TextSpan(
-                                                //   text: formatItemType(
-                                                //       borrowed['itemType']),
-                                                //   style: regularText12.copyWith(
-                                                //       color: AppColors
-                                                //           .neutralColors[1]),
-                                                // ),
-                                              ],
+                                      Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 7.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Pinjam Tools',
+                                              style: semiBoldText14,
                                             ),
-                                          ),
-                                        ],
+                                            RichText(
+                                              text: TextSpan(
+                                                text: borrowed['user'],
+                                                style: semiBoldText12.copyWith(
+                                                    color: AppColors
+                                                        .neutralColors[1]),
+                                                children: [
+                                                  TextSpan(
+                                                    text: ' ',
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[2]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: formatActionType(
+                                                        borrowed['actionType']),
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[2]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: " ",
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[2]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: borrowed['amount']
+                                                        .toString(),
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[1]),
+                                                  ),
+                                                  TextSpan(
+                                                    text: borrowed['name'],
+                                                    style: regularText12.copyWith(
+                                                        color: AppColors
+                                                            .neutralColors[1]),
+                                                  ),
+                                                  // TextSpan(
+                                                  //   text: formatItemType(
+                                                  //       borrowed['itemType']),
+                                                  //   style: regularText12.copyWith(
+                                                  //       color: AppColors
+                                                  //           .neutralColors[1]),
+                                                  // ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  Flexible(
-                                    flex: 3,
+                                  Expanded(
+                                    // flex: 1,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
