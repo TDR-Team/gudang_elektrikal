@@ -175,14 +175,13 @@ class GetComponentsView extends GetView<GetComponentsController> {
         ),
         itemBuilder: (context, index) {
           return Container(
-            height: 86.h,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.3),
                   spreadRadius: 3,
                   blurRadius: 10,
-                  offset: const Offset(0, 0), // changes position of shadow
+                  offset: const Offset(0, 0),
                 ),
               ],
               color: const Color.fromARGB(255, 249, 253, 255),
@@ -191,92 +190,94 @@ class GetComponentsView extends GetView<GetComponentsController> {
             margin: const EdgeInsets.symmetric(
               horizontal: 20,
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: 86.h,
-                    decoration: BoxDecoration(
-                      color: kColorScheme.primary,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: kColorScheme.primary,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      levels[index],
-                      style: boldText28.copyWith(
-                        fontSize: 45.sp,
-                        color: kColorScheme.secondary,
+                      alignment: Alignment.center,
+                      child: Text(
+                        levels[index],
+                        style: boldText28.copyWith(
+                          fontSize: 45.sp,
+                          color: kColorScheme.secondary,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Laci ${levels[index]}',
-                        style: boldText20.copyWith(
-                          color: kColorScheme.primary,
+                  Flexible(
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Laci ${levels[index]}',
+                          style: boldText20.copyWith(
+                            color: kColorScheme.primary,
+                          ),
                         ),
-                      ),
-                      Divider(
-                        color: kColorScheme.primary,
-                        height: 1,
-                        thickness: 1,
-                      ),
-                      const SizedBox(height: 4),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: TextButton.icon(
-                            onPressed: () {
-                              onLevelClicked(rackName, levels[index]);
-                            },
-                            style: ButtonStyle(
-                              foregroundColor: const WidgetStatePropertyAll(
-                                Colors.white,
-                              ),
-                              backgroundColor: WidgetStatePropertyAll(
-                                kColorScheme.secondary,
-                              ),
-                              padding: const WidgetStatePropertyAll(
-                                EdgeInsetsDirectional.only(
-                                  start: 12,
-                                  end: 16,
+                        Divider(
+                          color: kColorScheme.primary,
+                          height: 1,
+                          thickness: 1,
+                        ),
+                        const SizedBox(height: 4),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextButton.icon(
+                              onPressed: () {
+                                onLevelClicked(rackName, levels[index]);
+                              },
+                              style: ButtonStyle(
+                                foregroundColor: const WidgetStatePropertyAll(
+                                  Colors.white,
+                                ),
+                                backgroundColor: WidgetStatePropertyAll(
+                                  kColorScheme.secondary,
+                                ),
+                                padding: const WidgetStatePropertyAll(
+                                  EdgeInsetsDirectional.only(
+                                    start: 12,
+                                    end: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                            label: Text(
-                              'Ambil',
-                              style: semiBoldText14.copyWith(
+                              label: Text(
+                                'Ambil',
+                                style: semiBoldText14.copyWith(
+                                  color: kColorScheme.primary,
+                                ),
+                              ),
+                              icon: Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                size: 18.sp,
                                 color: kColorScheme.primary,
                               ),
                             ),
-                            icon: Icon(
-                              Icons.arrow_back_ios_new_rounded,
-                              size: 18.sp,
-                              color: kColorScheme.primary,
-                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )
-                      .marginSymmetric(
-                        horizontal: 16,
-                      )
-                      .paddingOnly(bottom: 4),
-                ),
-              ],
+                        )
+                      ],
+                    )
+                        .marginSymmetric(
+                          horizontal: 16,
+                        )
+                        .paddingOnly(bottom: 4),
+                  ),
+                ],
+              ),
             ),
           );
         },
