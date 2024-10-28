@@ -72,7 +72,11 @@ class HistoryController extends GetxController
         activitiesList.addAll(sortedActivities);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch activities data: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal mengambil data aktivitas.',
+      ).showSnackbar();
     } finally {
       isLoadingActivities.value = false;
     }
@@ -115,7 +119,11 @@ class HistoryController extends GetxController
         borrowedList.addAll(sortedBorrowed);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch borrowed data: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal mengambil data pinjaman.',
+      ).showSnackbar();
     } finally {
       isLoadingBorrowed.value = false;
     }
@@ -123,13 +131,9 @@ class HistoryController extends GetxController
 
   void onReturnClicked(String borrowedId) async {
     try {
-      debugPrint('Memulai proses pengembalian barang untuk ID: $borrowedId');
-
       // Temukan data barang yang dipinjam dari `borrowedList` berdasarkan `borrowedId`
       final borrowedItem = borrowedList
           .firstWhere((item) => item['id'] == borrowedId, orElse: () {
-        debugPrint(
-            'Data pinjaman tidak ditemukan dalam borrowedList untuk ID: $borrowedId');
         return null;
       });
 
@@ -161,23 +165,36 @@ class HistoryController extends GetxController
               .update({borrowedId: FieldValue.delete()});
 
           // Menampilkan snackbar sukses
-          Get.snackbar('Success', 'Barang berhasil dikembalikan oleh $user');
+          CustomSnackbar(
+            success: true,
+            title: 'Berhasil',
+            message: 'Barang berhasil dikembalikan oleh $user',
+          ).showSnackbar();
 
           _logHistoryReturn(returnAmount, name);
 
           // Refresh data borrowed setelah pengembalian
           await fetchBorrowed();
         } else {
-          Get.snackbar(
-              'Error', 'Barang yang akan dikembalikan tidak ditemukan.');
+          const CustomSnackbar(
+            success: false,
+            title: 'Gagal',
+            message: 'Barang yang akan dikembalikan tidak ditemukan.',
+          ).showSnackbar();
         }
       } else {
-        debugPrint('Error: Data pinjaman tidak ditemukan.');
-        Get.snackbar('Error', 'Data pinjaman tidak ditemukan.');
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Data pinjaman tidak ditemukan.',
+        ).showSnackbar();
       }
     } catch (e) {
-      debugPrint('Terjadi error saat mengembalikan barang: $e');
-      Get.snackbar('Error', 'Gagal mengembalikan barang: $e');
+      CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal mengembalikan barang: $e',
+      ).showSnackbar();
     }
   }
 
