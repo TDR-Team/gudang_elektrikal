@@ -13,138 +13,140 @@ import 'package:gudang_elektrikal/app/widgets/show_image_picker_bottom_sheet.dar
 import 'package:shimmer/shimmer.dart';
 
 class EditToolsView extends GetView<EditToolsController> {
-  const EditToolsView({
-    super.key,
-  });
+  const EditToolsView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => EditToolsController());
-    final controller = Get.find<EditToolsController>();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Alat'),
-        centerTitle: false,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Obx(
-                  () => _buildImagePicker(
-                    isLoadingImage: controller.isLoadingImage.value,
-                    imageFileController: controller.imageFileController.value,
-                    networkImage: controller.networkImage.value,
-                    onPickImage: controller.onPickImage,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  label: 'Nama Komponen',
-                  controller: controller.nameController,
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  label: 'Deskripsi',
-                  controller: controller.descriptionController,
-                  textInputType: TextInputType.multiline,
-                  maxLines: 4,
-                  maxLength: 100,
-                  isRequired: false,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GetBuilder<EditToolsController>(
+      init: EditToolsController(),
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Edit Alat'),
+            centerTitle: false,
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Flexible(
-                      child: Text(
-                        'Stok',
-                        style: semiBoldText16,
+                    Obx(
+                      () => _buildImagePicker(
+                        isLoadingImage: controller.isLoadingImage.value,
+                        imageFileController:
+                            controller.imageFileController.value,
+                        networkImage: controller.networkImage.value,
+                        onPickImage: controller.onPickImage,
                       ),
                     ),
-                    Flexible(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: kColorScheme.primary,
-                          // color: Colors.amber,
-                          borderRadius: BorderRadius.circular(10),
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      label: 'Nama Komponen',
+                      controller: controller.nameController,
+                    ),
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      label: 'Deskripsi',
+                      controller: controller.descriptionController,
+                      textInputType: TextInputType.multiline,
+                      maxLines: 4,
+                      maxLength: 100,
+                      isRequired: false,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Stok',
+                            style: semiBoldText16,
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              onPressed: controller.decrement,
-                              icon: Icon(
-                                Icons.remove,
-                                color: kColorScheme.surface,
-                                size: 24.sp,
-                              ),
+                        Flexible(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: kColorScheme.primary,
+                              // color: Colors.amber,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                bottom: 4,
-                              ),
-                              width: 50.w,
-                              child: CustomTextField(
-                                label: '',
-                                controller: controller.stockController,
-                                textAlign: TextAlign.center,
-                                lengthInput: 3,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 10,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: controller.decrement,
+                                  icon: Icon(
+                                    Icons.remove,
+                                    color: kColorScheme.surface,
+                                    size: 24.sp,
+                                  ),
                                 ),
-                                textInputType: TextInputType.number,
-                                focusNode: controller.stockFocusNode,
-                                textStyle: semiBoldText16,
-                              ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    bottom: 4,
+                                  ),
+                                  width: 50.w,
+                                  child: CustomTextField(
+                                    label: '',
+                                    controller: controller.stockController,
+                                    textAlign: TextAlign.center,
+                                    lengthInput: 3,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    textInputType: TextInputType.number,
+                                    focusNode: controller.stockFocusNode,
+                                    textStyle: semiBoldText16,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: controller.increment,
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: kColorScheme.surface,
+                                    size: 24.sp,
+                                  ),
+                                )
+                              ],
                             ),
-                            IconButton(
-                              onPressed: controller.increment,
-                              icon: Icon(
-                                Icons.add,
-                                color: kColorScheme.surface,
-                                size: 24.sp,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: Obx(
-        () => Container(
-          height: 50.h,
-          margin: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            bottom: 25,
-          ),
-          child: CustomElevatedButton(
-            isLoading: controller.isLoadingEditTools.value,
-            onPressed: () async {
-              await controller.onEditToolsClicked();
-            },
-            text: 'Simpan',
-            buttonStyle: primary300Button.copyWith(
-              overlayColor: WidgetStateProperty.all<Color>(
-                const Color.fromARGB(255, 13, 97, 128),
               ),
             ),
-            // buttonStyle: primary300Button,
           ),
-        ),
-      ),
+          bottomNavigationBar: Obx(
+            () => Container(
+              height: 50.h,
+              margin: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                bottom: 25,
+              ),
+              child: CustomElevatedButton(
+                isLoading: controller.isLoadingEditTools.value,
+                onPressed: () async {
+                  await controller.onEditToolsClicked();
+                },
+                text: 'Simpan',
+                buttonStyle: primary300Button.copyWith(
+                  overlayColor: WidgetStateProperty.all<Color>(
+                    const Color.fromARGB(255, 13, 97, 128),
+                  ),
+                ),
+                // buttonStyle: primary300Button,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

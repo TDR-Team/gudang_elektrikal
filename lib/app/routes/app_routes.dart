@@ -13,7 +13,7 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const TOOLS = _Paths.TOOLS;
   static const GET_TOOLS = _Paths.GET_TOOLS;
-  static const ACTIVITY = _Paths.ACTIVITY;
+  static const HISTORY = _Paths.HISTORY;
   static const COMPONENTS = _Paths.COMPONENTS;
   static const SPLASH = _Paths.SPLASH;
   static const DASHBOARD = _Paths.DASHBOARD;
@@ -31,7 +31,7 @@ abstract class _Paths {
   static const EDIT_PROFILE = '/edit-profile';
   static const TOOLS = '/tools';
   static const GET_TOOLS = '/get-tools';
-  static const ACTIVITY = '/activity';
+  static const HISTORY = '/activity';
   static const COMPONENTS = '/components';
   static const LIST_COMPONENTS = '/list-components';
   static const SPLASH = '/splash';
