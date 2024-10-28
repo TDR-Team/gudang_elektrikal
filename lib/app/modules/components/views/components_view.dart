@@ -19,9 +19,10 @@ class ComponentsView extends GetView<ComponentsController> {
           backgroundColor: kColorScheme.surface,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
+            centerTitle: true,
             title: Text(
               'Komponen',
-              style: semiBoldText20,
+              style: semiBoldText24,
             ),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
@@ -135,7 +136,8 @@ class ComponentsView extends GetView<ComponentsController> {
                           bottom: Radius.circular(30),
                         ),
                         image: const DecorationImage(
-                          image: AssetImage('assets/images/img_bgAppbar.png'),
+                          image:
+                              AssetImage('assets/images/img_components_bg.png'),
                           fit: BoxFit.cover,
                         ),
                       ),

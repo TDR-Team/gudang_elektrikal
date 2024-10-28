@@ -273,8 +273,11 @@ class ListComponentsView extends GetView<ListComponentsController> {
               onPressed: () {
                 controller.onAddComponentClicked();
               },
-              backgroundColor: Colors.amber,
-              child: const Icon(Icons.add),
+              backgroundColor: kColorScheme.secondary,
+              child: const Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
             ),
           ),
         );

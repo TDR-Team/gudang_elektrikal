@@ -11,7 +11,7 @@ import '../controllers/tools_controller.dart';
 
 class ToolsView extends GetView<ToolsController> {
   const ToolsView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ToolsController>(
@@ -21,9 +21,10 @@ class ToolsView extends GetView<ToolsController> {
           backgroundColor: kColorScheme.surface,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
+            centerTitle: true,
             title: Text(
               'Alat',
-              style: semiBoldText20,
+              style: semiBoldText24,
             ),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
@@ -45,7 +46,7 @@ class ToolsView extends GetView<ToolsController> {
                         ),
                         image: const DecorationImage(
                           image: AssetImage(
-                            'assets/images/img_bgTools.png',
+                            'assets/images/img_tools_bg.png',
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -209,10 +210,10 @@ class ToolsView extends GetView<ToolsController> {
                 onPressed: () {
                   controller.onAddToolsClicked();
                 },
-                backgroundColor: AppColors.secondaryColors[0],
-                child: Icon(
+                backgroundColor: kColorScheme.secondary,
+                child: const Icon(
                   Icons.add,
-                  color: AppColors.onSecondaryColors[1],
+                  color: Colors.black,
                 ),
               ),
             ),
