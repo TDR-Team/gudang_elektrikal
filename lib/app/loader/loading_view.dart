@@ -18,7 +18,8 @@ class LoadingView extends StatelessWidget {
                 end: Alignment.topLeft,
                 colors: <Color>[
                   kColorScheme.primary,
-                  kColorScheme.primary.withOpacity(0.8),
+                  kColorScheme.primary.withOpacity(0.6),
+                  kColorScheme.primary.withOpacity(0.3),
                 ],
               ),
             ),
@@ -27,7 +28,7 @@ class LoadingView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Image.asset(
-                'assets/images/img_pln.png',
+                'assets/images/img_splash.png',
                 width: MediaQuery.sizeOf(context).width / 2,
               ),
             ),
