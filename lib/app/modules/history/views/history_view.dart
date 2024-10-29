@@ -378,7 +378,7 @@ class HistoryView extends GetView<HistoryController> {
                                               style: semiBoldText14,
                                             ),
                                             SizedBox(
-                                              width: 160.w,
+                                              width: 145.w,
                                               child: RichText(
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 2,
