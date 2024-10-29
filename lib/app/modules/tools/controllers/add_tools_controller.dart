@@ -29,25 +29,38 @@ class AddToolsController extends GetxController {
 
   String? userName;
 
-  final categoryName = 'Kategori 1'.obs;
-  final listCategory = [
-    'Kategori 1',
-    'Kategori 2',
-    'Kategori 3',
-    'Kategori 4',
-    'Kategori 5',
-    'Kategori 6',
-  ];
+  final categoryName = ''.obs;
+  RxList<String> listCategory = <String>[].obs;
 
   void onChangedCategory(String? value) {
     categoryName.value = value ?? "";
+  }
+
+  Future<void> fetchCategories() async {
+    try {
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('tools').get();
+
+      listCategory.value = snapshot.docs.map((doc) => doc.id).toList();
+
+      if (listCategory.isNotEmpty) {
+        categoryName.value = listCategory.first;
+      }
+    } catch (e) {
+      log.e('Error fetching categories: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Error',
+        message: 'Gagal mengambil kategori',
+      ).showSnackbar();
+    }
   }
 
   @override
   void onInit() {
     super.onInit();
     _getUserData();
-    // Initialize the stockController with the initial stock value
+    fetchCategories();
     stockController.text = stock.value.toString();
 
     // Listen to changes in stockController and update the stock value

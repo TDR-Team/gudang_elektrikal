@@ -11,7 +11,10 @@ import 'package:uuid/uuid.dart';
 class ToolsController extends GetxController {
   TextEditingController stockController = TextEditingController();
   TextEditingController searchController = TextEditingController();
+  TextEditingController addCategoryController = TextEditingController();
+  TextEditingController editCategoryController = TextEditingController();
 
+  RxString categoryName = ''.obs;
   RxBool isLoading = true.obs;
   RxMap<String, List<Map<String, dynamic>>> categorizedTools =
       <String, List<Map<String, dynamic>>>{}.obs;
@@ -87,6 +90,103 @@ class ToolsController extends GetxController {
       categorizedTools.value = {};
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  void addCategory(String addcategoryName) async {
+    if (addcategoryName.isEmpty) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Nama kategori tidak boleh kosong.',
+      ).showSnackbar();
+      return;
+    }
+
+    try {
+      // Check if category already exists
+      DocumentSnapshot categoryDoc = await FirebaseFirestore.instance
+          .collection('tools')
+          .doc(addcategoryName)
+          .get();
+
+      if (categoryDoc.exists) {
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Kategori sudah ada.',
+        ).showSnackbar();
+      } else {
+        // Add a new document with the specified category name
+        await FirebaseFirestore.instance
+            .collection('tools')
+            .doc(addcategoryName)
+            .set({});
+
+        const CustomSnackbar(
+          success: true,
+          title: 'Berhasil',
+          message: 'Kategori berhasil ditambahkan.',
+        ).showSnackbar();
+
+        // Update the tools list after adding the category
+        update();
+        fetchTools();
+        categoryName.value = '';
+      }
+    } catch (e) {
+      debugPrint('Error adding category: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal menambahkan kategori.',
+      ).showSnackbar();
+    }
+  }
+
+  void editCategory(String oldCategoryName, String newCategoryName) async {
+    try {
+      final toolsRef = FirebaseFirestore.instance.collection('tools');
+      final categoryData = await toolsRef.doc(oldCategoryName).get();
+
+      if (categoryData.exists) {
+        await toolsRef.doc(newCategoryName).set(categoryData.data() ?? {});
+        await toolsRef.doc(oldCategoryName).delete();
+        const CustomSnackbar(
+          success: true,
+          title: 'Berhasil',
+          message: 'Kategori berhasil diubah',
+        ).showSnackbar();
+      }
+      update();
+      categoryName.value = '';
+    } catch (e) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Error',
+        message: 'Gagal mengubah kategori',
+      ).showSnackbar();
+    }
+  }
+
+  void deleteCategory(String delcategoryName) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('tools')
+          .doc(delcategoryName)
+          .delete();
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Kategori berhasil dihapus',
+      ).showSnackbar();
+      await fetchTools();
+    } catch (e) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Error',
+        message: 'Gagal menghapus kategori',
+      ).showSnackbar();
     }
   }
 
