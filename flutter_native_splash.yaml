@@ -28,6 +28,9 @@ flutter_native_splash:
   # From Android 12 onwards, the splash screen is handled differently than in previous versions.
   # Please visit https://developer.android.com/guide/topics/ui/splash-screen
   # Following are specific parameters for Android 12+.
+  android: true
+  ios: false
+  android_gravity: fill
   android_12:
     # color: '#137BA1'
     background_image: assets/images/img_background_splash.png
@@ -70,8 +73,7 @@ flutter_native_splash:
 
   # The android, ios and web parameters can be used to disable generating a splash screen on a given
   # platform.
-  android: true
-  ios: true
+ 
   #web: false
 
   # Platform specific images can be specified with the following parameters, which will override
