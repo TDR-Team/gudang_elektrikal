@@ -13,7 +13,7 @@ class AuthController extends GetxController {
     User? user = FirebaseAuth.instance.currentUser;
 
     Timer(
-      const Duration(seconds: 2),
+      const Duration(seconds: 3),
       () async {
         if (user != null) {
           Get.offAllNamed('/dashboard');
