@@ -55,9 +55,9 @@ class ToolsController extends GetxController {
 
       for (var categoryDoc in categorySnapshot.docs) {
         String categoryName = categoryDoc.id;
-
         final toolsMap = categoryDoc.data() as Map<String, dynamic>;
 
+        // Buat daftar alat dan urutkan berdasarkan nama
         List<Map<String, dynamic>> toolsList = toolsMap.entries.map((entry) {
           return {
             'id': entry.key,
@@ -69,22 +69,18 @@ class ToolsController extends GetxController {
           };
         }).toList();
 
-        tools.value = toolsMap.entries.map((entry) {
-          var toolsData = entry.value as Map<String, dynamic>;
-          return {
-            'id': entry.key,
-            'name': toolsData['name'] ?? 'No name',
-            'description': toolsData['description'] ?? '',
-            'stock': toolsData['stock'] ?? 0,
-            'tStock': toolsData['tStock'] ?? 0,
-            'imgUrl': toolsData['imgUrl'] ?? '',
-          };
-        }).toList();
+        // Urutkan toolsList berdasarkan 'name' secara alfabetis
+        toolsList.sort((a, b) => a['name'].compareTo(b['name']));
 
+        // Masukkan toolsList yang sudah diurutkan ke dalam toolsData
         toolsData[categoryName] = toolsList;
       }
 
-      categorizedTools.value = toolsData;
+      // Urutkan kunci kategori secara alfabetis sebelum diatur ke categorizedTools
+      List<String> sortedKeys = toolsData.keys.toList()..sort();
+      categorizedTools.value = {
+        for (var key in sortedKeys) key: toolsData[key] ?? []
+      };
     } catch (e) {
       debugPrint('Error fetching tools: $e');
       categorizedTools.value = {};
@@ -92,6 +88,52 @@ class ToolsController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // Future<void> fetchTools() async {
+  //   isLoading.value = true;
+  //   try {
+  //     final QuerySnapshot categorySnapshot =
+  //         await FirebaseFirestore.instance.collection('tools').get();
+
+  //     for (var categoryDoc in categorySnapshot.docs) {
+  //       String categoryName = categoryDoc.id;
+
+  //       final toolsMap = categoryDoc.data() as Map<String, dynamic>;
+
+  //       List<Map<String, dynamic>> toolsList = toolsMap.entries.map((entry) {
+  //         return {
+  //           'id': entry.key,
+  //           'name': entry.value['name'] ?? 'No name',
+  //           'description': entry.value['description'] ?? '',
+  //           'stock': entry.value['stock'] ?? 0,
+  //           'tStock': entry.value['tStock'] ?? 0,
+  //           'imgUrl': entry.value['imgUrl'] ?? '',
+  //         };
+  //       }).toList();
+
+  //       tools.value = toolsMap.entries.map((entry) {
+  //         var toolsData = entry.value as Map<String, dynamic>;
+  //         return {
+  //           'id': entry.key,
+  //           'name': toolsData['name'] ?? 'No name',
+  //           'description': toolsData['description'] ?? '',
+  //           'stock': toolsData['stock'] ?? 0,
+  //           'tStock': toolsData['tStock'] ?? 0,
+  //           'imgUrl': toolsData['imgUrl'] ?? '',
+  //         };
+  //       }).toList();
+
+  //       toolsData[categoryName] = toolsList;
+  //     }
+
+  //     categorizedTools.value = toolsData;
+  //   } catch (e) {
+  //     debugPrint('Error fetching tools: $e');
+  //     categorizedTools.value = {};
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
   void addCategory(String addcategoryName) async {
     if (addcategoryName.isEmpty) {
@@ -150,16 +192,23 @@ class ToolsController extends GetxController {
       final categoryData = await toolsRef.doc(oldCategoryName).get();
 
       if (categoryData.exists) {
+        // Buat dokumen baru dengan nama kategori yang diperbarui
         await toolsRef.doc(newCategoryName).set(categoryData.data() ?? {});
+
+        // Hapus dokumen dengan nama kategori lama
         await toolsRef.doc(oldCategoryName).delete();
+
+        // Tampilkan Snackbar sukses
         const CustomSnackbar(
           success: true,
           title: 'Berhasil',
           message: 'Kategori berhasil diubah',
         ).showSnackbar();
       }
-      update();
-      categoryName.value = '';
+
+      // Memuat ulang data kategori setelah proses selesai
+      await fetchTools();
+      categoryName.value = ''; // Reset kategori
     } catch (e) {
       const CustomSnackbar(
         success: false,
@@ -180,7 +229,7 @@ class ToolsController extends GetxController {
         title: 'Berhasil',
         message: 'Kategori berhasil dihapus',
       ).showSnackbar();
-      await fetchTools();
+      await fetchTools(); // Refresh the tools list
     } catch (e) {
       const CustomSnackbar(
         success: false,

@@ -83,17 +83,12 @@ class ListComponentsController extends GetxController {
           };
         }).toList();
 
+        // Mengurutkan komponen berdasarkan nama
+        components.sort((a, b) => a['name'].compareTo(b['name']));
+
+        // Menginisialisasi filteredComponents sebagai salinan dari komponen yang telah diurutkan
         // ignore: invalid_use_of_protected_member
         filteredComponents.value = components.value;
-
-        // Check for low stock and trigger notification if conditions are met
-        // for (var component in filteredComponents) {
-        //   int stock = component['stock'];
-        //   if (stock > 0 && stock <= 3) {
-        //     ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
-        //         ' ${component['name']}');
-        //   }
-        // }
       } else {
         components.value = [];
         filteredComponents.value = [];
