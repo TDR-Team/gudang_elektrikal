@@ -99,50 +99,47 @@ class ListComponentsView extends GetView<ListComponentsController> {
                         onRefresh: () async {
                           controller.fetchComponents();
                         },
-                        child: Expanded(
-                          child: Center(
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/img_empty.png',
-                                      fit: BoxFit.fitHeight,
-                                      height: 180.h,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container(
-                                          height: 180.h,
-                                          width: 80.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(35),
-                                            color: Colors.grey,
-                                          ),
-                                          child: const Icon(
-                                            Icons.image_not_supported,
-                                            size: 75,
-                                            color:
-                                                Color.fromARGB(255, 53, 53, 53),
-                                          ),
-                                        );
-                                      },
+                        child: Center(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/img_empty.png',
+                                    fit: BoxFit.fitHeight,
+                                    height: 180.h,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 180.h,
+                                        width: 80.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(35),
+                                          color: Colors.grey,
+                                        ),
+                                        child: const Icon(
+                                          Icons.image_not_supported,
+                                          size: 75,
+                                          color:
+                                              Color.fromARGB(255, 53, 53, 53),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'Laci ${controller.levelName} belum memiliki komponen',
+                                    style: boldText16.copyWith(
+                                      color: kColorScheme.primary,
                                     ),
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      'Laci ${controller.levelName} belum memiliki komponen',
-                                      style: boldText16.copyWith(
-                                        color: kColorScheme.primary,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 150),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                  const SizedBox(height: 150),
+                                ],
+                              ),
+                            ],
                           ),
                         ));
                   } else {

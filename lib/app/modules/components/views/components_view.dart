@@ -211,46 +211,48 @@ class ComponentsView extends GetView<ComponentsController> {
                             const SizedBox(height: 10),
                             _buildAddLevelButton(controller),
                             const SizedBox(height: 20),
-                            ListView(
-                              shrinkWrap: true,
-                              children: [
-                                Center(
-                                  child: Column(
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/img_empty.png',
-                                        fit: BoxFit.fitHeight,
-                                        height: 180.h,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Container(
-                                            height: 180.h,
-                                            width: 80.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(35),
-                                              color: Colors.grey,
-                                            ),
-                                            child: const Icon(
-                                              Icons.image_not_supported,
-                                              size: 75,
-                                              color: Color.fromARGB(
-                                                  255, 53, 53, 53),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'Belum ada Laci pada Rak ini',
-                                        style: boldText16.copyWith(
-                                          color: kColorScheme.primary,
+                            Expanded(
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: [
+                                  Center(
+                                    child: Column(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/img_empty.png',
+                                          fit: BoxFit.fitHeight,
+                                          height: 180.h,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              height: 180.h,
+                                              width: 80.w,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(35),
+                                                color: Colors.grey,
+                                              ),
+                                              child: const Icon(
+                                                Icons.image_not_supported,
+                                                size: 75,
+                                                color: Color.fromARGB(
+                                                    255, 53, 53, 53),
+                                              ),
+                                            );
+                                          },
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'Belum ada Laci pada Rak ini',
+                                          style: boldText16.copyWith(
+                                            color: kColorScheme.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
