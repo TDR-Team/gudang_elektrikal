@@ -14,9 +14,7 @@ import 'package:gudang_elektrikal/app/widgets/show_image_picker_bottom_sheet.dar
 import 'package:shimmer/shimmer.dart';
 
 class AddToolsView extends GetView<AddToolsController> {
-  const AddToolsView({
-    super.key,
-  });
+  const AddToolsView({super.key});
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => AddToolsController());

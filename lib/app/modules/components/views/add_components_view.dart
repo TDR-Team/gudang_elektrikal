@@ -14,9 +14,7 @@ import 'package:gudang_elektrikal/app/widgets/show_image_picker_bottom_sheet.dar
 import 'package:shimmer/shimmer.dart';
 
 class AddComponentsView extends GetView<AddComponentsController> {
-  const AddComponentsView({
-    super.key,
-  });
+  const AddComponentsView({super.key});
 
   @override
   Widget build(BuildContext context) {
