@@ -107,7 +107,7 @@ class RegisterView extends GetView<RegisterController> {
                                   vertical: 3,
                                 ),
                                 child: CircularProgressIndicator(
-                                  color: kColorScheme.secondary,
+                                  color: kColorScheme.primary,
                                 ),
                               )
                             : Text(

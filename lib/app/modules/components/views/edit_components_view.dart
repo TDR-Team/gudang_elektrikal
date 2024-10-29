@@ -16,14 +16,16 @@ import '../controllers/edit_components_controller.dart';
 
 class EditComponentsView extends GetView<EditComponentsController> {
   const EditComponentsView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<EditComponentsController>(
       init: EditComponentsController(),
       builder: (controller) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.transparent,
             leading: IconButton(
               padding: const EdgeInsets.all(16),
               onPressed: () => Get.back(),

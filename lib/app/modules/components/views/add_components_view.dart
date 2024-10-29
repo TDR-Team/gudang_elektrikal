@@ -24,7 +24,9 @@ class AddComponentsView extends GetView<AddComponentsController> {
       init: AddComponentsController(),
       builder: (controller) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.transparent,
             leading: IconButton(
               padding: const EdgeInsets.all(16),
               onPressed: () {
