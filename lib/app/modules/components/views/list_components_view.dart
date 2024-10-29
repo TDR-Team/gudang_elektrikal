@@ -34,7 +34,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                         ),
                         image: const DecorationImage(
                           image: AssetImage(
-                            'assets/images/img_bgAppbar.png',
+                            'assets/images/img_components_bg.png',
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -202,11 +202,11 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                       builder: (context) {
                                         return AlertDialog(
                                           title: Text(
-                                            'Apakah anda yakin?',
+                                            'Hapus Komponen',
                                             style: semiBoldText16,
                                           ),
                                           content: Text(
-                                            'Komponen ini akan dihapus',
+                                            'Apakah anda yakin ingin menghapus komponen ini?',
                                             style: regularText12,
                                           ),
                                           actions: [
@@ -225,6 +225,7 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                                   horizontal: 16,
                                                 ),
                                                 decoration: BoxDecoration(
+                                                  color: kColorScheme.error,
                                                   borderRadius:
                                                       BorderRadius.circular(50),
                                                   border: Border.all(
@@ -235,17 +236,18 @@ class ListComponentsView extends GetView<ListComponentsController> {
                                                   'Hapus',
                                                   style:
                                                       semiBoldText12.copyWith(
-                                                    color: kColorScheme.error,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, false),
+                                              onPressed: () => Get.back(),
                                               child: Text(
-                                                'Kembali',
-                                                style: semiBoldText12,
+                                                'Batal',
+                                                style: semiBoldText14.copyWith(
+                                                  color: kColorScheme.primary,
+                                                ),
                                               ),
                                             ),
                                           ],

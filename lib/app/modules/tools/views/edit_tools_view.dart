@@ -22,7 +22,7 @@ class EditToolsView extends GetView<EditToolsController> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Edit Alat'),
+            title: const Text('Ubah Alat'),
             centerTitle: false,
           ),
           body: SafeArea(

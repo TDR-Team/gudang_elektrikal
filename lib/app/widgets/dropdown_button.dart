@@ -52,6 +52,7 @@ class DropDown<T> extends StatelessWidget {
       ),
       popupProps: PopupProps.menu(
         menuProps: MenuProps(
+          backgroundColor: Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
         showSearchBox: showSearchBox,

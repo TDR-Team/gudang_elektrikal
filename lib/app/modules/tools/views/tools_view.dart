@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_tools.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_search.dart';
+import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
 
 import '../../../common/theme/font.dart';
 import '../controllers/tools_controller.dart';
@@ -21,13 +22,40 @@ class ToolsView extends GetView<ToolsController> {
           backgroundColor: kColorScheme.surface,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
-            centerTitle: true,
             title: Text(
               'Alat',
               style: semiBoldText24,
             ),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: PopupMenuButton<int>(
+                  color: Colors.white,
+                  onSelected: (value) {
+                    switch (value) {
+                      case 0:
+                        addCategoryDialog();
+                        break;
+                    }
+                  },
+                  icon: Icon(
+                    Icons.more_vert,
+                    size: 24.sp,
+                    color: Colors.black,
+                  ),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text(
+                        'Tambah Kategori',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,13 +102,14 @@ class ToolsView extends GetView<ToolsController> {
                               child: Container(
                                 padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey,
+                                  color: kColorScheme.primary,
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(
                                   Icons.tune,
                                   size: 24.sp,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -164,13 +193,46 @@ class ToolsView extends GetView<ToolsController> {
                               String categoryName = entry.key;
                               List<Map<String, dynamic>> toolsList =
                                   entry.value;
-
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    categoryName,
-                                    style: semiBoldText16,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        categoryName,
+                                        style: semiBoldText16,
+                                      ),
+                                      PopupMenuButton<int>(
+                                        color: Colors.white,
+                                        onSelected: (value) {
+                                          switch (value) {
+                                            case 0:
+                                              editCategoryDialog(categoryName);
+                                              break;
+                                            case 1:
+                                              deleteCategoryDialog(
+                                                  categoryName);
+                                              break;
+                                          }
+                                        },
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          size: 18,
+                                        ),
+                                        itemBuilder: (context) => [
+                                          const PopupMenuItem<int>(
+                                            value: 0,
+                                            child: Text(
+                                              'Ubah Kategori',
+                                            ),
+                                          ),
+                                          const PopupMenuItem<int>(
+                                            value: 1,
+                                            child: Text('Hapus Kategori'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(height: 5.h),
                                   ...toolsList.map((tools) {
@@ -189,8 +251,66 @@ class ToolsView extends GetView<ToolsController> {
                                             categoryName, tools['id']);
                                       },
                                       onTapDelete: () {
-                                        controller.onDeleteToolsClicked(
-                                            categoryName, tools['id']);
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                'Hapus Alat',
+                                                style: semiBoldText16,
+                                              ),
+                                              content: Text(
+                                                'Apakah anda yakin ingin menghapus alat ini?',
+                                                style: regularText12,
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    controller
+                                                        .onDeleteToolsClicked(
+                                                            categoryName,
+                                                            tools['id']);
+                                                  },
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      vertical: 8,
+                                                      horizontal: 16,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: kColorScheme.error,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      border: Border.all(
+                                                        color:
+                                                            kColorScheme.error,
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Hapus',
+                                                      style: semiBoldText12
+                                                          .copyWith(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Get.back(),
+                                                  child: Text(
+                                                    'Batal',
+                                                    style:
+                                                        semiBoldText14.copyWith(
+                                                      color:
+                                                          kColorScheme.primary,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       },
                                     );
                                   }),
@@ -225,6 +345,144 @@ class ToolsView extends GetView<ToolsController> {
           ),
         );
       },
+    );
+  }
+
+  void addCategoryDialog() {
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          'Tambah Kategori',
+          style: semiBoldText16,
+        ),
+        content: TextField(
+          controller: controller.addCategoryController,
+          style: semiBoldText14,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Nama Kategori',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              String addCategoryName =
+                  controller.addCategoryController.text.trim();
+              if (addCategoryName.isEmpty) {
+                const CustomSnackbar(
+                  success: false,
+                  title: 'Error',
+                  message: 'Nama kategori tidak boleh kosong.',
+                ).showSnackbar();
+              } else {
+                controller.addCategory(addCategoryName);
+                Get.back(); // Close the dialog
+              }
+            },
+            child: Text(
+              'Tambah',
+              style: semiBoldText14.copyWith(
+                color: kColorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void editCategoryDialog(String oldCategoryName) {
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          'Ubah Kategori',
+          style: semiBoldText16,
+        ),
+        content: TextField(
+          controller: controller.editCategoryController,
+          style: semiBoldText14,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Nama Kategori',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              String newCategoryName =
+                  controller.editCategoryController.text.trim();
+              if (newCategoryName.isEmpty) {
+                const CustomSnackbar(
+                  success: false,
+                  title: 'Error',
+                  message: 'Nama kategori tidak boleh kosong.',
+                ).showSnackbar();
+              } else {
+                controller.editCategory(oldCategoryName, newCategoryName);
+                Get.back(); // Close the dialog
+              }
+            },
+            child: Text(
+              'Ubah',
+              style: semiBoldText14.copyWith(
+                color: kColorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void deleteCategoryDialog(String categoryName) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Hapus Kategori',
+          style: semiBoldText16,
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin menghapus kategori ini?',
+          style: regularText12,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              controller.deleteCategory(categoryName);
+              Get.back(); // Close the dialog
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 16,
+              ),
+              decoration: BoxDecoration(
+                color: kColorScheme.error,
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(
+                  color: kColorScheme.error,
+                ),
+              ),
+              child: Text(
+                'Hapus',
+                style: semiBoldText12.copyWith(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Batal',
+              style: semiBoldText14.copyWith(
+                color: kColorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -19,7 +19,6 @@ class ComponentsView extends GetView<ComponentsController> {
           backgroundColor: kColorScheme.surface,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
-            centerTitle: true,
             title: Text(
               'Komponen',
               style: semiBoldText24,
@@ -30,6 +29,7 @@ class ComponentsView extends GetView<ComponentsController> {
               Padding(
                 padding: const EdgeInsets.only(right: 10.0),
                 child: PopupMenuButton<int>(
+                  color: Colors.white,
                   onSelected: (value) {
                     switch (value) {
                       case 0:
@@ -52,11 +52,11 @@ class ComponentsView extends GetView<ComponentsController> {
                           builder: (context) {
                             return AlertDialog(
                               title: Text(
-                                'Apakah anda yakin?',
+                                'Hapus Rak',
                                 style: semiBoldText16,
                               ),
                               content: Text(
-                                'Rak ini akan dihapus',
+                                'Apakah anda yakin ingin menghapus rak ini?',
                                 style: regularText12,
                               ),
                               actions: [
@@ -69,6 +69,7 @@ class ComponentsView extends GetView<ComponentsController> {
                                       horizontal: 16,
                                     ),
                                     decoration: BoxDecoration(
+                                      color: kColorScheme.error,
                                       borderRadius: BorderRadius.circular(50),
                                       border: Border.all(
                                         color: kColorScheme.error,
@@ -77,17 +78,18 @@ class ComponentsView extends GetView<ComponentsController> {
                                     child: Text(
                                       'Hapus',
                                       style: semiBoldText12.copyWith(
-                                        color: kColorScheme.error,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
+                                  onPressed: () => Get.back(),
                                   child: Text(
-                                    'Kembali',
-                                    style: semiBoldText12,
+                                    'Batal',
+                                    style: semiBoldText14.copyWith(
+                                      color: kColorScheme.primary,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -287,15 +289,15 @@ class ComponentsView extends GetView<ComponentsController> {
               onPressed: () {
                 controller.addLevel();
               },
-              label: Text(
+              label: const Text(
                 'Laci',
                 style: TextStyle(
-                  color: kColorScheme.secondary,
+                  color: Colors.white,
                 ),
               ),
               icon: Icon(
                 Icons.add_rounded,
-                color: kColorScheme.secondary,
+                color: Colors.white,
                 size: 20.sp,
               ),
             ),
@@ -319,7 +321,7 @@ class ComponentsView extends GetView<ComponentsController> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Obx(
           () => DropDown(
-            fillColor: const Color.fromARGB(255, 249, 253, 255),
+            fillColor: Colors.white,
             hintText: 'Pilih Rak',
             listElement: listRackNames,
             selectedItem:
@@ -558,11 +560,11 @@ class ComponentsView extends GetView<ComponentsController> {
               builder: (context) {
                 return AlertDialog(
                   title: Text(
-                    'Apakah anda yakin?',
+                    'Hapus Laci',
                     style: semiBoldText16,
                   ),
                   content: Text(
-                    'Laci ini akan dihapus',
+                    'Apakah anda yakin ingin menghapus laci ini?',
                     style: regularText12,
                   ),
                   actions: [
@@ -580,6 +582,7 @@ class ComponentsView extends GetView<ComponentsController> {
                           horizontal: 16,
                         ),
                         decoration: BoxDecoration(
+                          color: kColorScheme.error,
                           borderRadius: BorderRadius.circular(50),
                           border: Border.all(
                             color: kColorScheme.error,
@@ -588,16 +591,18 @@ class ComponentsView extends GetView<ComponentsController> {
                         child: Text(
                           'Hapus',
                           style: semiBoldText12.copyWith(
-                            color: kColorScheme.error,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pop(context, false),
+                      onPressed: () => Get.back(),
                       child: Text(
-                        'Kembali',
-                        style: semiBoldText12,
+                        'Batal',
+                        style: semiBoldText14.copyWith(
+                          color: kColorScheme.primary,
+                        ),
                       ),
                     ),
                   ],

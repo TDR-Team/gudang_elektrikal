@@ -56,7 +56,7 @@ class GetToolsView extends GetView<GetToolsController> {
                         ),
                         image: const DecorationImage(
                           image: AssetImage(
-                            'assets/images/img_bgTools.png',
+                            'assets/images/img_tools_bg.png',
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -84,13 +84,14 @@ class GetToolsView extends GetView<GetToolsController> {
                               child: Container(
                                 padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey,
+                                  color: kColorScheme.primary,
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(
                                   Icons.tune,
                                   size: 24.sp,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
