@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/utils/logging.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_snackbar.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gudang_elektrikal/app/common/helpers/custom_timeago.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HistoryController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -38,6 +40,45 @@ class HistoryController extends GetxController
 
   void _handleTabChange() {}
 
+  String formatActionType(String actionType) {
+    switch (actionType) {
+      case 'add':
+        return 'menambahkan';
+      case 'edit':
+        return 'mengubah';
+      case 'delete':
+        return 'menghapus';
+      case 'take':
+        return 'mengambil';
+      case 'borrow':
+        return 'meminjam';
+      case 'return':
+        return 'mengembalikan';
+      default:
+        return actionType;
+    }
+  }
+
+  String formatItemType(String itemType) {
+    switch (itemType) {
+      case 'components':
+        return 'Komponen';
+      case 'tools':
+        return 'Alat';
+      default:
+        return itemType;
+    }
+  }
+
+  String formatUser(String user) {
+    return user.split(" ").first;
+  }
+
+  String formatTimestamp(Timestamp timestamp) {
+    timeago.setLocaleMessages('id', CustomIdMessages());
+    return timeago.format(timestamp.toDate(), locale: 'id');
+  }
+
   Future<void> fetchActivities() async {
     isLoadingActivities.value = true;
     try {
@@ -56,7 +97,10 @@ class HistoryController extends GetxController
             'actionType': entry.value['actionType'],
             'itemType': entry.value['itemType'],
             'timestamp': entry.value['timestamp'],
-            'itemData': entry.value['itemData'],
+            'xName': entry.value['xName'],
+            'xDescription': entry.value['xDescription'],
+            'xAmount': entry.value['xAmount'],
+            'xLocation': entry.value['xLocation'],
           };
         }).toList();
 
@@ -139,15 +183,20 @@ class HistoryController extends GetxController
 
       if (borrowedItem != null) {
         final String categoryName = borrowedItem['categoryName'];
-        final String toolsId = borrowedItem['itemData'].keys.first;
+        final String toolsId = borrowedItem['itemData'];
         final int returnAmount = borrowedItem['amount'] ?? 0;
         final String user = borrowedItem['user'] ?? '';
-        final String name = borrowedItem['itemData'][toolsId]["name"];
-        final int currentStock =
-            borrowedItem['itemData'][toolsId]["stock"] ?? 0;
+        final String name = borrowedItem["name"] ?? "";
+        final String description = borrowedItem["description"] ?? "";
+        final String amount = borrowedItem["amount"].toString();
+        final String category = borrowedItem["category"] ?? "";
 
         final toolsRef =
             FirebaseFirestore.instance.collection('tools').doc(categoryName);
+
+        final toolsSnapshot = await toolsRef.get();
+        final Map<String, dynamic>? toolsData = toolsSnapshot.data();
+        final int currentStock = toolsData?[toolsId]?['stock'] ?? 0;
 
         if (returnAmount > 0) {
           final int newStock = currentStock + returnAmount;
@@ -171,7 +220,7 @@ class HistoryController extends GetxController
             message: 'Barang berhasil dikembalikan oleh $user',
           ).showSnackbar();
 
-          _logHistoryReturn(returnAmount, name);
+          _logHistoryReturn(name, description, amount, category);
 
           // Refresh data borrowed setelah pengembalian
           await fetchBorrowed();
@@ -242,8 +291,10 @@ class HistoryController extends GetxController
   }
 
   Future<void> _logHistoryReturn(
-    int amount,
     String name,
+    String description,
+    String amount,
+    String category,
   ) async {
     try {
       final borrowedId =
@@ -256,8 +307,10 @@ class HistoryController extends GetxController
           'user': userName,
           'itemType': "tools",
           'actionType': "return",
-          'name': name,
-          'amount': amount,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

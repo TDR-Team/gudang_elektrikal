@@ -135,14 +135,23 @@ class GetToolsController extends GetxController {
 
   Future<void> onDeleteToolsClicked(String categoryName, String toolsId) async {
     try {
-      // Ambil data tools berdasarkan categoryName dan toolsId
-      final toolsDoc = await FirebaseFirestore.instance
-          .collection('tools')
-          .doc(categoryName)
-          .get();
+      final toolIndex = categorizedTools[categoryName]?.indexWhere(
+        (tool) => tool['id'] == toolsId,
+      );
 
-      final toolsMap = toolsDoc.data();
-      final toolsData = toolsMap?[toolsId] as Map<String, dynamic>? ?? {};
+      if (toolIndex == null || toolIndex == -1) {
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Komponen tidak ditemukan.',
+        ).showSnackbar();
+        return;
+      }
+
+      final selectedTool = categorizedTools[categoryName]![toolIndex];
+      int selectedStock = selectedTool['selectedStock'] ?? 1;
+      String name = selectedTool['name'];
+      String description = selectedTool['description'];
 
       // Hapus tools
       await FirebaseFirestore.instance
@@ -152,12 +161,12 @@ class GetToolsController extends GetxController {
         toolsId: FieldValue.delete(),
       });
 
-      // Log data alat yang dihapus ke dalam riwayat aktivitas
-      final logData = {
-        toolsId: toolsData,
-      };
-
-      await _logHistoryActivity(logData);
+      await _logHistoryActivity(
+        name,
+        description,
+        "$selectedStock buah",
+        categoryName,
+      );
 
       Get.back();
       // Tampilkan snackbar sukses
@@ -235,7 +244,6 @@ class GetToolsController extends GetxController {
         return;
       }
 
-      // Cari alat berdasarkan `toolsId`
       final toolIndex = categorizedTools[categoryName]?.indexWhere(
         (tool) => tool['id'] == toolsId,
       );
@@ -253,6 +261,7 @@ class GetToolsController extends GetxController {
       int selectedStock = selectedTool['selectedStock'] ?? 1;
       int availableStock = selectedTool['stock'] ?? 0;
       String name = selectedTool['name'];
+      String description = selectedTool['description'];
 
       if (selectedStock > 0) {
         int newStock = availableStock - selectedStock;
@@ -286,15 +295,14 @@ class GetToolsController extends GetxController {
         // Refresh UI dan tampilkan pesan sukses
         categorizedTools.refresh();
 
-        final logData = {
-          toolsId: {
-            'name': name,
-            'stock': newStock,
-          },
-        };
-
-        await _logHistoryActivity(logData);
-        await _logHistoryBorrowed(logData, name, selectedStock, categoryName);
+        await _logHistoryActivity(
+          name,
+          description,
+          "$selectedStock buah",
+          categoryName,
+        );
+        await _logHistoryBorrowed(
+            toolsId, name, description, selectedStock, categoryName);
 
         Get.back();
         const CustomSnackbar(
@@ -373,7 +381,10 @@ class GetToolsController extends GetxController {
   }
 
   Future<void> _logHistoryActivity(
-    Map<String, dynamic> toolsData,
+    String name,
+    String description,
+    String amount,
+    String category,
   ) async {
     try {
       final activityId =
@@ -386,7 +397,10 @@ class GetToolsController extends GetxController {
           'user': userName,
           'itemType': "tools",
           'actionType': "borrow",
-          'itemData': toolsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));
@@ -396,8 +410,9 @@ class GetToolsController extends GetxController {
   }
 
   Future<void> _logHistoryBorrowed(
-    Map<String, dynamic> toolsData,
+    String itemData,
     String name,
+    String description,
     int amount,
     String categoryName,
   ) async {
@@ -412,9 +427,10 @@ class GetToolsController extends GetxController {
           'user': userName,
           'itemType': "tools",
           'actionType': "borrow",
-          'itemData': toolsData,
-          'amount': amount,
+          'itemData': itemData,
           'name': name,
+          'description': description,
+          'amount': amount,
           'categoryName': categoryName,
           'timestamp': FieldValue.serverTimestamp(),
         }

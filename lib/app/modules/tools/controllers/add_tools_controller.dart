@@ -207,7 +207,12 @@ class AddToolsController extends GetxController {
 
         // Add tools data to the specified category
         await _addToolsInCategory(toolsData);
-        await _logHistoryActivity(toolsData);
+        await _logAddToolsHistoryActivity(
+          name,
+          description ?? "",
+          "$stock buah",
+          categoryName.value,
+        );
 
         Get.back();
         const CustomSnackbar(
@@ -282,8 +287,11 @@ class AddToolsController extends GetxController {
     }
   }
 
-  Future<void> _logHistoryActivity(
-    Map<String, dynamic> toolsData,
+  Future<void> _logAddToolsHistoryActivity(
+    String name,
+    String description,
+    String amount,
+    String category,
   ) async {
     try {
       final activityId =
@@ -296,7 +304,10 @@ class AddToolsController extends GetxController {
           'user': userName,
           'itemType': "tools",
           'actionType': "add",
-          'itemData': toolsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

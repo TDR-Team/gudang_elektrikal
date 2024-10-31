@@ -35,7 +35,10 @@ class EditComponentsView extends GetView<EditComponentsController> {
                 color: Colors.black,
               ),
             ),
-            title: const Text('Ubah Komponen'),
+            title: Text(
+              'Ubah Komponen',
+              style: semiBoldText20,
+            ),
             centerTitle: false,
           ),
           body: SafeArea(

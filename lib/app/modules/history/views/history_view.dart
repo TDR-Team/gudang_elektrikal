@@ -1,13 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:gudang_elektrikal/app/common/helpers/custom_timeago.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
+import 'package:gudang_elektrikal/app/modules/history/views/detail_activity_view.dart';
 import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_job_horizontal.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../controllers/history_controller.dart';
 
@@ -159,96 +157,117 @@ class HistoryView extends GetView<HistoryController> {
                         ),
                         itemBuilder: (context, index) {
                           final activity = controller.activitiesList[index];
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(15),
-                                    margin: const EdgeInsets.only(right: 10),
-                                    decoration: BoxDecoration(
-                                      color: activity['itemType'] == 'tools'
-                                          ? kColorScheme.primary
-                                          : AppColors.secondaryColors[2],
-                                      borderRadius: BorderRadius.circular(10),
+                          return GestureDetector(
+                            onTap: () {
+                              // Go to detail activity
+                              Get.to(
+                                () => DetailActivityView(
+                                  user: activity['user'],
+                                  actionType: activity['actionType'],
+                                  itemType: activity['itemType'],
+                                  timestamp: activity['timestamp'],
+                                  xName: activity['xName'],
+                                  xDescription: activity['xDescription'],
+                                  xAmount: activity['xAmount'],
+                                  xLocation: activity['xLocation'],
+                                ),
+                              );
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(15),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: BoxDecoration(
+                                        color: activity['itemType'] == 'tools'
+                                            ? kColorScheme.primary
+                                            : AppColors.secondaryColors[2],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Icon(
+                                        activity['itemType'] == 'tools'
+                                            ? Icons.build_outlined
+                                            : Icons.all_inbox,
+                                        color: activity['itemType'] == 'tools'
+                                            ? kColorScheme.secondary
+                                            : kColorScheme.primary,
+                                      ),
                                     ),
-                                    child: Icon(
-                                      activity['itemType'] == 'tools'
-                                          ? Icons.build_outlined
-                                          : Icons.all_inbox,
-                                      color: activity['itemType'] == 'tools'
-                                          ? kColorScheme.secondary
-                                          : kColorScheme.primary,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              formatItemType(
-                                                  activity['itemType']),
-                                              style: semiBoldText16,
-                                            ),
-                                            Text(
-                                              formatTimestamp(
-                                                  activity['timestamp']),
-                                              style: regularText10,
-                                            ),
-                                          ],
-                                        ),
-                                        RichText(
-                                          overflow: TextOverflow.ellipsis,
-                                          text: TextSpan(
-                                            text: activity['user'],
-                                            style: semiBoldText12.copyWith(
-                                                color:
-                                                    AppColors.neutralColors[1]),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
-                                              TextSpan(
-                                                text: ' ',
-                                                style: regularText12.copyWith(
-                                                    color: AppColors
-                                                        .neutralColors[2]),
-                                              ),
-                                              TextSpan(
-                                                text: formatActionType(
-                                                    activity['actionType']),
-                                                style: regularText12.copyWith(
-                                                    color: AppColors
-                                                        .neutralColors[2]),
-                                              ),
-                                              TextSpan(
-                                                text: ' pada ',
-                                                style: regularText12.copyWith(
-                                                    color: AppColors
-                                                        .neutralColors[2]),
-                                              ),
-                                              TextSpan(
-                                                text: formatItemType(
+                                              Text(
+                                                controller.formatItemType(
                                                     activity['itemType']),
-                                                style: regularText12.copyWith(
-                                                    color: AppColors
-                                                        .neutralColors[1]),
+                                                style: semiBoldText16,
+                                              ),
+                                              Text(
+                                                controller.formatTimestamp(
+                                                    activity['timestamp']),
+                                                style: regularText10,
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                          RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(
+                                              text: controller
+                                                  .formatUser(activity['user']),
+                                              style: semiBoldText12.copyWith(
+                                                  color: AppColors
+                                                      .neutralColors[1]),
+                                              children: [
+                                                TextSpan(
+                                                  text: ' ',
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[2]),
+                                                ),
+                                                TextSpan(
+                                                  text: controller
+                                                      .formatActionType(
+                                                          activity[
+                                                              'actionType']),
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[2]),
+                                                ),
+                                                TextSpan(
+                                                  text: ' pada ',
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[2]),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      controller.formatItemType(
+                                                          activity['itemType']),
+                                                  style: regularText12.copyWith(
+                                                      color: AppColors
+                                                          .neutralColors[1]),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           );
                         },
                         separatorBuilder: (context, index) => Divider(
@@ -383,7 +402,7 @@ class HistoryView extends GetView<HistoryController> {
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 2,
                                                 text: TextSpan(
-                                                  text: formatUser(
+                                                  text: controller.formatUser(
                                                       borrowed['user']),
                                                   style: semiBoldText12.copyWith(
                                                       color: AppColors
@@ -396,9 +415,10 @@ class HistoryView extends GetView<HistoryController> {
                                                               .neutralColors[2]),
                                                     ),
                                                     TextSpan(
-                                                      text: formatActionType(
-                                                          borrowed[
-                                                              'actionType']),
+                                                      text: controller
+                                                          .formatActionType(
+                                                              borrowed[
+                                                                  'actionType']),
                                                       style: regularText12.copyWith(
                                                           color: AppColors
                                                               .neutralColors[2]),
@@ -451,7 +471,7 @@ class HistoryView extends GetView<HistoryController> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          formatTimestamp(
+                                          controller.formatTimestamp(
                                               borrowed['timestamp']),
                                           style: regularText10,
                                         ),
@@ -498,44 +518,5 @@ class HistoryView extends GetView<HistoryController> {
         ],
       ),
     );
-  }
-
-  String formatActionType(String actionType) {
-    switch (actionType) {
-      case 'add':
-        return 'menambahkan';
-      case 'edit':
-        return 'mengubah';
-      case 'delete':
-        return 'menghapus';
-      case 'take':
-        return 'mengambil';
-      case 'borrow':
-        return 'meminjam';
-      case 'return':
-        return 'mengembalikan';
-      default:
-        return actionType;
-    }
-  }
-
-  String formatItemType(String itemType) {
-    switch (itemType) {
-      case 'components':
-        return 'Komponen';
-      case 'tools':
-        return 'Alat';
-      default:
-        return itemType;
-    }
-  }
-
-  String formatUser(String user) {
-    return user.split(" ").first;
-  }
-
-  String formatTimestamp(Timestamp timestamp) {
-    timeago.setLocaleMessages('id', CustomIdMessages());
-    return timeago.format(timestamp.toDate(), locale: 'id');
   }
 }

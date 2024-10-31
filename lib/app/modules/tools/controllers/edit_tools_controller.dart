@@ -204,7 +204,12 @@ class EditToolsController extends GetxController {
       }
 
       await _updateToolsInCategory(toolsData);
-      await _logHistoryActivity(toolsData);
+      await _logHistoryActivity(
+        nameController.text,
+        descriptionController.text,
+        "${tStock.value} buah",
+        categoryId,
+      );
 
       Get.back();
       const CustomSnackbar(
@@ -286,7 +291,10 @@ class EditToolsController extends GetxController {
   }
 
   Future<void> _logHistoryActivity(
-    Map<String, dynamic> toolsData,
+    String name,
+    String description,
+    String amount,
+    String category,
   ) async {
     try {
       final activityId =
@@ -299,7 +307,10 @@ class EditToolsController extends GetxController {
           'user': userName,
           'itemType': "tools",
           'actionType': "edit",
-          'itemData': toolsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

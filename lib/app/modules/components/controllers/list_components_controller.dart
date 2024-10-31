@@ -122,23 +122,28 @@ class ListComponentsController extends GetxController {
   Future<void> onDeleteComponentClicked(
       String componentsId, bool isGetComponent) async {
     try {
-      final componentsDoc = await FirebaseFirestore.instance
-          .collection('tools')
-          .doc(rackName)
-          .get();
-      final componentsMap = componentsDoc.data();
-      final componentsData =
-          componentsMap?[componentsId] as Map<String, dynamic>? ?? {};
+      // final componentsDoc = await FirebaseFirestore.instance
+      //     .collection('tools')
+      //     .doc(rackName)
+      //     .get();
+      // final componentsMap = componentsDoc.data();
+      // final componentsData =
+      //     componentsMap?[componentsId] as Map<String, dynamic>? ?? {};
       DocumentReference rackRef =
           FirebaseFirestore.instance.collection('components').doc(rackName);
 
       await rackRef.update({'$levelName.$componentsId': FieldValue.delete()});
 
-      final logData = {
-        componentsId: componentsData,
-      };
+      final componentToDelete = components.firstWhere(
+        (component) => component['id'] == componentsId,
+        orElse: () => {},
+      );
 
-      await _logHistoryActivity(logData);
+      await _logDeleteHistoryActivity(
+        componentToDelete['name'],
+        componentToDelete['description'],
+        "${componentToDelete['stock']} ${componentToDelete['unit']}",
+      );
 
       Get.back();
       CustomSnackbar(
@@ -160,9 +165,7 @@ class ListComponentsController extends GetxController {
     }
   }
 
-  // GET COMPONENT
   void increment(String componentId) {
-    // Find the selected component based on componentId
     final selectedComponentIndex = components.indexWhere(
       (component) => component['id'] == componentId,
     );
@@ -255,6 +258,15 @@ class ListComponentsController extends GetxController {
               message: 'Komponen berhasil diambil.',
             ).showSnackbar();
           }
+
+          final componentToGet = components[selectedComponentIndex];
+
+          await _logGetHistoryActivity(
+            componentToGet['name'],
+            componentToGet['description'],
+            // ignore: prefer_interpolation_to_compose_strings
+            "$selectedStock ${componentToGet['unit']}",
+          );
 
           await fetchComponents();
 
@@ -352,8 +364,10 @@ class ListComponentsController extends GetxController {
     }
   }
 
-  Future<void> _logHistoryActivity(
-    Map<String, dynamic> componentsData,
+  Future<void> _logDeleteHistoryActivity(
+    String name,
+    String description,
+    String amount,
   ) async {
     try {
       final activityId =
@@ -366,7 +380,38 @@ class ListComponentsController extends GetxController {
           'user': userName,
           'itemType': "components",
           'actionType': "delete",
-          'itemData': componentsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "$rackName, Laci $levelName",
+          'timestamp': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
+    } catch (e) {
+      log.e('Failed to log activity: $e');
+    }
+  }
+
+  Future<void> _logGetHistoryActivity(
+    String name,
+    String description,
+    String amount,
+  ) async {
+    try {
+      final activityId =
+          const Uuid().v4(); // Generate a unique ID for the activity
+      await FirebaseFirestore.instance
+          .collection('history')
+          .doc('activities')
+          .set({
+        activityId: {
+          'user': userName,
+          'itemType': "components",
+          'actionType': "take",
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "$rackName, Laci $levelName",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));
