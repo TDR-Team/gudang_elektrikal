@@ -33,8 +33,8 @@ class EditComponentsController extends GetxController {
 
   String? userName;
 
-  final unitName = 'Pcs'.obs;
-  final listUnit = ['Meter', 'Pcs', 'Dus', 'Box', 'Pack', 'Roll'];
+  final unitName = 'pcs'.obs;
+  final listUnit = ['meter', 'pcs', 'dus', 'box', 'pack', 'roll'];
 
   // Reactive stock value
   RxInt stock = 0.obs;
@@ -48,7 +48,7 @@ class EditComponentsController extends GetxController {
     descriptionController.text = component['description'] ?? '';
     stockController.text = component['stock'].toString();
     networkImage.value = component['imgUrl'];
-    unitName.value = component['unit'] ?? 'Pcs';
+    unitName.value = component['unit'] ?? 'pcs';
 
     // Initialize stock value
     stock.value = component['stock'] ?? 0;
