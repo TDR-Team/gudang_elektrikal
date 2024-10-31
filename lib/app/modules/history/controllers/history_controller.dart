@@ -188,7 +188,7 @@ class HistoryController extends GetxController
         final String user = borrowedItem['user'] ?? '';
         final String name = borrowedItem["name"] ?? "";
         final String description = borrowedItem["description"] ?? "";
-        final String amount = borrowedItem["amount"].toString() ?? "";
+        final String amount = borrowedItem["amount"].toString();
         final String category = borrowedItem["categoryName"] ?? "";
 
         final int currentStock = borrowedItem["stock"] ?? 0;
