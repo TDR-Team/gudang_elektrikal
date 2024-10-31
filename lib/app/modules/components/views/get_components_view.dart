@@ -54,7 +54,9 @@ class GetComponentsView extends GetView<GetComponentsController> {
                           bottom: Radius.circular(30),
                         ),
                         image: const DecorationImage(
-                          image: AssetImage('assets/images/img_bgAppbar.png'),
+                          image: AssetImage(
+                            'assets/images/img_components_bg.png',
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),

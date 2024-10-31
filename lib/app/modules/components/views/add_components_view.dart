@@ -37,7 +37,10 @@ class AddComponentsView extends GetView<AddComponentsController> {
                 color: Colors.black,
               ),
             ),
-            title: const Text('Tambah Komponen'),
+            title: Text(
+              'Tambah Komponen',
+              style: semiBoldText20,
+            ),
             centerTitle: false,
           ),
           body: SafeArea(

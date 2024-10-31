@@ -211,7 +211,11 @@ class AddComponentsController extends GetxController {
         };
 
         await _addComponentsToRack(componentsData);
-        await _logHistoryActivity(componentsData);
+        await _logAddComponentsHistoryActivity(
+          name,
+          description ?? "",
+          "$stock $unit",
+        );
 
         Get.back();
         const CustomSnackbar(
@@ -285,8 +289,10 @@ class AddComponentsController extends GetxController {
     }
   }
 
-  Future<void> _logHistoryActivity(
-    Map<String, dynamic> componentsData,
+  Future<void> _logAddComponentsHistoryActivity(
+    String name,
+    String description,
+    String amount,
   ) async {
     try {
       final activityId =
@@ -298,10 +304,11 @@ class AddComponentsController extends GetxController {
         activityId: {
           'user': userName,
           'itemType': "components",
-          'racks': rackName,
-          'level': levelName,
           'actionType': "add",
-          'itemData': componentsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "$rackName, Laci $levelName",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

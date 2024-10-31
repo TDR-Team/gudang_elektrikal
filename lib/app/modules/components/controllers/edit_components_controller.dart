@@ -200,7 +200,11 @@ class EditComponentsController extends GetxController {
       }
 
       await _updateComponentsToRack(componentsData);
-      await _logHistoryActivity(componentsData);
+      await _logEditHistoryActivity(
+        nameController.text,
+        descriptionController.text,
+        "${unitName.value} ${stock.value}",
+      );
 
       Get.back();
       const CustomSnackbar(
@@ -284,8 +288,10 @@ class EditComponentsController extends GetxController {
     }
   }
 
-  Future<void> _logHistoryActivity(
-    Map<String, dynamic> componentsData,
+  Future<void> _logEditHistoryActivity(
+    String name,
+    String description,
+    String amount,
   ) async {
     try {
       final activityId =
@@ -297,10 +303,11 @@ class EditComponentsController extends GetxController {
         activityId: {
           'user': userName,
           'itemType': "components",
-          'racks': rackName,
-          'level': levelName,
           'actionType': "edit",
-          'itemData': componentsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "$rackName, Laci $levelName",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

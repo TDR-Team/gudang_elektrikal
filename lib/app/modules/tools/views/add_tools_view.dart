@@ -22,7 +22,10 @@ class AddToolsView extends GetView<AddToolsController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Alat'),
+        title: Text(
+          'Tambah Alat',
+          style: semiBoldText20,
+        ),
         centerTitle: false,
       ),
       body: SafeArea(
