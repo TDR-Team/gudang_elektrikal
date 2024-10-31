@@ -291,14 +291,23 @@ class ToolsController extends GetxController {
 
   Future<void> onDeleteToolsClicked(String categoryName, String toolsId) async {
     try {
-      // Ambil data tools berdasarkan categoryName dan toolsId
-      final toolsDoc = await FirebaseFirestore.instance
-          .collection('tools')
-          .doc(categoryName)
-          .get();
+      final toolIndex = categorizedTools[categoryName]?.indexWhere(
+        (tool) => tool['id'] == toolsId,
+      );
 
-      final toolsMap = toolsDoc.data();
-      final toolsData = toolsMap?[toolsId] as Map<String, dynamic>? ?? {};
+      if (toolIndex == null || toolIndex == -1) {
+        const CustomSnackbar(
+          success: false,
+          title: 'Gagal',
+          message: 'Komponen tidak ditemukan.',
+        ).showSnackbar();
+        return;
+      }
+
+      final selectedTool = categorizedTools[categoryName]![toolIndex];
+      String name = selectedTool['name'];
+      String description = selectedTool['description'];
+      String amount = selectedTool['tStock'].toString();
 
       // Hapus tools
       await FirebaseFirestore.instance
@@ -308,12 +317,7 @@ class ToolsController extends GetxController {
         toolsId: FieldValue.delete(),
       });
 
-      // Log data alat yang dihapus ke dalam riwayat aktivitas
-      final logData = {
-        toolsId: toolsData,
-      };
-
-      await _logHistoryActivity(logData);
+      await _logHistoryActivity(name, description, amount, categoryName);
 
       Get.back();
       // Tampilkan snackbar sukses
@@ -487,7 +491,10 @@ class ToolsController extends GetxController {
   }
 
   Future<void> _logHistoryActivity(
-    Map<String, dynamic> toolsData,
+    String name,
+    String description,
+    String amount,
+    String category,
   ) async {
     try {
       final activityId =
@@ -500,7 +507,10 @@ class ToolsController extends GetxController {
           'user': userName,
           'itemType': "tools",
           'actionType': "delete",
-          'itemData': toolsData,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

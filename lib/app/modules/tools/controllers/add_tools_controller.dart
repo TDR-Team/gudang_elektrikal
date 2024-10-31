@@ -210,8 +210,8 @@ class AddToolsController extends GetxController {
         await _logAddToolsHistoryActivity(
           name,
           description ?? "",
-          "buah",
-          stock,
+          "$stock buah",
+          categoryName.value,
         );
 
         Get.back();
@@ -290,8 +290,8 @@ class AddToolsController extends GetxController {
   Future<void> _logAddToolsHistoryActivity(
     String name,
     String description,
-    String unit,
-    int stock,
+    String amount,
+    String category,
   ) async {
     try {
       final activityId =
@@ -304,10 +304,10 @@ class AddToolsController extends GetxController {
           'user': userName,
           'itemType': "tools",
           'actionType': "add",
-          'cName': name,
-          'cDescription': description,
-          'cUnit': unit,
-          'cStock': stock,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));

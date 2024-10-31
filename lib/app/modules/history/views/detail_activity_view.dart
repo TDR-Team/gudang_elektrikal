@@ -161,7 +161,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
                           color: AppColors.neutralColors[2],
                         ),
                       ),
-                      // location
+                      // amount
                       TextSpan(
                         text: xAmount,
                         style: semiBoldText14.copyWith(

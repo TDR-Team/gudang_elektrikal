@@ -183,12 +183,15 @@ class HistoryController extends GetxController
 
       if (borrowedItem != null) {
         final String categoryName = borrowedItem['categoryName'];
-        final String toolsId = borrowedItem['itemData'].keys.first;
+        final String toolsId = borrowedItem['xxx'];
         final int returnAmount = borrowedItem['amount'] ?? 0;
         final String user = borrowedItem['user'] ?? '';
-        final String name = borrowedItem['itemData'][toolsId]["name"];
-        final int currentStock =
-            borrowedItem['itemData'][toolsId]["stock"] ?? 0;
+        final String name = borrowedItem["name"] ?? "";
+        final String description = borrowedItem["description"] ?? "";
+        final String amount = borrowedItem["amount"].toString() ?? "";
+        final String category = borrowedItem["categoryName"] ?? "";
+
+        final int currentStock = borrowedItem["stock"] ?? 0;
 
         final toolsRef =
             FirebaseFirestore.instance.collection('tools').doc(categoryName);
@@ -215,7 +218,7 @@ class HistoryController extends GetxController
             message: 'Barang berhasil dikembalikan oleh $user',
           ).showSnackbar();
 
-          _logHistoryReturn(returnAmount, name);
+          _logHistoryReturn(name, description, amount, category);
 
           // Refresh data borrowed setelah pengembalian
           await fetchBorrowed();
@@ -286,8 +289,10 @@ class HistoryController extends GetxController
   }
 
   Future<void> _logHistoryReturn(
-    int amount,
     String name,
+    String description,
+    String amount,
+    String category,
   ) async {
     try {
       final borrowedId =
@@ -300,8 +305,10 @@ class HistoryController extends GetxController
           'user': userName,
           'itemType': "tools",
           'actionType': "return",
-          'name': name,
-          'amount': amount,
+          'xName': name,
+          'xDescription': description,
+          'xAmount': amount,
+          'xLocation': "Kategori $category",
           'timestamp': FieldValue.serverTimestamp(),
         }
       }, SetOptions(merge: true));
