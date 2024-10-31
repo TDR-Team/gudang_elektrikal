@@ -203,7 +203,7 @@ class EditComponentsController extends GetxController {
       await _logEditHistoryActivity(
         nameController.text,
         descriptionController.text,
-        "${unitName.value} ${stock.value}",
+        "${stock.value} ${unitName.value}",
       );
 
       Get.back();
