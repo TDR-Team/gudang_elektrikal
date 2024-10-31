@@ -59,7 +59,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Nama Pengambil',
+                  'Username',
                   style: boldText14.copyWith(
                     color: AppColors.neutralColors[1],
                   ),
