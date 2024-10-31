@@ -183,18 +183,20 @@ class HistoryController extends GetxController
 
       if (borrowedItem != null) {
         final String categoryName = borrowedItem['categoryName'];
-        final String toolsId = borrowedItem['xxx'];
+        final String toolsId = borrowedItem['itemData'];
         final int returnAmount = borrowedItem['amount'] ?? 0;
         final String user = borrowedItem['user'] ?? '';
         final String name = borrowedItem["name"] ?? "";
         final String description = borrowedItem["description"] ?? "";
         final String amount = borrowedItem["amount"].toString();
-        final String category = borrowedItem["categoryName"] ?? "";
-
-        final int currentStock = borrowedItem["stock"] ?? 0;
+        final String category = borrowedItem["category"] ?? "";
 
         final toolsRef =
             FirebaseFirestore.instance.collection('tools').doc(categoryName);
+
+        final toolsSnapshot = await toolsRef.get();
+        final Map<String, dynamic>? toolsData = toolsSnapshot.data();
+        final int currentStock = toolsData?[toolsId]?['stock'] ?? 0;
 
         if (returnAmount > 0) {
           final int newStock = currentStock + returnAmount;
