@@ -268,16 +268,13 @@ class EditToolsController extends GetxController {
 
         update();
 
-        // Convert DocumentSnapshot to Map<String, dynamic>
         Map<String, dynamic> data =
             userData.data() as Map<String, dynamic>? ?? {};
 
-        // Check if the document exists
         if (userData.exists) {
           userName = data['name'] ?? '';
           update();
         } else {
-          // Handle case where document does not exist
           userName = '';
           update();
         }
@@ -297,8 +294,7 @@ class EditToolsController extends GetxController {
     String category,
   ) async {
     try {
-      final activityId =
-          const Uuid().v4(); // Generate a unique ID for the activity
+      final activityId = const Uuid().v4();
       await FirebaseFirestore.instance
           .collection('history')
           .doc('activities')
