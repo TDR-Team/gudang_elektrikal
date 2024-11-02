@@ -2,6 +2,7 @@ import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 
 class ScheduleDailyPuhNotifHelper {
   static void scheduleDailyPushNotifHelper(
+    bool isComponent,
     String? name,
     int? id,
   ) {
@@ -14,7 +15,7 @@ class ScheduleDailyPuhNotifHelper {
       now.month,
       now.day,
       8, // 08:00 AM
-      0,
+      10,
       0,
     );
 
@@ -29,7 +30,7 @@ class ScheduleDailyPuhNotifHelper {
       now.month,
       now.day,
       16,
-      0,
+      10,
       0,
     );
 
@@ -39,12 +40,21 @@ class ScheduleDailyPuhNotifHelper {
     }
 
     // Schedule the notifications
-    NotificationService.scheduleNotification(
-      id ?? 0,
-      'Stok komponen sudah mau habis',
-      'Jangan lupa stok ulang komponen $name sebelum habis',
-      morningNotification,
-    );
+    if (isComponent) {
+      NotificationService.scheduleNotification(
+        id ?? 0,
+        'Stok komponen sudah mau habis',
+        'Jangan lupa stok ulang komponen $name sebelum habis',
+        morningNotification,
+      );
+    }else{
+       NotificationService.scheduleNotification(
+        id ?? 0,
+        'Stok alat sudah mau habis',
+        'Jangan lupa stok ulang alat $name sebelum habis',
+        morningNotification,
+      );
+    }
 
     // NotificationService.scheduleNotification(
     //   1,

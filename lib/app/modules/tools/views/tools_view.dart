@@ -131,7 +131,11 @@ class ToolsView extends GetView<ToolsController> {
                       );
                     } else if (controller.categorizedTools.isEmpty) {
                       return Expanded(
-                        child: Center(
+                        child: RefreshIndicator(
+                          color: kColorScheme.primary,
+                          onRefresh: () async {
+                            controller.fetchTools();
+                          },
                           child: ListView(
                             shrinkWrap: true,
                             children: [
@@ -188,136 +192,121 @@ class ToolsView extends GetView<ToolsController> {
                             right: 16.w,
                             bottom: 120.h,
                           ),
-                          children: controller.categorizedTools.entries.map(
-                            (entry) {
-                              String categoryName = entry.key;
-                              List<Map<String, dynamic>> toolsList =
-                                  entry.value;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var category
+                                in controller.categorizedTools.keys) ...[
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        categoryName,
-                                        style: semiBoldText16,
+                                  Text(
+                                    category,
+                                    style: semiBoldText16,
+                                  ),
+                                  PopupMenuButton<int>(
+                                    color: Colors.white,
+                                    onSelected: (value) {
+                                      switch (value) {
+                                        case 0:
+                                          editCategoryDialog(category);
+                                          break;
+                                        case 1:
+                                          deleteCategoryDialog(category);
+                                          break;
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      size: 18,
+                                    ),
+                                    itemBuilder: (context) => [
+                                      const PopupMenuItem<int>(
+                                        value: 0,
+                                        child: Text('Ubah Kategori'),
                                       ),
-                                      PopupMenuButton<int>(
-                                        color: Colors.white,
-                                        onSelected: (value) {
-                                          switch (value) {
-                                            case 0:
-                                              editCategoryDialog(categoryName);
-                                              break;
-                                            case 1:
-                                              deleteCategoryDialog(
-                                                  categoryName);
-                                              break;
-                                          }
-                                        },
-                                        icon: const Icon(
-                                          Icons.edit,
-                                          size: 18,
-                                        ),
-                                        itemBuilder: (context) => [
-                                          const PopupMenuItem<int>(
-                                            value: 0,
-                                            child: Text(
-                                              'Ubah Kategori',
-                                            ),
-                                          ),
-                                          const PopupMenuItem<int>(
-                                            value: 1,
-                                            child: Text('Hapus Kategori'),
-                                          ),
-                                        ],
+                                      const PopupMenuItem<int>(
+                                        value: 1,
+                                        child: Text('Hapus Kategori'),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 5.h),
-                                  ...toolsList.map((tools) {
-                                    return CustomListTools(
-                                      id: tools['id'],
-                                      name: tools['name'],
-                                      imgUrl: tools['imgUrl'] ??
-                                          'https://picsum.photos/200/300',
-                                      description: tools['description'] ??
-                                          'No description available',
-                                      stock: tools['stock'],
-                                      tStock: tools['tStock'],
-                                      isStatus: tools['stock'] != 0,
-                                      onTapEdit: () {
-                                        controller.onEditToolsClicked(
-                                            categoryName, tools['id']);
-                                      },
-                                      onTapDelete: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Hapus Alat',
-                                                style: semiBoldText16,
-                                              ),
-                                              content: Text(
-                                                'Apakah anda yakin ingin menghapus alat ini?',
-                                                style: regularText12,
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    controller
-                                                        .onDeleteToolsClicked(
-                                                            categoryName,
-                                                            tools['id']);
-                                                  },
-                                                  child: Container(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 16,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: kColorScheme.error,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      border: Border.all(
-                                                        color:
-                                                            kColorScheme.error,
-                                                      ),
-                                                    ),
-                                                    child: Text(
-                                                      'Hapus',
-                                                      style: semiBoldText12
-                                                          .copyWith(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
+                                ],
+                              ),
+                              SizedBox(height: 5.h),
+                              for (var tools in controller
+                                  .categorizedTools[category]!) ...[
+                                CustomListTools(
+                                  id: tools['id'],
+                                  name: tools['name'],
+                                  imgUrl: tools['imgUrl'] ??
+                                      'https://picsum.photos/200/300',
+                                  description: tools['description'] ??
+                                      'No description available',
+                                  stock: tools['stock'],
+                                  tStock: tools['tStock'],
+                                  isStatus: tools['stock'] != 0,
+                                  onTapEdit: () {
+                                    controller.onEditToolsClicked(
+                                        category, tools['id']);
+                                  },
+                                  onTapDelete: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Hapus Alat',
+                                            style: semiBoldText16,
+                                          ),
+                                          content: Text(
+                                            'Apakah anda yakin ingin menghapus alat ini?',
+                                            style: regularText12,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                controller.onDeleteToolsClicked(
+                                                    category, tools['id']);
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 8,
+                                                  horizontal: 16,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: kColorScheme.error,
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  border: Border.all(
+                                                    color: kColorScheme.error,
                                                   ),
                                                 ),
-                                                TextButton(
-                                                  onPressed: () => Get.back(),
-                                                  child: Text(
-                                                    'Batal',
-                                                    style:
-                                                        semiBoldText14.copyWith(
-                                                      color:
-                                                          kColorScheme.primary,
-                                                    ),
+                                                child: Text(
+                                                  'Hapus',
+                                                  style:
+                                                      semiBoldText12.copyWith(
+                                                    color: Colors.white,
                                                   ),
                                                 ),
-                                              ],
-                                            );
-                                          },
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Get.back(),
+                                              child: Text(
+                                                'Batal',
+                                                style: semiBoldText14.copyWith(
+                                                  color: kColorScheme.primary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         );
                                       },
                                     );
-                                  }),
-                                ],
-                              );
-                            },
-                          ).toList(),
+                                  },
+                                ),
+                              ],
+                            ],
+                          ],
                         ),
                       );
                     }
@@ -392,6 +381,7 @@ class ToolsView extends GetView<ToolsController> {
   }
 
   void editCategoryDialog(String oldCategoryName) {
+    controller.editCategoryController.text = oldCategoryName;
     Get.dialog(
       AlertDialog(
         title: Text(
@@ -420,6 +410,8 @@ class ToolsView extends GetView<ToolsController> {
               } else {
                 controller.editCategory(oldCategoryName, newCategoryName);
                 Get.back(); // Close the dialog
+                controller.editCategoryController
+                    .clear(); // Clear the controller
               }
             },
             child: Text(

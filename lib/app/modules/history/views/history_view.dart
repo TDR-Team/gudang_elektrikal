@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/history/views/detail_activity_view.dart';
-import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_job_horizontal.dart';
+import 'package:gudang_elektrikal/app/widgets/shimmer/shimmer_history_horizontal.dart';
 
 import '../controllers/history_controller.dart';
 
@@ -23,8 +23,6 @@ class HistoryView extends GetView<HistoryController> {
               'Riwayat',
               style: semiBoldText20,
             ),
-            surfaceTintColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
           ),
           body: SafeArea(
             child: Obx(
@@ -94,10 +92,10 @@ class HistoryView extends GetView<HistoryController> {
                     child: SingleChildScrollView(
                       child: Column(
                           children: List.generate(
-                        5,
-                        (index) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ShimmerJobHorizontal(),
+                        16,
+                        (index) => const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: ShimmerHistoryHorizontal(),
                         ),
                       )),
                     ),
@@ -300,9 +298,9 @@ class HistoryView extends GetView<HistoryController> {
                       child: Column(
                           children: List.generate(
                         5,
-                        (index) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ShimmerJobHorizontal(),
+                        (index) => const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: ShimmerHistoryHorizontal(),
                         ),
                       )),
                     ),

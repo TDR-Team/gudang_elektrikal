@@ -138,6 +138,24 @@ class ToolsController extends GetxController {
   }
 
   void editCategory(String oldCategoryName, String newCategoryName) async {
+    if (newCategoryName.isEmpty) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Nama kategori tidak boleh kosong.',
+      ).showSnackbar();
+      return;
+    }
+
+    if (oldCategoryName == newCategoryName) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Info',
+        message: 'Nama kategori tidak berubah.',
+      ).showSnackbar();
+      return;
+    }
+
     try {
       final toolsRef = FirebaseFirestore.instance.collection('tools');
       final categoryData = await toolsRef.doc(oldCategoryName).get();
@@ -157,31 +175,58 @@ class ToolsController extends GetxController {
       fetchTools();
       categoryName.value = '';
     } catch (e) {
+      log.e('Error editing category: $e');
       const CustomSnackbar(
         success: false,
-        title: 'Error',
-        message: 'Gagal mengubah kategori',
+        title: 'Gagal',
+        message: 'Gagal mengubah kategori.',
       ).showSnackbar();
     }
   }
 
-  void deleteCategory(String delcategoryName) async {
+  void deleteCategory(String delCategoryName) async {
+    if (delCategoryName.isEmpty) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Pilih kategori terlebih dahulu.',
+      ).showSnackbar();
+      return;
+    }
+
     try {
-      await FirebaseFirestore.instance
-          .collection('tools')
-          .doc(delcategoryName)
-          .delete();
+      final toolsRef = FirebaseFirestore.instance.collection('tools');
+      final categoryDocRef = toolsRef.doc(delCategoryName);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(categoryDocRef);
+        if (!snapshot.exists) {
+          throw Exception('Dokumen kategori tidak ditemukan!');
+        }
+
+        // Hapus dokumen kategori
+        transaction.delete(categoryDocRef);
+      });
+
+      // Remove the category data from toolsData and categorizedTools
+      toolsData.remove(delCategoryName);
+      categorizedTools.remove(delCategoryName);
+
+      categoryName.value = ''; // Reset pilihan kategori
+      Get.back();
+
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
-        message: 'Kategori berhasil dihapus',
+        message: 'Kategori berhasil dihapus.',
       ).showSnackbar();
       fetchTools();
     } catch (e) {
+      log.e('Error deleting category: $e');
       const CustomSnackbar(
         success: false,
-        title: 'Error',
-        message: 'Gagal menghapus kategori',
+        title: 'Gagal',
+        message: 'Gagal menghapus kategori.',
       ).showSnackbar();
     }
   }

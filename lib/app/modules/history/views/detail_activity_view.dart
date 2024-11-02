@@ -31,7 +31,6 @@ class DetailActivityView extends GetView<DetailActivityController> {
 
   @override
   Widget build(BuildContext context) {
-    print('item type: $itemType');
     return GetBuilder<DetailActivityController>(
       init: DetailActivityController(),
       builder: (controller) {

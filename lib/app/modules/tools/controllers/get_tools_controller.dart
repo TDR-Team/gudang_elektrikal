@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gudang_elektrikal/app/common/helpers/schedule_daily_push_notif_helper.dart';
 import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/add_tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/tools/views/edit_tools_view.dart';
@@ -315,8 +316,13 @@ class GetToolsController extends GetxController {
 
         if (categorizedTools[categoryName]![toolIndex]['stock'] > 0 &&
             categorizedTools[categoryName]![toolIndex]['stock'] <= 3) {
+          ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+            false,
+            ' ${categorizedTools[categoryName]![toolIndex]['name']}',
+            1,
+          );
           DateTime scheduledDate = DateTime.now().add(
-            const Duration(seconds: 3),
+            const Duration(hours: 1),
           );
           NotificationService.scheduleNotification(
             0,
