@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/common/helpers/schedule_daily_push_notif_helper.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
-import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:uuid/uuid.dart';
 import '../../../utils/logging.dart';
 import '../../../widgets/custom_snackbar.dart';
@@ -272,16 +271,8 @@ class ListComponentsController extends GetxController {
 
           if (filteredComponents[selectedComponentIndex]['stock'] > 0 &&
               filteredComponents[selectedComponentIndex]['stock'] <= 3) {
-            DateTime scheduledDate = DateTime.now().add(
-              const Duration(seconds: 3),
-            );
-            NotificationService.scheduleNotification(
-              0,
-              'Stok komponen sudah mau habis',
-              'Jangan lupa stok ulang komponen ${filteredComponents[selectedComponentIndex]['name']} sebelum habis.',
-              scheduledDate,
-            );
             ScheduleDailyPuhNotifHelper.scheduleDailyPushNotifHelper(
+              true,
               ' ${filteredComponents[selectedComponentIndex]['name']}',
               0,
             );
