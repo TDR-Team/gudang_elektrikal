@@ -89,52 +89,6 @@ class ToolsController extends GetxController {
     }
   }
 
-  // Future<void> fetchTools() async {
-  //   isLoading.value = true;
-  //   try {
-  //     final QuerySnapshot categorySnapshot =
-  //         await FirebaseFirestore.instance.collection('tools').get();
-
-  //     for (var categoryDoc in categorySnapshot.docs) {
-  //       String categoryName = categoryDoc.id;
-
-  //       final toolsMap = categoryDoc.data() as Map<String, dynamic>;
-
-  //       List<Map<String, dynamic>> toolsList = toolsMap.entries.map((entry) {
-  //         return {
-  //           'id': entry.key,
-  //           'name': entry.value['name'] ?? 'No name',
-  //           'description': entry.value['description'] ?? '',
-  //           'stock': entry.value['stock'] ?? 0,
-  //           'tStock': entry.value['tStock'] ?? 0,
-  //           'imgUrl': entry.value['imgUrl'] ?? '',
-  //         };
-  //       }).toList();
-
-  //       tools.value = toolsMap.entries.map((entry) {
-  //         var toolsData = entry.value as Map<String, dynamic>;
-  //         return {
-  //           'id': entry.key,
-  //           'name': toolsData['name'] ?? 'No name',
-  //           'description': toolsData['description'] ?? '',
-  //           'stock': toolsData['stock'] ?? 0,
-  //           'tStock': toolsData['tStock'] ?? 0,
-  //           'imgUrl': toolsData['imgUrl'] ?? '',
-  //         };
-  //       }).toList();
-
-  //       toolsData[categoryName] = toolsList;
-  //     }
-
-  //     categorizedTools.value = toolsData;
-  //   } catch (e) {
-  //     debugPrint('Error fetching tools: $e');
-  //     categorizedTools.value = {};
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
-
   void addCategory(String addcategoryName) async {
     if (addcategoryName.isEmpty) {
       const CustomSnackbar(
@@ -187,54 +141,112 @@ class ToolsController extends GetxController {
   }
 
   void editCategory(String oldCategoryName, String newCategoryName) async {
-    try {
-      final toolsRef = FirebaseFirestore.instance.collection('tools');
-      final categoryData = await toolsRef.doc(oldCategoryName).get();
-
-      if (categoryData.exists) {
-        // Buat dokumen baru dengan nama kategori yang diperbarui
-        await toolsRef.doc(newCategoryName).set(categoryData.data() ?? {});
-
-        // Hapus dokumen dengan nama kategori lama
-        await toolsRef.doc(oldCategoryName).delete();
-
-        // Tampilkan Snackbar sukses
-        const CustomSnackbar(
-          success: true,
-          title: 'Berhasil',
-          message: 'Kategori berhasil diubah',
-        ).showSnackbar();
-      }
-
-      // Memuat ulang data kategori setelah proses selesai
-      await fetchTools();
-      categoryName.value = ''; // Reset kategori
-    } catch (e) {
+    if (newCategoryName.isEmpty) {
       const CustomSnackbar(
         success: false,
-        title: 'Error',
-        message: 'Gagal mengubah kategori',
+        title: 'Gagal',
+        message: 'Nama kategori tidak boleh kosong.',
+      ).showSnackbar();
+      return;
+    }
+
+    if (oldCategoryName == newCategoryName) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Info',
+        message: 'Nama kategori tidak berubah.',
+      ).showSnackbar();
+      return;
+    }
+
+    try {
+      final toolsRef = FirebaseFirestore.instance.collection('tools');
+      final oldCategoryDocRef = toolsRef.doc(oldCategoryName);
+      final newCategoryDocRef = toolsRef.doc(newCategoryName);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(oldCategoryDocRef);
+        if (!snapshot.exists) {
+          throw Exception('Dokumen kategori tidak ditemukan!');
+        }
+
+        Map<String, dynamic>? oldCategoryData =
+            snapshot.data() as Map<String, dynamic>;
+
+        // Set data di dokumen baru dengan data lama
+        transaction.set(newCategoryDocRef, oldCategoryData);
+
+        // Pastikan data lama dihapus
+        transaction.delete(oldCategoryDocRef);
+      });
+
+      // Remove the old category data from toolsData and categorizedTools
+      toolsData.remove(oldCategoryName);
+      categorizedTools.remove(oldCategoryName);
+
+      // Reload category data setelah update
+      await fetchTools();
+      categoryName.value = ''; // Reset pilihan kategori
+
+      const CustomSnackbar(
+        success: true,
+        title: 'Berhasil',
+        message: 'Kategori berhasil diubah.',
+      ).showSnackbar();
+    } catch (e) {
+      log.e('Error editing category: $e');
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Gagal mengubah kategori.',
       ).showSnackbar();
     }
   }
 
-  void deleteCategory(String delcategoryName) async {
+  void deleteCategory(String delCategoryName) async {
+    if (delCategoryName.isEmpty) {
+      const CustomSnackbar(
+        success: false,
+        title: 'Gagal',
+        message: 'Pilih kategori terlebih dahulu.',
+      ).showSnackbar();
+      return;
+    }
+
     try {
-      await FirebaseFirestore.instance
-          .collection('tools')
-          .doc(delcategoryName)
-          .delete();
+      final toolsRef = FirebaseFirestore.instance.collection('tools');
+      final categoryDocRef = toolsRef.doc(delCategoryName);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(categoryDocRef);
+        if (!snapshot.exists) {
+          throw Exception('Dokumen kategori tidak ditemukan!');
+        }
+
+        // Hapus dokumen kategori
+        transaction.delete(categoryDocRef);
+      });
+
+      // Remove the category data from toolsData and categorizedTools
+      toolsData.remove(delCategoryName);
+      categorizedTools.remove(delCategoryName);
+
+      categoryName.value = ''; // Reset pilihan kategori
+      Get.back();
+
       const CustomSnackbar(
         success: true,
         title: 'Berhasil',
-        message: 'Kategori berhasil dihapus',
+        message: 'Kategori berhasil dihapus.',
       ).showSnackbar();
-      await fetchTools(); // Refresh the tools list
+
+      await fetchTools(); // Reload data kategori setelah penghapusan
     } catch (e) {
+      log.e('Error deleting category: $e');
       const CustomSnackbar(
         success: false,
-        title: 'Error',
-        message: 'Gagal menghapus kategori',
+        title: 'Gagal',
+        message: 'Gagal menghapus kategori.',
       ).showSnackbar();
     }
   }

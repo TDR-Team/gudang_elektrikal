@@ -18,8 +18,8 @@ class LoadingView extends StatelessWidget {
                 end: Alignment.topLeft,
                 colors: <Color>[
                   kColorScheme.primary,
+                  kColorScheme.primary.withOpacity(0.8),
                   kColorScheme.primary.withOpacity(0.6),
-                  kColorScheme.primary.withOpacity(0.3),
                 ],
               ),
             ),
@@ -41,8 +41,8 @@ class LoadingView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Version 1.0.0',
-                    style: mediumText16,
+                    'Gudang Elektrikal',
+                    style: boldText20.copyWith(color: kColorScheme.secondary),
                   ),
                 ],
               ),
