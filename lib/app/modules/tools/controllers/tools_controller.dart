@@ -49,6 +49,8 @@ class ToolsController extends GetxController {
 
   Future<void> fetchTools() async {
     isLoading.value = true;
+    toolsData.clear();
+
     try {
       final QuerySnapshot categorySnapshot =
           await FirebaseFirestore.instance.collection('tools').get();
@@ -69,14 +71,11 @@ class ToolsController extends GetxController {
           };
         }).toList();
 
-        // Urutkan toolsList berdasarkan 'name' secara alfabetis
         toolsList.sort((a, b) => a['name'].compareTo(b['name']));
 
-        // Masukkan toolsList yang sudah diurutkan ke dalam toolsData
         toolsData[categoryName] = toolsList;
       }
 
-      // Urutkan kunci kategori secara alfabetis sebelum diatur ke categorizedTools
       List<String> sortedKeys = toolsData.keys.toList()..sort();
       categorizedTools.value = {
         for (var key in sortedKeys) key: toolsData[key] ?? []
@@ -113,7 +112,6 @@ class ToolsController extends GetxController {
           message: 'Kategori sudah ada.',
         ).showSnackbar();
       } else {
-        // Add a new document with the specified category name
         await FirebaseFirestore.instance
             .collection('tools')
             .doc(addcategoryName)
@@ -125,7 +123,6 @@ class ToolsController extends GetxController {
           message: 'Kategori berhasil ditambahkan.',
         ).showSnackbar();
 
-        // Update the tools list after adding the category
         update();
         fetchTools();
         categoryName.value = '';
@@ -161,38 +158,22 @@ class ToolsController extends GetxController {
 
     try {
       final toolsRef = FirebaseFirestore.instance.collection('tools');
-      final oldCategoryDocRef = toolsRef.doc(oldCategoryName);
-      final newCategoryDocRef = toolsRef.doc(newCategoryName);
+      final categoryData = await toolsRef.doc(oldCategoryName).get();
 
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot snapshot = await transaction.get(oldCategoryDocRef);
-        if (!snapshot.exists) {
-          throw Exception('Dokumen kategori tidak ditemukan!');
-        }
+      if (categoryData.exists) {
+        await toolsRef.doc(newCategoryName).set(categoryData.data() ?? {});
 
-        Map<String, dynamic>? oldCategoryData =
-            snapshot.data() as Map<String, dynamic>;
+        await toolsRef.doc(oldCategoryName).delete();
 
-        // Set data di dokumen baru dengan data lama
-        transaction.set(newCategoryDocRef, oldCategoryData);
+        const CustomSnackbar(
+          success: true,
+          title: 'Berhasil',
+          message: 'Kategori berhasil diubah',
+        ).showSnackbar();
+      }
 
-        // Pastikan data lama dihapus
-        transaction.delete(oldCategoryDocRef);
-      });
-
-      // Remove the old category data from toolsData and categorizedTools
-      toolsData.remove(oldCategoryName);
-      categorizedTools.remove(oldCategoryName);
-
-      // Reload category data setelah update
-      await fetchTools();
-      categoryName.value = ''; // Reset pilihan kategori
-
-      const CustomSnackbar(
-        success: true,
-        title: 'Berhasil',
-        message: 'Kategori berhasil diubah.',
-      ).showSnackbar();
+      fetchTools();
+      categoryName.value = '';
     } catch (e) {
       log.e('Error editing category: $e');
       const CustomSnackbar(
@@ -239,8 +220,7 @@ class ToolsController extends GetxController {
         title: 'Berhasil',
         message: 'Kategori berhasil dihapus.',
       ).showSnackbar();
-
-      await fetchTools(); // Reload data kategori setelah penghapusan
+      fetchTools();
     } catch (e) {
       log.e('Error deleting category: $e');
       const CustomSnackbar(

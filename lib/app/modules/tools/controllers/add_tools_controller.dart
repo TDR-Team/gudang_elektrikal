@@ -182,7 +182,6 @@ class AddToolsController extends GetxController {
     }
 
     try {
-      // Upload image to Firebase Storage
       final imagePath = 'tools/${DateTime.now().millisecondsSinceEpoch}.jpg';
       final uploadTask =
           FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
@@ -193,7 +192,6 @@ class AddToolsController extends GetxController {
         const uuid = Uuid();
         final String toolsId = uuid.v4();
 
-        // Prepare data to add to Firestore
         Map<String, dynamic> toolsData = {
           toolsId: {
             'name': name,

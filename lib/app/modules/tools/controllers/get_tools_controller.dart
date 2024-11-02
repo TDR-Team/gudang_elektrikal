@@ -51,6 +51,8 @@ class GetToolsController extends GetxController {
 
   Future<void> fetchTools() async {
     isLoading.value = true;
+    toolsData.clear();
+
     try {
       final QuerySnapshot categorySnapshot =
           await FirebaseFirestore.instance.collection('tools').get();
