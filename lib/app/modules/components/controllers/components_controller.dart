@@ -21,7 +21,7 @@ class ComponentsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchRackNames();
-    onChangedRackNames('Rak 1');
+    onChangedRackNames('Silakan Pilih Rak Di Sini');
   }
 
   @override
