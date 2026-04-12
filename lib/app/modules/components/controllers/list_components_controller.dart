@@ -11,9 +11,6 @@ import '../../../utils/logging.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class ListComponentsController extends GetxController {
-  // final String levelName = Get.arguments['levelName'];
-  // final String rackName = Get.arguments['rackName'];
-  // final bool isGetComponent = Get.arguments['isGetComponent'] ?? false;
   late final String rackName;
   late final String levelName;
   late final bool isGetComponent;
@@ -95,34 +92,10 @@ class ListComponentsController extends GetxController {
           };
         }).toList();
 
-        // Mengurutkan komponen berdasarkan nama
         components.sort((a, b) => a['name'].compareTo(b['name']));
 
-        // Menginisialisasi filteredComponents sebagai salinan dari komponen yang telah diurutkan
         // ignore: invalid_use_of_protected_member
         filteredComponents.value = components.value;
-        // var data = levelSnapshot.data();
-
-        // if (data != null && data[levelName] != null) {
-        //   var levelMap = Map<String, dynamic>.from(data[levelName]);
-
-        //   components.value = levelMap.entries.map((entry) {
-        //     var componentData = Map<String, dynamic>.from(entry.value);
-
-        //     return {
-        //       'id': entry.key,
-        //       'name': componentData['name'] ?? 'No name',
-        //       'description': componentData['description'] ?? '',
-        //       'stock': componentData['stock'] ?? 0,
-        //       'unit': componentData['unit'] ?? '',
-        //       'imgUrl': componentData['imgUrl'] ?? '',
-        //       'selectedStock': 1,
-        //     };
-        //   }).toList();
-        // } else {
-        //   components.value = [];
-        //   filteredComponents.value = [];
-        // }
       } else {
         components.value = [];
         filteredComponents.value = [];
@@ -157,13 +130,6 @@ class ListComponentsController extends GetxController {
     bool isGetComponent,
   ) async {
     try {
-      // final componentsDoc = await FirebaseFirestore.instance
-      //     .collection('tools')
-      //     .doc(rackName)
-      //     .get();
-      // final componentsMap = componentsDoc.data();
-      // final componentsData =
-      //     componentsMap?[componentsId] as Map<String, dynamic>? ?? {};
       DocumentReference rackRef = FirebaseFirestore.instance
           .collection('components')
           .doc(rackName);
@@ -366,16 +332,13 @@ class ListComponentsController extends GetxController {
 
         update();
 
-        // Convert DocumentSnapshot to Map<String, dynamic>
         Map<String, dynamic> data =
             userData.data() as Map<String, dynamic>? ?? {};
 
-        // Check if the document exists
         if (userData.exists) {
           userName = data['name'] ?? '';
           update();
         } else {
-          // Handle case where document does not exist
           userName = '';
           update();
         }
