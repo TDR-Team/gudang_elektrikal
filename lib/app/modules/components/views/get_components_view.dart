@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/components/controllers/get_components_controller.dart';
 
@@ -32,10 +31,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
                 color: Colors.black,
               ),
             ),
-            title: Text(
-              'Ambil Komponen',
-              style: semiBoldText20,
-            ),
+            title: Text('Ambil Komponen', style: semiBoldText20),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
           ),
@@ -69,56 +65,54 @@ class GetComponentsView extends GetView<GetComponentsController> {
                 ),
               ),
               Expanded(
-                child: Obx(
-                  () {
-                    // If levels are loading
-                    if (controller.isLoadingLevels.value) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: kColorScheme.primary,
-                        ),
-                      );
-                    }
+                child: Obx(() {
+                  // If levels are loading
+                  if (controller.isLoadingLevels.value) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: kColorScheme.primary,
+                      ),
+                    );
+                  }
 
-                    // Check if a rack is selected
-                    if (controller.rackName.value.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/shelf-stock.svg",
-                              width: MediaQuery.sizeOf(context).width / 1.5,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Pilih Rak untuk melihat level',
-                              style: semiBoldText20,
-                            ),
-                            const SizedBox(height: 80),
-                          ],
-                        ),
-                      );
-                    }
+                  // Check if a rack is selected
+                  if (controller.rackName.value.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/shelf-stock.svg",
+                            width: MediaQuery.sizeOf(context).width / 1.5,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Pilih Rak untuk melihat level',
+                            style: semiBoldText20,
+                          ),
+                          const SizedBox(height: 80),
+                        ],
+                      ),
+                    );
+                  }
 
-                    // If levels are fetched
-                    if (controller.listLevels.isNotEmpty) {
-                      return _buildRackLevels(
-                        context: context,
-                        rackName: controller.rackName.value,
-                        levels: controller.listLevels,
-                        onLevelClicked: controller.onLevelClicked,
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          'Tidak ada laci untuk rak ini.',
-                          style: semiBoldText20,
-                        ),
-                      );
-                    }
-                  },
-                ),
+                  // If levels are fetched
+                  if (controller.listLevels.isNotEmpty) {
+                    return _buildRackLevels(
+                      context: context,
+                      rackName: controller.rackName.value,
+                      levels: controller.listLevels,
+                      onLevelClicked: controller.onLevelClicked,
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                        'Tidak ada laci untuk rak ini.',
+                        style: semiBoldText20,
+                      ),
+                    );
+                  }
+                }),
               ),
             ],
           ),
@@ -144,9 +138,10 @@ class GetComponentsView extends GetView<GetComponentsController> {
           selectedItem: controller.rackName.value.isNotEmpty
               ? controller.rackName.value
               : 'Pilih Rak',
-          itemBuilder: (context, rackName, isSelected) {
-            return ListTile(
-              title: Text(rackName!),
+          itemBuilder: (context, rackName, isDisabled, isSelected) {
+            return Container(
+              color: isSelected ? Colors.grey.shade100 : null,
+              child: ListTile(title: Text(rackName)),
             );
           },
         ),
@@ -169,18 +164,13 @@ class GetComponentsView extends GetView<GetComponentsController> {
       },
       child: ListView.separated(
         shrinkWrap: true,
-        padding: const EdgeInsets.only(
-          top: 12,
-          right: 0,
-          left: 0,
-          bottom: 100,
-        ),
+        padding: const EdgeInsets.only(top: 12, right: 0, left: 0, bottom: 100),
         itemBuilder: (context, index) {
           return Container(
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withValues(alpha: 0.3),
                   spreadRadius: 3,
                   blurRadius: 10,
                   offset: const Offset(0, 0),
@@ -189,9 +179,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
               color: const Color.fromARGB(255, 249, 253, 255),
               borderRadius: BorderRadius.circular(20),
             ),
-            margin: const EdgeInsets.symmetric(
-              horizontal: 20,
-            ),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             child: IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -205,7 +193,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
                           end: Alignment.centerRight,
                           colors: [
                             kColorScheme.primary,
-                            kColorScheme.primary.withOpacity(0.85),
+                            kColorScheme.primary.withValues(alpha: 0.85),
                           ],
                         ),
                         borderRadius: const BorderRadius.only(
@@ -277,13 +265,9 @@ class GetComponentsView extends GetView<GetComponentsController> {
                               ),
                             ),
                           ),
-                        )
+                        ),
                       ],
-                    )
-                        .marginSymmetric(
-                          horizontal: 16,
-                        )
-                        .paddingOnly(bottom: 4),
+                    ).marginSymmetric(horizontal: 16).paddingOnly(bottom: 4),
                   ),
                 ],
               ),
