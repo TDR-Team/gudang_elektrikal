@@ -149,116 +149,69 @@ class ListComponentsView extends GetView<ListComponentsController> {
                         controller.fetchComponents();
                       },
                       child: ListView.separated(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.only(
-                          top: 12,
-                          left: 16,
-                          right: 16,
-                          bottom: 0,
-                        ),
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
-                        itemCount: controller.filteredComponents.length,
-                        itemBuilder: (context, index) {
-                          var component = controller.filteredComponents[index];
-                          return controller.isGetComponent
-                              ? CustomListGetComponent(
-                                  id: component['id'],
-                                  name: component['name'],
-                                  imgUrl: component['imgUrl'],
-                                  description: component['description'],
-                                  stock: component['stock'],
-                                  unit: component['unit'],
-                                  onTapGetComponent: () {
-                                    controller
-                                        .onGetComponentClicked(component['id']);
-                                  },
-                                  stockController: controller.stockController,
-                                  stockFocusNode: controller.stockFocusNode,
-                                  onIncrementButton: () =>
-                                      controller.increment(component['id']),
-                                  onDecrementButton: () =>
-                                      controller.decrement(component['id']),
-                                  isLoading:
-                                      controller.isLoadingGetComponent.value,
-                                )
-                              : CustomListComponents(
-                                  id: component['id'],
-                                  name: component['name'],
-                                  imgUrl: component['imgUrl'],
-                                  description: component['description'],
-                                  stock: component['stock'],
-                                  unit: component['unit'],
-                                  onTapEdit: () {
-                                    controller.onEditComponentClicked(
-                                        component['id']);
-                                  },
-                                  onTapDelete: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            'Hapus Komponen',
-                                            style: semiBoldText16,
-                                          ),
-                                          content: Text(
-                                            'Apakah anda yakin ingin menghapus komponen ini?',
-                                            style: regularText12,
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                controller
-                                                    .onDeleteComponentClicked(
-                                                  component['id'],
-                                                  !controller.isGetComponent,
-                                                );
-                                              },
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 8,
-                                                  horizontal: 16,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: kColorScheme.error,
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  border: Border.all(
-                                                    color: kColorScheme.error,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Hapus',
-                                                  style:
-                                                      semiBoldText12.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => Get.back(),
-                                              child: Text(
-                                                'Batal',
-                                                style: semiBoldText14.copyWith(
-                                                  color: kColorScheme.primary,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                    // controller.onDeleteComponentClicked(
-                                    //   component['id'],
-                                    //   !controller.isGetComponent,
-                                    // );
-                                  },
-                                );
-                        },
-                      ),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(
+                            top: 12,
+                            left: 16,
+                            right: 16,
+                            bottom: 0,
+                          ),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 12),
+                          itemCount: controller.filteredComponents.length,
+                          itemBuilder: (context, index) {
+                            var component =
+                                controller.filteredComponents[index];
+                            final isLast = index ==
+                                controller.filteredComponents.length - 1;
+
+                            final item = controller.isGetComponent
+                                ? CustomListGetComponent(
+                                    id: component['id'],
+                                    name: component['name'],
+                                    imgUrl: component['imgUrl'],
+                                    description: component['description'],
+                                    stock: component['stock'],
+                                    unit: component['unit'],
+                                    onTapGetComponent: () {
+                                      controller.onGetComponentClicked(
+                                          component['id']);
+                                    },
+                                    stockController: controller.stockController,
+                                    stockFocusNode: controller.stockFocusNode,
+                                    onIncrementButton: () =>
+                                        controller.increment(component['id']),
+                                    onDecrementButton: () =>
+                                        controller.decrement(component['id']),
+                                    isLoading:
+                                        controller.isLoadingGetComponent.value,
+                                  )
+                                : CustomListComponents(
+                                    id: component['id'],
+                                    name: component['name'],
+                                    imgUrl: component['imgUrl'],
+                                    description: component['description'],
+                                    stock: component['stock'],
+                                    unit: component['unit'],
+                                    onTapEdit: () {
+                                      controller.onEditComponentClicked(
+                                          component['id']);
+                                    },
+                                    onTapDelete: () {
+                                      // dialog...
+                                    },
+                                  );
+
+                            return Container(
+                              margin: EdgeInsets.only(
+                                bottom: isLast
+                                    ? MediaQuery.of(context).viewInsets.bottom +
+                                        kBottomNavigationBarHeight
+                                    : 0,
+                              ),
+                              child: item,
+                            );
+                          }),
                     );
                   }
                 }),
