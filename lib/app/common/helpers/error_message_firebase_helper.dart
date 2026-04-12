@@ -1,32 +1,35 @@
 class ErrorMessageFirebaseHelper {
-  String getMessageFromErrorCode(String errorCode) {
-    switch (errorCode) {
-      case "ERROR_EMAIL_ALREADY_IN_USE":
-      case "account-exists-with-different-credential":
-      case "email-already-in-use":
-        return "Email sudah terdaftar. Silakan ke halaman login.";
-      case "ERROR_WRONG_PASSWORD":
-      case "wrong-password":
-        return "Kombinasi email/password salah.";
-      case "ERROR_USER_NOT_FOUND":
-      case "user-not-found":
-        return "Tidak ada pengguna yang ditemukan dengan email ini.";
-      case "ERROR_USER_DISABLED":
-      case "user-disabled":
-        return "Pengguna telah dinonaktifkan.";
-      case "ERROR_TOO_MANY_REQUESTS":
-      case "operation-not-allowed":
-        return "Terlalu banyak permintaan untuk masuk ke akun ini.";
-      case "ERROR_OPERATION_NOT_ALLOWED":
-        return "Kesalahan server, silakan coba lagi nanti.";
-      case "channel-error":
-        return "Email dan password tidak boleh kosong.";
-      case "invalid-email":
-        return "Email Anda tidak valid.";
-      case "invalid-credential":
-        return "Email atau password Anda salah.";
+  String getMessageFromErrorCode(String code) {
+    switch (code) {
+      case 'invalid-email':
+        return 'Format email tidak valid.';
+
+      case 'invalid-credential':
+        return 'Email atau password salah.';
+
+      case 'user-disabled':
+        return 'Akun ini telah dinonaktifkan.';
+
+      case 'too-many-requests':
+        return 'Terlalu banyak percobaan login. Coba lagi nanti.';
+
+      case 'network-request-failed':
+        return 'Tidak ada koneksi internet.';
+
+      case 'email-already-in-use':
+        return 'Email sudah terdaftar.';
+
+      case 'weak-password':
+        return 'Password terlalu lemah.';
+
+      case 'operation-not-allowed':
+        return 'Metode login tidak diizinkan.';
+
+      case 'account-exists-with-different-credential':
+        return 'Akun sudah terdaftar dengan metode login yang berbeda.';
+
       default:
-        return "Gagal masuk. Mohon coba lagi.";
+        return 'Terjadi kesalahan. Mohon coba lagi.';
     }
   }
 }

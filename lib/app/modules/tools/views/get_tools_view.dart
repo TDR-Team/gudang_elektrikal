@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/modules/tools/controllers/get_tools_controller.dart';
@@ -32,10 +31,7 @@ class GetToolsView extends GetView<GetToolsController> {
                 color: Colors.black,
               ),
             ),
-            title: Text(
-              'Pinjam Alat',
-              style: semiBoldText20,
-            ),
+            title: Text('Pinjam Alat', style: semiBoldText20),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
           ),
@@ -55,9 +51,7 @@ class GetToolsView extends GetView<GetToolsController> {
                           bottom: Radius.circular(30),
                         ),
                         image: const DecorationImage(
-                          image: AssetImage(
-                            'assets/images/img_tools_bg.png',
-                          ),
+                          image: AssetImage('assets/images/img_tools_bg.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -98,7 +92,7 @@ class GetToolsView extends GetView<GetToolsController> {
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -167,41 +161,49 @@ class GetToolsView extends GetView<GetToolsController> {
                           top: 12.h,
                           left: 16.w,
                           right: 16.w,
-                          bottom: 0.h,
+                          bottom:
+                              MediaQuery.of(context).viewInsets.bottom +
+                              kBottomNavigationBarHeight,
                         ),
-                        children:
-                            controller.categorizedTools.entries.map((entry) {
+                        children: controller.categorizedTools.entries.map((
+                          entry,
+                        ) {
                           String categoryName = entry.key;
                           List<Map<String, dynamic>> toolsList = entry.value;
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                categoryName,
-                                style: semiBoldText16,
-                              ),
+                              Text(categoryName, style: semiBoldText16),
                               SizedBox(height: 5.h),
                               ...toolsList.map((tools) {
                                 return CustomGetTools(
                                   id: tools['id'],
                                   name: tools['name'],
-                                  imgUrl: tools['imgUrl'] ??
+                                  imgUrl:
+                                      tools['imgUrl'] ??
                                       'https://picsum.photos/200/300',
-                                  description: tools['description'] ??
+                                  description:
+                                      tools['description'] ??
                                       'No description available',
                                   stock: tools['stock'],
                                   tStock: tools['tStock'],
                                   isStatus: tools['stock'] != 0,
                                   onTapGetTools: () {
                                     controller.onGetToolsClicked(
-                                        categoryName, tools['id']);
+                                      categoryName,
+                                      tools['id'],
+                                    );
                                   },
                                   stockController: controller.stockController,
                                   stockFocusNode: controller.stockFocusNode,
                                   onIncrementButton: () => controller.increment(
-                                      categoryName, tools['id']),
+                                    categoryName,
+                                    tools['id'],
+                                  ),
                                   onDecrementButton: () => controller.decrement(
-                                      categoryName, tools['id']),
+                                    categoryName,
+                                    tools['id'],
+                                  ),
                                   isLoading: controller.isLoadingGetTools.value,
                                 );
                               }),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
@@ -48,15 +49,16 @@ class CustomGetTools extends StatelessWidget {
           context: context,
           backgroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           isScrollControlled: true,
           builder: (context) {
             return Padding(
               padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
+                bottom:
+                    MediaQuery.of(context).viewInsets.bottom +
+                    kBottomNavigationBarHeight,
+              ),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -82,46 +84,47 @@ class CustomGetTools extends StatelessWidget {
                       const SizedBox(height: 16),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          imgUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: imgUrl,
                           height: 200.h,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Shimmer.fromColors(
-                                baseColor:
-                                    const Color.fromARGB(255, 148, 148, 148),
-                                highlightColor:
-                                    const Color.fromARGB(255, 102, 95, 95),
-                                child: Container(
-                                  height: 250.h,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 250.h,
+
+                          memCacheWidth: 600,
+                          memCacheHeight: 600,
+                          fadeInDuration: const Duration(milliseconds: 200),
+
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: const Color.fromARGB(255, 148, 148, 148),
+                            highlightColor: const Color.fromARGB(
+                              255,
+                              102,
+                              95,
+                              95,
+                            ),
+                            child: Container(
+                              height: 200.h,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: Colors.grey,
+                                color: Colors.grey.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Icon(
-                                Icons.image_not_supported,
-                                size: 125.sp,
-                                color: const Color.fromARGB(255, 53, 53, 53),
-                              ),
-                            );
-                          },
+                            ),
+                          ),
+
+                          errorWidget: (context, url, error) => Container(
+                            height: 200.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 125.sp,
+                              color: const Color.fromARGB(255, 53, 53, 53),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -193,12 +196,7 @@ class CustomGetTools extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(
-                            child: Text(
-                              'Stok',
-                              style: semiBoldText16,
-                            ),
-                          ),
+                          Flexible(child: Text('Stok', style: semiBoldText16)),
                           Flexible(
                             child: Container(
                               decoration: BoxDecoration(
@@ -219,9 +217,7 @@ class CustomGetTools extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 4,
-                                    ),
+                                    padding: const EdgeInsets.only(bottom: 4),
                                     width: 50.w,
                                     child: CustomTextField(
                                       label: '',
@@ -230,8 +226,8 @@ class CustomGetTools extends StatelessWidget {
                                       lengthInput: 3,
                                       contentPadding:
                                           const EdgeInsets.symmetric(
-                                        vertical: 10,
-                                      ),
+                                            vertical: 10,
+                                          ),
                                       textInputType: TextInputType.number,
                                       focusNode: stockFocusNode,
                                       textStyle: semiBoldText16,
@@ -244,11 +240,11 @@ class CustomGetTools extends StatelessWidget {
                                       color: kColorScheme.surface,
                                       size: 24.sp,
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -257,18 +253,14 @@ class CustomGetTools extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         child: Container(
                           alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             color: AppColors.secondaryColors[0],
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: isLoading
                               ? const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 3,
-                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 3),
                                   child: CircularProgressIndicator(
                                     color: Colors.white,
                                   ),
@@ -287,11 +279,9 @@ class CustomGetTools extends StatelessWidget {
               ),
             );
           },
-        ).whenComplete(
-          () {
-            stockController.text = '1';
-          },
-        );
+        ).whenComplete(() {
+          stockController.text = '1';
+        });
       },
       child: Container(
         width: double.infinity,
@@ -300,52 +290,48 @@ class CustomGetTools extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Colors.black12,
-          ),
+          border: Border.all(color: Colors.black12),
         ),
         child: Row(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                imgUrl,
+              child: CachedNetworkImage(
+                imageUrl: imgUrl,
                 height: 60.h,
                 width: 60.w,
                 fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  } else {
-                    return Shimmer.fromColors(
-                      baseColor: AppColors.neutralColors[2],
-                      highlightColor: AppColors.neutralColors[1],
-                      child: Container(
-                        height: 60.h,
-                        width: 60.w,
-                        decoration: BoxDecoration(
-                          color: AppColors.neutralColors[3].withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    );
-                  }
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
+
+                memCacheWidth: 120,
+                memCacheHeight: 120,
+                fadeInDuration: const Duration(milliseconds: 150),
+
+                placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: AppColors.neutralColors[2],
+                  highlightColor: AppColors.neutralColors[1],
+                  child: Container(
                     height: 60.h,
                     width: 60.w,
                     decoration: BoxDecoration(
-                      color: AppColors.neutralColors[3],
+                      color: AppColors.neutralColors[3].withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 30,
-                      color: AppColors.neutralColors[1],
-                    ),
-                  );
-                },
+                  ),
+                ),
+
+                errorWidget: (context, url, error) => Container(
+                  height: 60.h,
+                  width: 60.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.neutralColors[3],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.image_not_supported,
+                    size: 30,
+                    color: AppColors.neutralColors[1],
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -358,8 +344,8 @@ class CustomGetTools extends StatelessWidget {
                     name,
                     maxLines:
                         description != null && description!.trim().isNotEmpty
-                            ? 1
-                            : 2,
+                        ? 1
+                        : 2,
                     overflow: TextOverflow.ellipsis,
                     style: boldText18.copyWith(
                       color: AppColors.neutralColors[1],
@@ -391,10 +377,7 @@ class CustomGetTools extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 9.h,
-                    vertical: 3.w,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 3.w),
                   decoration: isStatus
                       ? BoxDecoration(
                           color: AppColors.successColors,

@@ -12,7 +12,28 @@
           "package_name": "com.gudang_elektrikal.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "289344003521-1pv4p9tf4arfepnujbi5hlmlf83lbhrl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudang_elektrikal.app",
+            "certificate_hash": "65dfc9d27c9401e11f00bc1839ef167675c57754"
+          }
+        },
+        {
+          "client_id": "289344003521-alajp3mt8o6dipfqv7pa4mbluj7actr6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudang_elektrikal.app",
+            "certificate_hash": "b243c1fac5768c718443652756a86f52146c84f7"
+          }
+        },
+        {
+          "client_id": "289344003521-irelsfc7se657bfe47356cmvu090il1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDXzV69AzFxrhbM_M99WNev9cCiqoHoZ5k"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289344003521-irelsfc7se657bfe47356cmvu090il1o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "289344003521-g14r2cs2a0vjr4gs18qjlis223andjf4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gudangelektrikal.gudangElektrikal"
+              }
+            }
+          ]
         }
       }
     }

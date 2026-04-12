@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
@@ -16,17 +15,10 @@ class ProfileView extends GetView<ProfileController> {
       init: ProfileController(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Profil',
-              style: semiBoldText20,
-            ),
-          ),
+          appBar: AppBar(title: Text('Profil', style: semiBoldText20)),
           body: controller.isLoading
               ? Center(
-                  child: CircularProgressIndicator(
-                    color: kColorScheme.primary,
-                  ),
+                  child: CircularProgressIndicator(color: kColorScheme.primary),
                 )
               : RefreshIndicator(
                   color: kColorScheme.primary,
@@ -35,226 +27,235 @@ class ProfileView extends GetView<ProfileController> {
                   },
                   child: Stack(
                     children: [
-                      AppBar(
-                        title: Text(
-                          'Profil',
-                          style: semiBoldText20,
-                        ),
-                      ),
-                      ListView(shrinkWrap: true, children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 150.h,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: kColorScheme.primary,
-                              ),
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.white,
+                      AppBar(title: Text('Profil', style: semiBoldText20)),
+                      ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                height: 150.h,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: kColorScheme.primary,
+                                ),
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.white,
 
-                                child: controller.profileImageUrl == null
-                                    ? Text(
-                                        controller.name != null &&
-                                                controller.name!.isNotEmpty
-                                            ? controller.name![0].toUpperCase()
-                                            : 'N',
-                                        style: mediumText48.copyWith(
-                                          color: AppColors.primaryColors[0],
-                                        ),
-                                      )
-                                    : null, // If profile image exists, do not show text
+                                  child: controller.profileImageUrl == null
+                                      ? Text(
+                                          controller.name != null &&
+                                                  controller.name!.isNotEmpty
+                                              ? controller.name![0]
+                                                    .toUpperCase()
+                                              : 'N',
+                                          style: mediumText48.copyWith(
+                                            color: AppColors.primaryColors[0],
+                                          ),
+                                        )
+                                      : null, // If profile image exists, do not show text
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
+                              const SizedBox(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Align(
                                       alignment: Alignment.centerRight,
                                       child: InkWell(
-                                        onTap: () => Get.to(
-                                                () => const EditProfileView())!
-                                            .then((value) =>
-                                                controller.getUserData()),
+                                        onTap: () =>
+                                            Get.to(
+                                              () => const EditProfileView(),
+                                            )!.then(
+                                              (value) =>
+                                                  controller.getUserData(),
+                                            ),
                                         child: Text(
                                           'Ubah Profil',
                                           style: regularText12.copyWith(
                                             color: kColorScheme.primary,
                                           ),
                                         ),
-                                      )),
-                                  Text(
-                                    'Nama',
-                                    style: regularText12.copyWith(
-                                      color: Colors.black.withOpacity(0.7),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      'Nama',
+                                      style: regularText12.copyWith(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
+                                    ),
 
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    controller.name!,
-                                    style: mediumText16,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Divider(
-                                    color: Colors.grey.withOpacity(0.3),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Email',
-                                    style: regularText12.copyWith(
-                                      color: Colors.black.withOpacity(0.7),
+                                    const SizedBox(height: 5),
+                                    Text(controller.name!, style: mediumText16),
+                                    const SizedBox(height: 10),
+                                    Divider(
+                                      color: Colors.grey.withValues(alpha: 0.3),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    controller.user.email!,
-                                    style: mediumText16,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Divider(
-                                    color: Colors.grey.withOpacity(0.3),
-                                  ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Email',
+                                      style: regularText12.copyWith(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      controller.user.email!,
+                                      style: mediumText16,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Divider(
+                                      color: Colors.grey.withValues(alpha: 0.3),
+                                    ),
 
-                                  // Divider(
-                                  //   color: Colors.grey.withOpacity(0.3),
-                                  // ),
-                                  const SizedBox(height: 60),
-                                  InkWell(
-                                    // onTap: () => controller.signOut(),
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            backgroundColor:
-                                                kColorScheme.secondary,
-                                            title: Text(
-                                              'Konfirmasi',
-                                              style: semiBoldText22,
-                                            ),
-                                            content: Text(
-                                              'Apakah Anda yakin ingin keluar?',
-                                              style: regularText14,
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Tutup dialog
-                                                },
-                                                child: Text(
-                                                  'Tidak',
-                                                  style: semiBoldText14,
-                                                ),
+                                    // Divider(
+                                    //   color: Colors.grey.withValues(alpha: 0.3),
+                                    // ),
+                                    const SizedBox(height: 60),
+                                    InkWell(
+                                      // onTap: () => controller.signOut(),
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              backgroundColor:
+                                                  kColorScheme.secondary,
+                                              title: Text(
+                                                'Konfirmasi',
+                                                style: semiBoldText22,
                                               ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  controller
-                                                      .signOut(); // Panggil fungsi signOut
-                                                },
-                                                child: Text(
-                                                  'Ya',
-                                                  style: semiBoldText14,
-                                                ),
+                                              content: Text(
+                                                'Apakah Anda yakin ingin keluar?',
+                                                style: regularText14,
                                               ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width: double.infinity,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: kColorScheme.primary,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        'Keluar',
-                                        style: mediumText18.copyWith(
-                                          color: Colors.white,
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(
+                                                      context,
+                                                    ).pop(); // Tutup dialog
+                                                  },
+                                                  child: Text(
+                                                    'Tidak',
+                                                    style: semiBoldText14,
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    controller
+                                                        .signOut(); // Panggil fungsi signOut
+                                                  },
+                                                  child: Text(
+                                                    'Ya',
+                                                    style: semiBoldText14,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: kColorScheme.primary,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Keluar',
+                                          style: mediumText18.copyWith(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  InkWell(
-                                    // onTap: () => controller.signOut(),
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            backgroundColor:
-                                                kColorScheme.secondary,
-                                            title: Text(
-                                              'Konfirmasi',
-                                              style: semiBoldText22,
-                                            ),
-                                            content: Text(
-                                              'Apakah Anda yakin ingin hapus akun?',
-                                              style: regularText14,
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Tutup dialog
-                                                },
-                                                child: Text(
-                                                  'Tidak',
-                                                  style: semiBoldText14,
-                                                ),
+                                    const SizedBox(height: 20),
+                                    InkWell(
+                                      // onTap: () => controller.signOut(),
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              backgroundColor:
+                                                  kColorScheme.secondary,
+                                              title: Text(
+                                                'Konfirmasi',
+                                                style: semiBoldText22,
                                               ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  controller
-                                                      .deleteAccount(); // Panggil fungsi signOut
-                                                },
-                                                child: Text(
-                                                  'Ya',
-                                                  style: semiBoldText14,
-                                                ),
+                                              content: Text(
+                                                'Apakah Anda yakin ingin hapus akun?',
+                                                style: regularText14,
                                               ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width: double.infinity,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: Colors.red,
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(
+                                                      context,
+                                                    ).pop(); // Tutup dialog
+                                                  },
+                                                  child: Text(
+                                                    'Tidak',
+                                                    style: semiBoldText14,
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    controller
+                                                        .deleteAccount(); // Panggil fungsi signOut
+                                                  },
+                                                  child: Text(
+                                                    'Ya',
+                                                    style: semiBoldText14,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          border: Border.all(color: Colors.red),
                                         ),
-                                      ),
-                                      child: Text(
-                                        'Hapus Akun',
-                                        style: mediumText18.copyWith(
-                                          color: Colors.red,
+                                        child: Text(
+                                          'Hapus Akun',
+                                          style: mediumText18.copyWith(
+                                            color: Colors.red,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
                               ),
-                            )
-                          ],
-                        ),
-                      ]),
+                            ],
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

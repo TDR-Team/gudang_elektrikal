@@ -1,15 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../views/list_components_view.dart';
-import '../../../widgets/custom_snackbar.dart';
 import '../../../utils/logging.dart';
+import '../../../widgets/custom_snackbar.dart';
+import '../views/list_components_view.dart';
 
 class ComponentsController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  RxList listRackNames = <String>[].obs;
-  RxList listLevels = <String>[].obs;
+  RxList<String> listRackNames = <String>[].obs;
+  RxList<String> listLevels = <String>[].obs;
   RxString rackName = ''.obs;
   RxMap levelData = <String, Map<String, dynamic>>{}.obs;
   RxBool isLoadingLevels = false.obs;
@@ -21,7 +21,7 @@ class ComponentsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchRackNames();
-    onChangedRackNames('Rak 1');
+    onChangedRackNames('Silakan Pilih Rak Di Sini');
   }
 
   @override
@@ -43,11 +43,13 @@ class ComponentsController extends GetxController {
 
   void fetchRackNames() async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore.collection('components').get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('components')
+          .get();
 
-      List<String> rackNamesList =
-          querySnapshot.docs.map((doc) => doc.id).toList();
+      List<String> rackNamesList = querySnapshot.docs
+          .map((doc) => doc.id)
+          .toList();
 
       log.i("Fetched Rack Names: $rackNamesList");
 
@@ -60,8 +62,9 @@ class ComponentsController extends GetxController {
   void addRack() async {
     try {
       QuerySnapshot snapshot = await _firestore.collection('components').get();
-      List<String> existingRackNames =
-          snapshot.docs.map((doc) => doc.id).toList();
+      List<String> existingRackNames = snapshot.docs
+          .map((doc) => doc.id)
+          .toList();
 
       List<int> rackNumbers = existingRackNames
           .map((name) {
@@ -167,11 +170,13 @@ class ComponentsController extends GetxController {
     }
 
     try {
-      DocumentReference oldRackDocRef =
-          FirebaseFirestore.instance.collection('components').doc(oldRackName);
+      DocumentReference oldRackDocRef = FirebaseFirestore.instance
+          .collection('components')
+          .doc(oldRackName);
 
-      DocumentReference newRackDocRef =
-          FirebaseFirestore.instance.collection('components').doc(newRackName);
+      DocumentReference newRackDocRef = FirebaseFirestore.instance
+          .collection('components')
+          .doc(newRackName);
 
       // Start Firestore transaction to update the rack name
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -272,8 +277,10 @@ class ComponentsController extends GetxController {
     try {
       isLoadingLevels.value = true;
 
-      DocumentSnapshot rackDoc =
-          await _firestore.collection('components').doc(selectedRackName).get();
+      DocumentSnapshot rackDoc = await _firestore
+          .collection('components')
+          .doc(selectedRackName)
+          .get();
 
       if (rackDoc.exists) {
         Map<String, dynamic> data = rackDoc.data() as Map<String, dynamic>;

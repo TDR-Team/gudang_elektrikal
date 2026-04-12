@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:gudang_elektrikal/initializer.dart';
+
 import 'app/routes/app_pages.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  final stopwatch = Stopwatch()..start();
+
   await NotificationService.init();
   await Initializer.initFirebase();
   await Initializer.init();
   runApp(const MyApp());
+
+  final elapsed = stopwatch.elapsedMilliseconds;
+  if (elapsed < 800) {
+    await Future.delayed(Duration(milliseconds: 800 - elapsed));
+  }
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {

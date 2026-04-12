@@ -16,67 +16,63 @@ import '../../../common/helpers/image_helpers.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class AddComponentsController extends GetxController {
-  final String levelName = Get.arguments['levelName'];
-  final String rackName = Get.arguments['rackName'];
+  late final String levelName;
+  late final String rackName;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController stockController = TextEditingController();
-  FocusNode stockFocusNode = FocusNode();
-  RxBool isLoadingImage = false.obs;
-  RxBool isLoadingAddComponent = false.obs;
-  Rx<File?> imageFileController = RxNullable<File?>().setNull();
-  Rx<String?> networkImage = RxNullable<String?>().setNull();
-  RxString selectedRack = ''.obs;
-  RxString selectedLevel = ''.obs;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController stockController = TextEditingController();
+  final FocusNode stockFocusNode = FocusNode();
+
+  final RxBool isLoadingImage = false.obs;
+  final RxBool isLoadingAddComponent = false.obs;
+  final Rx<File?> imageFileController = RxNullable<File?>().setNull();
+  final Rx<String?> networkImage = RxNullable<String?>().setNull();
+  final RxString selectedRack = ''.obs;
+  final RxString selectedLevel = ''.obs;
 
   String? userName;
 
   final unitName = 'pcs'.obs;
-  final listUnit = ['meter', 'pcs', 'dus', 'box', 'pack', 'roll'];
+  final listUnit = <String>['meter', 'pcs', 'dus', 'box', 'pack', 'roll'];
 
-  void onChangedRackName(String? value) {
-    unitName.value = value ?? "";
-  }
-
-  void setRackAndLevel() {
-    selectedRack.value = rackName;
-    selectedLevel.value = levelName;
-  }
-
-  // Define the stock as an RxInt to make it reactive
-  RxInt stock = 0.obs;
+  final RxInt stock = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
+
+    final args = (Get.arguments as Map<String, dynamic>?) ?? {};
+
+    rackName = args['rackName']?.toString() ?? '';
+    levelName = args['levelName']?.toString() ?? '';
+
+    if (rackName.isEmpty || levelName.isEmpty) {
+      log.e('AddComponentsController arguments tidak lengkap: $args');
+    }
+
     setRackAndLevel();
     _getUserData();
-    // Initialize the stockController with the initial stock value
+
     stockController.text = stock.value.toString();
 
-    // Listen to changes in stockController and update the stock value
     stockController.addListener(() {
-      int? value = int.tryParse(stockController.text);
+      final int? value = int.tryParse(stockController.text);
       if (value != null) {
         stock.value = value;
       }
     });
 
-    // Add a focus listener to the stock focus node
     stockFocusNode.addListener(() {
-      if (!stockFocusNode.hasFocus) {
-        if (stockController.text.isEmpty) {
-          stock.value = 0;
-          stockController.text = stock.value.toString();
-        }
+      if (!stockFocusNode.hasFocus && stockController.text.isEmpty) {
+        stock.value = 0;
+        stockController.text = stock.value.toString();
       }
     });
   }
 
   @override
   void onClose() {
-    // Dispose of the controllers and focus nodes
     nameController.dispose();
     descriptionController.dispose();
     stockController.dispose();
@@ -84,28 +80,48 @@ class AddComponentsController extends GetxController {
     super.onClose();
   }
 
-  Future onPickImage({required bool isCamera}) async {
+  void onChangedRackName(String? value) {
+    unitName.value = value ?? '';
+  }
+
+  void setRackAndLevel() {
+    selectedRack.value = rackName;
+    selectedLevel.value = levelName;
+  }
+
+  Future<void> onPickImage({required bool isCamera}) async {
     try {
-      final image =
-          isCamera ? await pickImageFromCamera() : await pickImageFromGallery();
+      final image = isCamera
+          ? await pickImageFromCamera()
+          : await pickImageFromGallery();
 
       if (image != null) {
-        final croppedImageFile =
-            await croppingImage(imageFile: image, cropStyle: CropStyle.circle);
-        XFile croped = XFile(croppedImageFile?.path ?? "");
+        final croppedImageFile = await croppingImage(
+          imageFile: image,
+          cropStyle: CropStyle.circle,
+        );
+
         if (croppedImageFile != null) {
           isLoadingImage.value = true;
-          XFile? compressedImage = await compressImageForApi(croped);
-          var imageTemp = File(image.path);
+
+          final croped = XFile(croppedImageFile.path);
+          final XFile? compressedImage = await compressImageForApi(croped);
+          final imageTemp = File(image.path);
+
           if (compressedImage != null) {
-            File tempFile = File(compressedImage.path);
+            final tempFile = File(compressedImage.path);
+
             log.i('Size of the file: ${tempFile.path}');
-            int beforeSize = await imageTemp.length();
-            int newSize = await tempFile.length();
-            double beforeSizeMB = beforeSize / (1024 * 1024);
-            double newSizeMB = newSize / (1024 * 1024);
+            final int beforeSize = await imageTemp.length();
+            final int newSize = await tempFile.length();
+            final double beforeSizeMB = beforeSize / (1024 * 1024);
+            final double newSizeMB = newSize / (1024 * 1024);
+
             log.i(
-                'Size of the file: before ${beforeSizeMB.toStringAsFixed(2)} MB, new ${newSizeMB.toStringAsFixed(2)} MB');
+              'Size of the file: before ${beforeSizeMB.toStringAsFixed(2)} MB, '
+              'new ${newSizeMB.toStringAsFixed(2)} MB',
+            );
+
             imageFileController.value = tempFile;
             networkImage.value = null;
           }
@@ -113,13 +129,13 @@ class AddComponentsController extends GetxController {
       }
     } on PlatformException catch (e) {
       log.e('Failed to pick image: $e');
+    } finally {
+      isLoadingImage.value = false;
     }
-    isLoadingImage.value = false;
   }
 
   void increment() {
-    // Use the current value from stockController
-    int? currentStock = int.tryParse(stockController.text);
+    final int? currentStock = int.tryParse(stockController.text);
     if (currentStock != null) {
       stock.value = currentStock + 1;
       stockController.text = stock.value.toString();
@@ -127,8 +143,7 @@ class AddComponentsController extends GetxController {
   }
 
   void decrement() {
-    // Use the current value from stockController
-    int? currentStock = int.tryParse(stockController.text);
+    final int? currentStock = int.tryParse(stockController.text);
     if (currentStock != null && currentStock > 0) {
       stock.value = currentStock - 1;
       stockController.text = stock.value.toString();
@@ -137,15 +152,15 @@ class AddComponentsController extends GetxController {
 
   Future<void> onAddComponentsClicked() async {
     final imageFile = imageFileController.value;
-    final name = nameController.text;
-    final description = descriptionController.text.isNotEmpty
-        ? descriptionController.text
+    final name = nameController.text.trim();
+    final description = descriptionController.text.trim().isNotEmpty
+        ? descriptionController.text.trim()
         : null;
-    final stock = this.stock.value;
+    final currentStock = stock.value;
     final unit = unitName.value;
+
     isLoadingAddComponent.value = true;
 
-    // Validation checks
     if (imageFile == null) {
       isLoadingAddComponent.value = false;
       const CustomSnackbar(
@@ -155,6 +170,7 @@ class AddComponentsController extends GetxController {
       ).showSnackbar();
       return;
     }
+
     if (name.isEmpty) {
       isLoadingAddComponent.value = false;
       const CustomSnackbar(
@@ -164,7 +180,8 @@ class AddComponentsController extends GetxController {
       ).showSnackbar();
       return;
     }
-    if (stock == 0) {
+
+    if (currentStock == 0) {
       isLoadingAddComponent.value = false;
       const CustomSnackbar(
         success: false,
@@ -173,6 +190,7 @@ class AddComponentsController extends GetxController {
       ).showSnackbar();
       return;
     }
+
     if (selectedRack.value.isEmpty || selectedLevel.value.isEmpty) {
       isLoadingAddComponent.value = false;
       const CustomSnackbar(
@@ -184,37 +202,37 @@ class AddComponentsController extends GetxController {
     }
 
     try {
-      // Upload image to Firebase Storage
       final imagePath =
           'components/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final uploadTask =
-          FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
+      final uploadTask = FirebaseStorage.instance
+          .ref()
+          .child(imagePath)
+          .putFile(imageFile);
       final snapshot = await uploadTask;
 
       if (snapshot.state == TaskState.success) {
         final imageUrl = await snapshot.ref.getDownloadURL();
         const uuid = Uuid();
-
         final String componentId = uuid.v4();
 
-        Map<String, dynamic> componentsData = {
+        final Map<String, dynamic> componentsData = {
           levelName: {
             componentId: {
               'name': name,
               'description': description,
-              'stock': stock,
+              'stock': currentStock,
               'unit': unit,
               'imgUrl': imageUrl,
               'createdAt': FieldValue.serverTimestamp(),
-            }
-          }
+            },
+          },
         };
 
         await _addComponentsToRack(componentsData);
         await _logAddComponentsHistoryActivity(
           name,
           description ?? "",
-          "$stock $unit",
+          "$currentStock $unit",
         );
 
         Get.back();
@@ -244,8 +262,9 @@ class AddComponentsController extends GetxController {
 
   Future<void> _addComponentsToRack(Map<String, dynamic> componentsData) async {
     try {
-      DocumentReference rackRef =
-          FirebaseFirestore.instance.collection('components').doc(rackName);
+      final DocumentReference rackRef = FirebaseFirestore.instance
+          .collection('components')
+          .doc(rackName);
 
       await rackRef.set(componentsData, SetOptions(merge: true));
     } catch (e) {
@@ -256,36 +275,24 @@ class AddComponentsController extends GetxController {
 
   Future<void> _getUserData() async {
     try {
-      update();
-
-      User? user = FirebaseAuth.instance.currentUser;
+      final User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        DocumentSnapshot userData = await FirebaseFirestore.instance
+        final DocumentSnapshot userData = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
 
-        update();
-
-        // Convert DocumentSnapshot to Map<String, dynamic>
-        Map<String, dynamic> data =
+        final Map<String, dynamic> data =
             userData.data() as Map<String, dynamic>? ?? {};
 
-        // Check if the document exists
         if (userData.exists) {
-          userName = data['name'] ?? '';
-          update();
+          userName = data['name']?.toString() ?? '';
         } else {
-          // Handle case where document does not exist
           userName = '';
-          update();
         }
       }
-      update();
     } catch (e) {
       debugPrint('Error getting profile data: $e');
-    } finally {
-      update();
     }
   }
 
@@ -295,23 +302,22 @@ class AddComponentsController extends GetxController {
     String amount,
   ) async {
     try {
-      final activityId =
-          const Uuid().v4(); // Generate a unique ID for the activity
+      final activityId = const Uuid().v4();
       await FirebaseFirestore.instance
           .collection('history')
           .doc('activities')
           .set({
-        activityId: {
-          'user': userName,
-          'itemType': "components",
-          'actionType': "add",
-          'xName': name,
-          'xDescription': description,
-          'xAmount': amount,
-          'xLocation': "$rackName, Laci $levelName",
-          'timestamp': FieldValue.serverTimestamp(),
-        }
-      }, SetOptions(merge: true));
+            activityId: {
+              'user': userName,
+              'itemType': "components",
+              'actionType': "add",
+              'xName': name,
+              'xDescription': description,
+              'xAmount': amount,
+              'xLocation': "$rackName, Laci $levelName",
+              'timestamp': FieldValue.serverTimestamp(),
+            },
+          }, SetOptions(merge: true));
     } catch (e) {
       log.e('Failed to log activity: $e');
     }

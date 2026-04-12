@@ -7,7 +7,7 @@ ThemeData themeData = ThemeData(
   appBarTheme: const AppBarTheme(
     surfaceTintColor: Colors.transparent,
   ),
-  cardTheme: const CardTheme(
+  cardTheme: const CardThemeData(
     surfaceTintColor: Colors.white,
   ),
 );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/widgets/custom_list_tools.dart';
@@ -22,10 +21,7 @@ class ToolsView extends GetView<ToolsController> {
           backgroundColor: kColorScheme.surface,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
-            title: Text(
-              'Alat',
-              style: semiBoldText24,
-            ),
+            title: Text('Alat', style: semiBoldText24),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
             actions: [
@@ -40,17 +36,11 @@ class ToolsView extends GetView<ToolsController> {
                         break;
                     }
                   },
-                  icon: Icon(
-                    Icons.more_vert,
-                    size: 24.sp,
-                    color: Colors.black,
-                  ),
+                  icon: Icon(Icons.more_vert, size: 24.sp, color: Colors.black),
                   itemBuilder: (context) => [
                     const PopupMenuItem<int>(
                       value: 0,
-                      child: Text(
-                        'Tambah Kategori',
-                      ),
+                      child: Text('Tambah Kategori'),
                     ),
                   ],
                 ),
@@ -73,9 +63,7 @@ class ToolsView extends GetView<ToolsController> {
                           bottom: Radius.circular(30),
                         ),
                         image: const DecorationImage(
-                          image: AssetImage(
-                            'assets/images/img_tools_bg.png',
-                          ),
+                          image: AssetImage('assets/images/img_tools_bg.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -116,202 +104,200 @@ class ToolsView extends GetView<ToolsController> {
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
               Expanded(
-                child: Obx(
-                  () {
-                    if (controller.isLoading.value) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: kColorScheme.primary,
-                        ),
-                      );
-                    } else if (controller.categorizedTools.isEmpty) {
-                      return Expanded(
-                        child: RefreshIndicator(
-                          color: kColorScheme.primary,
-                          onRefresh: () async {
-                            controller.fetchTools();
-                          },
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/img_empty.png',
-                                    fit: BoxFit.fitHeight,
-                                    height: 180.h,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        height: 180.h,
-                                        width: 80.w,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(35),
-                                          color: Colors.grey,
-                                        ),
-                                        child: const Icon(
-                                          Icons.image_not_supported,
-                                          size: 75,
-                                          color:
-                                              Color.fromARGB(255, 53, 53, 53),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Alat tidak ditemukan',
-                                    style: boldText16.copyWith(
-                                      color: kColorScheme.primary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return RefreshIndicator(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: kColorScheme.primary,
+                      ),
+                    );
+                  } else if (controller.categorizedTools.isEmpty) {
+                    return Expanded(
+                      child: RefreshIndicator(
                         color: kColorScheme.primary,
                         onRefresh: () async {
-                          await controller.fetchTools();
+                          controller.fetchTools();
                         },
                         child: ListView(
                           shrinkWrap: true,
-                          padding: EdgeInsets.only(
-                            top: 12.h,
-                            left: 16.w,
-                            right: 16.w,
-                            bottom: 120.h,
-                          ),
                           children: [
-                            for (var category
-                                in controller.categorizedTools.keys) ...[
-                              Row(
-                                children: [
-                                  Text(
-                                    category,
-                                    style: semiBoldText16,
-                                  ),
-                                  PopupMenuButton<int>(
-                                    color: Colors.white,
-                                    onSelected: (value) {
-                                      switch (value) {
-                                        case 0:
-                                          editCategoryDialog(category);
-                                          break;
-                                        case 1:
-                                          deleteCategoryDialog(category);
-                                          break;
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      size: 18,
-                                    ),
-                                    itemBuilder: (context) => [
-                                      const PopupMenuItem<int>(
-                                        value: 0,
-                                        child: Text('Ubah Kategori'),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/img_empty.png',
+                                  fit: BoxFit.fitHeight,
+                                  height: 180.h,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: 180.h,
+                                      width: 80.w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(35),
+                                        color: Colors.grey,
                                       ),
-                                      const PopupMenuItem<int>(
-                                        value: 1,
-                                        child: Text('Hapus Kategori'),
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        size: 75,
+                                        color: Color.fromARGB(255, 53, 53, 53),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5.h),
-                              for (var tools in controller
-                                  .categorizedTools[category]!) ...[
-                                CustomListTools(
-                                  id: tools['id'],
-                                  name: tools['name'],
-                                  imgUrl: tools['imgUrl'] ??
-                                      'https://picsum.photos/200/300',
-                                  description: tools['description'] ??
-                                      'No description available',
-                                  stock: tools['stock'],
-                                  tStock: tools['tStock'],
-                                  isStatus: tools['stock'] != 0,
-                                  onTapEdit: () {
-                                    controller.onEditToolsClicked(
-                                        category, tools['id']);
-                                  },
-                                  onTapDelete: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            'Hapus Alat',
-                                            style: semiBoldText16,
-                                          ),
-                                          content: Text(
-                                            'Apakah anda yakin ingin menghapus alat ini?',
-                                            style: regularText12,
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                controller.onDeleteToolsClicked(
-                                                    category, tools['id']);
-                                              },
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 8,
-                                                  horizontal: 16,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: kColorScheme.error,
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  border: Border.all(
-                                                    color: kColorScheme.error,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Hapus',
-                                                  style:
-                                                      semiBoldText12.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => Get.back(),
-                                              child: Text(
-                                                'Batal',
-                                                style: semiBoldText14.copyWith(
-                                                  color: kColorScheme.primary,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
                                     );
                                   },
                                 ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Alat tidak ditemukan',
+                                  style: boldText16.copyWith(
+                                    color: kColorScheme.primary,
+                                  ),
+                                ),
                               ],
-                            ],
+                            ),
                           ],
                         ),
-                      );
-                    }
-                  },
-                ),
+                      ),
+                    );
+                  } else {
+                    return RefreshIndicator(
+                      color: kColorScheme.primary,
+                      onRefresh: () async {
+                        await controller.fetchTools();
+                      },
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                          top: 12.h,
+                          left: 16.w,
+                          right: 16.w,
+                          bottom:
+                              MediaQuery.of(context).viewInsets.bottom +
+                              kBottomNavigationBarHeight +
+                              100.h,
+                        ),
+                        children: [
+                          for (var category
+                              in controller.categorizedTools.keys) ...[
+                            Row(
+                              children: [
+                                Text(category, style: semiBoldText16),
+                                PopupMenuButton<int>(
+                                  color: Colors.white,
+                                  onSelected: (value) {
+                                    switch (value) {
+                                      case 0:
+                                        editCategoryDialog(category);
+                                        break;
+                                      case 1:
+                                        deleteCategoryDialog(category);
+                                        break;
+                                    }
+                                  },
+                                  icon: const Icon(Icons.edit, size: 18),
+                                  itemBuilder: (context) => [
+                                    const PopupMenuItem<int>(
+                                      value: 0,
+                                      child: Text('Ubah Kategori'),
+                                    ),
+                                    const PopupMenuItem<int>(
+                                      value: 1,
+                                      child: Text('Hapus Kategori'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5.h),
+                            for (var tools
+                                in controller.categorizedTools[category]!) ...[
+                              CustomListTools(
+                                id: tools['id'],
+                                name: tools['name'],
+                                imgUrl:
+                                    tools['imgUrl'] ??
+                                    'https://picsum.photos/200/300',
+                                description:
+                                    tools['description'] ??
+                                    'No description available',
+                                stock: tools['stock'],
+                                tStock: tools['tStock'],
+                                isStatus: tools['stock'] != 0,
+                                onTapEdit: () {
+                                  controller.onEditToolsClicked(
+                                    category,
+                                    tools['id'],
+                                  );
+                                },
+                                onTapDelete: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Hapus Alat',
+                                          style: semiBoldText16,
+                                        ),
+                                        content: Text(
+                                          'Apakah anda yakin ingin menghapus alat ini?',
+                                          style: regularText12,
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              controller.onDeleteToolsClicked(
+                                                category,
+                                                tools['id'],
+                                              );
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 8,
+                                                    horizontal: 16,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: kColorScheme.error,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                border: Border.all(
+                                                  color: kColorScheme.error,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'Hapus',
+                                                style: semiBoldText12.copyWith(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => Get.back(),
+                                            child: Text(
+                                              'Batal',
+                                              style: semiBoldText14.copyWith(
+                                                color: kColorScheme.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ],
+                        ],
+                      ),
+                    );
+                  }
+                }),
               ),
             ],
           ),
@@ -325,13 +311,11 @@ class ToolsView extends GetView<ToolsController> {
                   controller.onAddToolsClicked();
                 },
                 backgroundColor: kColorScheme.secondary,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
+                child: const Icon(Icons.add, color: Colors.black),
               ),
             ),
           ),
+          bottomSheet: Padding(padding: EdgeInsets.only(bottom: 100.h)),
         );
       },
     );
@@ -340,10 +324,7 @@ class ToolsView extends GetView<ToolsController> {
   void addCategoryDialog() {
     Get.dialog(
       AlertDialog(
-        title: Text(
-          'Tambah Kategori',
-          style: semiBoldText16,
-        ),
+        title: Text('Tambah Kategori', style: semiBoldText16),
         content: TextField(
           controller: controller.addCategoryController,
           style: semiBoldText14,
@@ -355,8 +336,8 @@ class ToolsView extends GetView<ToolsController> {
         actions: [
           TextButton(
             onPressed: () {
-              String addCategoryName =
-                  controller.addCategoryController.text.trim();
+              String addCategoryName = controller.addCategoryController.text
+                  .trim();
               if (addCategoryName.isEmpty) {
                 const CustomSnackbar(
                   success: false,
@@ -370,9 +351,7 @@ class ToolsView extends GetView<ToolsController> {
             },
             child: Text(
               'Tambah',
-              style: semiBoldText14.copyWith(
-                color: kColorScheme.primary,
-              ),
+              style: semiBoldText14.copyWith(color: kColorScheme.primary),
             ),
           ),
         ],
@@ -384,10 +363,7 @@ class ToolsView extends GetView<ToolsController> {
     controller.editCategoryController.text = oldCategoryName;
     Get.dialog(
       AlertDialog(
-        title: Text(
-          'Ubah Kategori',
-          style: semiBoldText16,
-        ),
+        title: Text('Ubah Kategori', style: semiBoldText16),
         content: TextField(
           controller: controller.editCategoryController,
           style: semiBoldText14,
@@ -399,8 +375,8 @@ class ToolsView extends GetView<ToolsController> {
         actions: [
           TextButton(
             onPressed: () {
-              String newCategoryName =
-                  controller.editCategoryController.text.trim();
+              String newCategoryName = controller.editCategoryController.text
+                  .trim();
               if (newCategoryName.isEmpty) {
                 const CustomSnackbar(
                   success: false,
@@ -416,9 +392,7 @@ class ToolsView extends GetView<ToolsController> {
             },
             child: Text(
               'Ubah',
-              style: semiBoldText14.copyWith(
-                color: kColorScheme.primary,
-              ),
+              style: semiBoldText14.copyWith(color: kColorScheme.primary),
             ),
           ),
         ],
@@ -430,10 +404,7 @@ class ToolsView extends GetView<ToolsController> {
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
-        title: Text(
-          'Hapus Kategori',
-          style: semiBoldText16,
-        ),
+        title: Text('Hapus Kategori', style: semiBoldText16),
         content: Text(
           'Apakah Anda yakin ingin menghapus kategori ini?',
           style: regularText12,
@@ -445,22 +416,15 @@ class ToolsView extends GetView<ToolsController> {
               Get.back(); // Close the dialog
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 16,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               decoration: BoxDecoration(
                 color: kColorScheme.error,
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: kColorScheme.error,
-                ),
+                border: Border.all(color: kColorScheme.error),
               ),
               child: Text(
                 'Hapus',
-                style: semiBoldText12.copyWith(
-                  color: Colors.white,
-                ),
+                style: semiBoldText12.copyWith(color: Colors.white),
               ),
             ),
           ),
@@ -468,9 +432,7 @@ class ToolsView extends GetView<ToolsController> {
             onPressed: () => Get.back(),
             child: Text(
               'Batal',
-              style: semiBoldText14.copyWith(
-                color: kColorScheme.primary,
-              ),
+              style: semiBoldText14.copyWith(color: kColorScheme.primary),
             ),
           ),
         ],

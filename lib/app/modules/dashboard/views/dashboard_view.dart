@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
-import 'package:gudang_elektrikal/app/modules/history/views/history_view.dart';
-import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/components_view.dart';
+import 'package:gudang_elektrikal/app/modules/history/views/history_view.dart';
 import 'package:gudang_elektrikal/app/modules/login/views/login_view.dart';
 import 'package:gudang_elektrikal/app/modules/profile/views/profile_view.dart';
+import 'package:gudang_elektrikal/app/modules/tools/views/tools_view.dart';
 import 'package:gudang_elektrikal/app/routes/app_pages.dart';
 import 'package:gudang_elektrikal/app/widgets/bottom_navigation_bar.dart';
 
@@ -32,7 +31,7 @@ class DashboardView extends GetView<DashboardController> {
                 ToolsView(),
                 LoginView(),
                 HistoryView(),
-                ProfileView()
+                ProfileView(),
               ],
             ),
           ),
@@ -58,8 +57,8 @@ class DashboardView extends GetView<DashboardController> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
 
+          // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
           floatingActionButton: Visibility(
             visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
             child: SizedBox(
@@ -95,9 +94,7 @@ class DashboardView extends GetView<DashboardController> {
       context: context,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       isScrollControlled: true,
       builder: (context) {
@@ -106,9 +103,12 @@ class DashboardView extends GetView<DashboardController> {
           child: SingleChildScrollView(
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                // vertical: 10,
+              padding: EdgeInsets.only(
+                right: 20,
+                left: 20,
+                bottom:
+                    MediaQuery.of(context).viewInsets.bottom +
+                    kBottomNavigationBarHeight,
               ),
               decoration: BoxDecoration(
                 color: Colors.grey[100],

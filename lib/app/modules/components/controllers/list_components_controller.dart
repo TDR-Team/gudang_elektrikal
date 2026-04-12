@@ -1,18 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudang_elektrikal/app/common/helpers/schedule_daily_push_notif_helper.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/add_components_view.dart';
 import 'package:gudang_elektrikal/app/modules/components/views/edit_components_view.dart';
 import 'package:uuid/uuid.dart';
+
 import '../../../utils/logging.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class ListComponentsController extends GetxController {
-  final String levelName = Get.arguments['levelName'];
-  final String rackName = Get.arguments['rackName'];
-  final bool isGetComponent = Get.arguments['isGetComponent'] ?? false;
+  late final String rackName;
+  late final String levelName;
+  late final bool isGetComponent;
+  late final Map<String, dynamic> levelData;
 
   TextEditingController stockController = TextEditingController();
   TextEditingController searchController = TextEditingController();
@@ -31,6 +33,13 @@ class ListComponentsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    final args = (Get.arguments as Map<String, dynamic>?) ?? {};
+
+    rackName = args['rackName']?.toString() ?? '';
+    levelName = args['levelName']?.toString() ?? '';
+    isGetComponent = args['isGetComponent'] as bool? ?? false;
+    levelData = Map<String, dynamic>.from(args['levelData'] as Map? ?? {});
+
     _getUserData();
     fetchComponents();
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -83,10 +92,8 @@ class ListComponentsController extends GetxController {
           };
         }).toList();
 
-        // Mengurutkan komponen berdasarkan nama
         components.sort((a, b) => a['name'].compareTo(b['name']));
 
-        // Menginisialisasi filteredComponents sebagai salinan dari komponen yang telah diurutkan
         // ignore: invalid_use_of_protected_member
         filteredComponents.value = components.value;
       } else {
@@ -119,17 +126,13 @@ class ListComponentsController extends GetxController {
   }
 
   Future<void> onDeleteComponentClicked(
-      String componentsId, bool isGetComponent) async {
+    String componentsId,
+    bool isGetComponent,
+  ) async {
     try {
-      // final componentsDoc = await FirebaseFirestore.instance
-      //     .collection('tools')
-      //     .doc(rackName)
-      //     .get();
-      // final componentsMap = componentsDoc.data();
-      // final componentsData =
-      //     componentsMap?[componentsId] as Map<String, dynamic>? ?? {};
-      DocumentReference rackRef =
-          FirebaseFirestore.instance.collection('components').doc(rackName);
+      DocumentReference rackRef = FirebaseFirestore.instance
+          .collection('components')
+          .doc(rackName);
 
       await rackRef.update({'$levelName.$componentsId': FieldValue.delete()});
 
@@ -221,8 +224,9 @@ class ListComponentsController extends GetxController {
         if (selectedStock > 0) {
           int newStock = availableStock - selectedStock;
 
-          DocumentReference componentRef =
-              FirebaseFirestore.instance.collection('components').doc(rackName);
+          DocumentReference componentRef = FirebaseFirestore.instance
+              .collection('components')
+              .doc(rackName);
 
           if (newStock <= 0) {
             await componentRef.update({
@@ -231,13 +235,11 @@ class ListComponentsController extends GetxController {
             });
 
             components.removeAt(selectedComponentIndex);
-            filteredComponents
-                .removeWhere((component) => component['id'] == componentId);
-
-            onDeleteComponentClicked(
-              componentId,
-              isGetComponent,
+            filteredComponents.removeWhere(
+              (component) => component['id'] == componentId,
             );
+
+            onDeleteComponentClicked(componentId, isGetComponent);
           }
           if (newStock > 0) {
             await componentRef.update({
@@ -310,10 +312,7 @@ class ListComponentsController extends GetxController {
   void onAddComponentClicked() {
     Get.to(
       () => const AddComponentsView(),
-      arguments: {
-        "rackName": rackName,
-        "levelName": levelName,
-      },
+      arguments: {"rackName": rackName, "levelName": levelName},
     )?.then((value) async {
       searchController.clear();
       await fetchComponents();
@@ -333,16 +332,13 @@ class ListComponentsController extends GetxController {
 
         update();
 
-        // Convert DocumentSnapshot to Map<String, dynamic>
         Map<String, dynamic> data =
             userData.data() as Map<String, dynamic>? ?? {};
 
-        // Check if the document exists
         if (userData.exists) {
           userName = data['name'] ?? '';
           update();
         } else {
-          // Handle case where document does not exist
           userName = '';
           update();
         }
@@ -361,23 +357,23 @@ class ListComponentsController extends GetxController {
     String amount,
   ) async {
     try {
-      final activityId =
-          const Uuid().v4(); // Generate a unique ID for the activity
+      final activityId = const Uuid()
+          .v4(); // Generate a unique ID for the activity
       await FirebaseFirestore.instance
           .collection('history')
           .doc('activities')
           .set({
-        activityId: {
-          'user': userName,
-          'itemType': "components",
-          'actionType': "delete",
-          'xName': name,
-          'xDescription': description,
-          'xAmount': amount,
-          'xLocation': "$rackName, Laci $levelName",
-          'timestamp': FieldValue.serverTimestamp(),
-        }
-      }, SetOptions(merge: true));
+            activityId: {
+              'user': userName,
+              'itemType': "components",
+              'actionType': "delete",
+              'xName': name,
+              'xDescription': description,
+              'xAmount': amount,
+              'xLocation': "$rackName, Laci $levelName",
+              'timestamp': FieldValue.serverTimestamp(),
+            },
+          }, SetOptions(merge: true));
     } catch (e) {
       log.e('Failed to log activity: $e');
     }
@@ -389,23 +385,23 @@ class ListComponentsController extends GetxController {
     String amount,
   ) async {
     try {
-      final activityId =
-          const Uuid().v4(); // Generate a unique ID for the activity
+      final activityId = const Uuid()
+          .v4(); // Generate a unique ID for the activity
       await FirebaseFirestore.instance
           .collection('history')
           .doc('activities')
           .set({
-        activityId: {
-          'user': userName,
-          'itemType': "components",
-          'actionType': "take",
-          'xName': name,
-          'xDescription': description,
-          'xAmount': amount,
-          'xLocation': "$rackName, Laci $levelName",
-          'timestamp': FieldValue.serverTimestamp(),
-        }
-      }, SetOptions(merge: true));
+            activityId: {
+              'user': userName,
+              'itemType': "components",
+              'actionType': "take",
+              'xName': name,
+              'xDescription': description,
+              'xAmount': amount,
+              'xLocation': "$rackName, Laci $levelName",
+              'timestamp': FieldValue.serverTimestamp(),
+            },
+          }, SetOptions(merge: true));
     } catch (e) {
       log.e('Failed to log activity: $e');
     }

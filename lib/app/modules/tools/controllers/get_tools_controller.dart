@@ -51,9 +51,12 @@ class GetToolsController extends GetxController {
 
   Future<void> fetchTools() async {
     isLoading.value = true;
+    toolsData.clear();
+
     try {
-      final QuerySnapshot categorySnapshot =
-          await FirebaseFirestore.instance.collection('tools').get();
+      final QuerySnapshot categorySnapshot = await FirebaseFirestore.instance
+          .collection('tools')
+          .get();
 
       for (var categoryDoc in categorySnapshot.docs) {
         String categoryName = categoryDoc.id;
@@ -109,9 +112,7 @@ class GetToolsController extends GetxController {
   }
 
   void onAddToolsClicked() {
-    Get.to(
-      () => const AddToolsView(),
-    )?.then((value) async {
+    Get.to(() => const AddToolsView())?.then((value) async {
       searchController.clear();
       await fetchTools();
     });
@@ -158,9 +159,7 @@ class GetToolsController extends GetxController {
       await FirebaseFirestore.instance
           .collection('tools')
           .doc(categoryName)
-          .update({
-        toolsId: FieldValue.delete(),
-      });
+          .update({toolsId: FieldValue.delete()});
 
       await _logHistoryActivity(
         name,
@@ -216,7 +215,7 @@ class GetToolsController extends GetxController {
     }
   }
 
-// Decrement Function
+  // Decrement Function
   void decrement(String categoryName, String toolsId) {
     final tool = categorizedTools[categoryName]?.firstWhere(
       (tool) => tool['id'] == toolsId,
@@ -268,8 +267,9 @@ class GetToolsController extends GetxController {
         int newStock = availableStock - selectedStock;
 
         // Referensi ke dokumen di Firebase berdasarkan categoryName
-        DocumentReference toolsRef =
-            FirebaseFirestore.instance.collection('tools').doc(categoryName);
+        DocumentReference toolsRef = FirebaseFirestore.instance
+            .collection('tools')
+            .doc(categoryName);
 
         if (newStock <= -1) {
           // skip
@@ -303,7 +303,12 @@ class GetToolsController extends GetxController {
           categoryName,
         );
         await _logHistoryBorrowed(
-            toolsId, name, description, selectedStock, categoryName);
+          toolsId,
+          name,
+          description,
+          selectedStock,
+          categoryName,
+        );
 
         Get.back();
         const CustomSnackbar(
@@ -319,14 +324,12 @@ class GetToolsController extends GetxController {
             ' ${categorizedTools[categoryName]![toolIndex]['name']}',
             1,
           );
-          DateTime scheduledDate = DateTime.now().add(
-            const Duration(hours: 1),
-          );
+          DateTime scheduledDate = DateTime.now().add(const Duration(hours: 1));
           NotificationService.scheduleNotification(
-            0,
-            'Stok alat sudah mau habis',
-            'Jangan lupa untuk mengembalikan alat $name pada tempatnya.',
-            scheduledDate,
+            id: 0,
+            title: 'Stok alat sudah mau habis',
+            body: 'Jangan lupa untuk mengembalikan alat $name pada tempatnya.',
+            scheduledTime: scheduledDate,
           );
         }
       } else {
@@ -393,23 +396,23 @@ class GetToolsController extends GetxController {
     String category,
   ) async {
     try {
-      final activityId =
-          const Uuid().v4(); // Generate a unique ID for the activity
+      final activityId = const Uuid()
+          .v4(); // Generate a unique ID for the activity
       await FirebaseFirestore.instance
           .collection('history')
           .doc('activities')
           .set({
-        activityId: {
-          'user': userName,
-          'itemType': "tools",
-          'actionType': "borrow",
-          'xName': name,
-          'xDescription': description,
-          'xAmount': amount,
-          'xLocation': "Kategori $category",
-          'timestamp': FieldValue.serverTimestamp(),
-        }
-      }, SetOptions(merge: true));
+            activityId: {
+              'user': userName,
+              'itemType': "tools",
+              'actionType': "borrow",
+              'xName': name,
+              'xDescription': description,
+              'xAmount': amount,
+              'xLocation': "Kategori $category",
+              'timestamp': FieldValue.serverTimestamp(),
+            },
+          }, SetOptions(merge: true));
     } catch (e) {
       log.e('Failed to log activity: $e');
     }
@@ -423,24 +426,24 @@ class GetToolsController extends GetxController {
     String categoryName,
   ) async {
     try {
-      final borrowedId =
-          const Uuid().v4(); // Generate a unique ID for the activity
+      final borrowedId = const Uuid()
+          .v4(); // Generate a unique ID for the activity
       await FirebaseFirestore.instance
           .collection('history')
           .doc('borrowed')
           .set({
-        borrowedId: {
-          'user': userName,
-          'itemType': "tools",
-          'actionType': "borrow",
-          'itemData': itemData,
-          'name': name,
-          'description': description,
-          'amount': amount,
-          'categoryName': categoryName,
-          'timestamp': FieldValue.serverTimestamp(),
-        }
-      }, SetOptions(merge: true));
+            borrowedId: {
+              'user': userName,
+              'itemType': "tools",
+              'actionType': "borrow",
+              'itemData': itemData,
+              'name': name,
+              'description': description,
+              'amount': amount,
+              'categoryName': categoryName,
+              'timestamp': FieldValue.serverTimestamp(),
+            },
+          }, SetOptions(merge: true));
     } catch (e) {
       log.e('Failed to log activity: $e');
     }
