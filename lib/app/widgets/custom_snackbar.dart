@@ -2,38 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 
-class CustomSnackbar extends StatelessWidget {
+class CustomSnackbar {
   final bool success;
   final String title;
   final String message;
-  final int? duration;
+  final int duration;
 
   const CustomSnackbar({
-    super.key,
     required this.success,
     required this.title,
     required this.message,
-    this.duration,
+    this.duration = 3,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
   void showSnackbar() {
-    if (Get.isSnackbarOpen) {
-      Get.closeCurrentSnackbar();
+    final context = Get.context;
+
+    if (context == null) {
+      debugPrint(
+        'CustomSnackbar tidak bisa ditampilkan karena Get.context null.',
+      );
+      return;
     }
-    Get.showSnackbar(
-      GetSnackBar(
-        snackPosition: SnackPosition.TOP,
+
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) {
+      debugPrint(
+        'CustomSnackbar tidak bisa ditampilkan karena ScaffoldMessenger tidak ditemukan.',
+      );
+      return;
+    }
+
+    messenger.hideCurrentSnackBar();
+
+    messenger.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: duration),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        padding: EdgeInsets.zero,
-        borderRadius: 10,
-        messageText: Padding(
+        content: Container(
           padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200.withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -44,25 +60,27 @@ class CustomSnackbar extends StatelessWidget {
                 child: Icon(
                   success ? Icons.check : Icons.error_outline,
                   color: Colors.white,
-                  size: 24,
+                  size: 22,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
                       style: boldText12,
-                      overflow: TextOverflow.ellipsis,
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       message,
                       style: regularText12,
-                      overflow: TextOverflow.ellipsis,
                       maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -70,10 +88,6 @@ class CustomSnackbar extends StatelessWidget {
             ],
           ),
         ),
-        duration: Duration(seconds: duration ?? 3),
-        barBlur: 2,
-        backgroundColor: Colors.grey[200]!.withOpacity(0.4),
-        snackStyle: SnackStyle.FLOATING,
       ),
     );
   }
