@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
@@ -186,7 +185,8 @@ class LoginView extends GetView<LoginController> {
             ),
           ),
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.only(bottom: 33),
+            padding:
+                const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
