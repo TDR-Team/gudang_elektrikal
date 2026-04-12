@@ -35,24 +35,25 @@ class ScheduleDailyPuhNotifHelper {
     );
 
     if (afternoonNotification.isBefore(now)) {
-      afternoonNotification =
-          afternoonNotification.add(const Duration(days: 1));
+      afternoonNotification = afternoonNotification.add(
+        const Duration(days: 1),
+      );
     }
 
     // Schedule the notifications
     if (isComponent) {
       NotificationService.scheduleNotification(
-        id ?? 0,
-        'Stok komponen sudah mau habis',
-        'Jangan lupa stok ulang komponen $name sebelum habis',
-        morningNotification,
+        id: id ?? 0,
+        title: 'Stok komponen sudah mau habis',
+        body: 'Jangan lupa stok ulang komponen $name sebelum habis',
+        scheduledTime: morningNotification,
       );
-    }else{
-       NotificationService.scheduleNotification(
-        id ?? 0,
-        'Stok alat sudah mau habis',
-        'Jangan lupa stok ulang alat $name sebelum habis',
-        morningNotification,
+    } else {
+      NotificationService.scheduleNotification(
+        id: id ?? 0,
+        title: 'Stok alat sudah mau habis',
+        body: 'Jangan lupa stok ulang alat $name sebelum habis',
+        scheduledTime: morningNotification,
       );
     }
 
