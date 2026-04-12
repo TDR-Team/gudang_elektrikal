@@ -40,7 +40,7 @@ class NotificationService {
 
     const AndroidInitializationSettings androidInitializationSettings =
         /// Lebih disarankan pakai drawable icon monokrom, mis. ic_notification
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('ic_notification');
 
     const DarwinInitializationSettings iOSInitializationSettings =
         DarwinInitializationSettings(
