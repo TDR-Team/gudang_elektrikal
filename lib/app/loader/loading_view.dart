@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
-
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 
 class LoadingView extends StatelessWidget {
@@ -18,8 +17,8 @@ class LoadingView extends StatelessWidget {
                 end: Alignment.topLeft,
                 colors: <Color>[
                   kColorScheme.primary,
-                  kColorScheme.primary.withOpacity(0.8),
-                  kColorScheme.primary.withOpacity(0.6),
+                  kColorScheme.primary.withValues(alpha: 0.8),
+                  kColorScheme.primary.withValues(alpha: 0.6),
                 ],
               ),
             ),
