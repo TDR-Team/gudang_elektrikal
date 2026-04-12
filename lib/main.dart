@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/modules/notification/notification.dart';
 import 'package:gudang_elektrikal/initializer.dart';
+
 import 'app/routes/app_pages.dart';
 
 void main() async {
