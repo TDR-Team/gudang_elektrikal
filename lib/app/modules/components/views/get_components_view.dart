@@ -122,7 +122,7 @@ class GetComponentsView extends GetView<GetComponentsController> {
   }
 
   Widget _buildDropDown({
-    required var listRack,
+    required List<String> listRack,
     required void Function(String? value) onChangedRackName,
   }) {
     return Positioned(
@@ -131,17 +131,30 @@ class GetComponentsView extends GetView<GetComponentsController> {
       bottom: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: DropDown(
+        child: DropDown<String>(
           listElement: listRack,
           hintText: 'Pilih Rak',
-          onChange: onChangedRackName,
           selectedItem: controller.rackName.value.isNotEmpty
               ? controller.rackName.value
-              : 'Pilih Rak',
+              : null,
+          compareFn: (a, b) => a == b,
+          onChange: onChangedRackName,
+          dropdownBuilder: (context, selectedItem) {
+            return Text(
+              selectedItem ?? 'Pilih Rak',
+              style: regularText12.copyWith(color: Colors.black),
+              overflow: TextOverflow.ellipsis,
+            );
+          },
           itemBuilder: (context, rackName, isDisabled, isSelected) {
             return Container(
               color: isSelected ? Colors.grey.shade100 : null,
-              child: ListTile(title: Text(rackName)),
+              child: ListTile(
+                title: Text(
+                  rackName,
+                  style: regularText12.copyWith(color: Colors.black),
+                ),
+              ),
             );
           },
         ),
