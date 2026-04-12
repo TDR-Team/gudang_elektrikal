@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -22,10 +23,7 @@ class AddToolsView extends GetView<AddToolsController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Tambah Alat',
-          style: semiBoldText20,
-        ),
+        title: Text('Tambah Alat', style: semiBoldText20),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -61,12 +59,7 @@ class AddToolsView extends GetView<AddToolsController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: Text(
-                        'Stok',
-                        style: semiBoldText16,
-                      ),
-                    ),
+                    Flexible(child: Text('Stok', style: semiBoldText16)),
                     Flexible(
                       child: Container(
                         decoration: BoxDecoration(
@@ -87,9 +80,7 @@ class AddToolsView extends GetView<AddToolsController> {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.only(
-                                bottom: 4,
-                              ),
+                              padding: const EdgeInsets.only(bottom: 4),
                               width: 50.w,
                               child: CustomTextField(
                                 label: '',
@@ -111,23 +102,18 @@ class AddToolsView extends GetView<AddToolsController> {
                                 color: kColorScheme.surface,
                                 size: 24.sp,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: Text(
-                        'Kategori',
-                        style: semiBoldText16,
-                      ),
-                    ),
+                    Flexible(child: Text('Kategori', style: semiBoldText16)),
                     _buildDropDown(
                       context: context,
                       listRack: controller.listCategory,
@@ -148,11 +134,7 @@ class AddToolsView extends GetView<AddToolsController> {
       bottomNavigationBar: Obx(
         () => Container(
           height: 50.h,
-          margin: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            bottom: 25,
-          ),
+          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
           child: CustomElevatedButton(
             isLoading: controller.isLoadingAddTools.value,
             onPressed: () async {
@@ -171,7 +153,7 @@ class AddToolsView extends GetView<AddToolsController> {
     );
   }
 
-  _buildDropDown({
+  Flexible _buildDropDown({
     required BuildContext context,
     required List<String> listRack,
     required String categoryName,
@@ -179,22 +161,28 @@ class AddToolsView extends GetView<AddToolsController> {
   }) {
     return Flexible(
       child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 20,
-        ),
-        child: DropDown(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: DropDown<String>(
           showSearchBox: false,
           listElement: listRack,
-          selectedItem: categoryName,
+          selectedItem: categoryName.isNotEmpty ? categoryName : null,
+          compareFn: (a, b) => a == b,
           onChange: onChangedCategory,
           borderSide: const BorderSide(),
           fillColor: Colors.white,
+          dropdownBuilder: (context, selectedItem) {
+            return Text(
+              selectedItem ?? 'Pilih Kategori',
+              style: regularText12.copyWith(color: Colors.black),
+              overflow: TextOverflow.ellipsis,
+            );
+          },
         ),
       ),
     );
   }
 
-  _buildImagePicker({
+  Column _buildImagePicker({
     required bool isLoadingImage,
     File? imageFileController,
     String? networkImage,
@@ -205,9 +193,7 @@ class AddToolsView extends GetView<AddToolsController> {
       children: [
         InkWell(
           onTap: () {
-            showImagePickerBottomSheet(
-              onPickImage: onPickImage,
-            );
+            showImagePickerBottomSheet(onPickImage: onPickImage);
           },
           borderRadius: BorderRadius.circular(10),
           child: SizedBox(
@@ -224,78 +210,86 @@ class AddToolsView extends GetView<AddToolsController> {
                           height: 150.h,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.grey.withOpacity(0.5),
+                            color: Colors.grey.withValues(alpha: 0.5),
                           ),
                         ),
                       )
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: networkImage != null && networkImage != ''
-                            ? Image.network(
-                                networkImage,
+                            ? CachedNetworkImage(
+                                imageUrl: networkImage,
                                 width: 150.h,
                                 height: 150.h,
                                 fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Shimmer.fromColors(
+
+                                // 🚀 Optimasi cache
+                                memCacheWidth: 300,
+                                memCacheHeight: 300,
+                                fadeInDuration: const Duration(
+                                  milliseconds: 150,
+                                ),
+
+                                // 🔄 Loading shimmer
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
                                       baseColor: const Color.fromARGB(
-                                          255, 148, 148, 148),
+                                        255,
+                                        148,
+                                        148,
+                                        148,
+                                      ),
                                       highlightColor: const Color.fromARGB(
-                                          255, 102, 95, 95),
+                                        255,
+                                        102,
+                                        95,
+                                        95,
+                                      ),
                                       child: Container(
                                         width: 150.h,
                                         height: 150.h,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Colors.grey.withOpacity(0.5),
+                                          color: Colors.grey.withValues(
+                                            alpha: 0.5,
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  }
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 150.h,
-                                    width: 150.h,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.grey,
-                                      shape: BoxShape.circle,
                                     ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.image_not_supported,
-                                        size: 90,
-                                        color: Color.fromARGB(255, 53, 53, 53),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )
-                            : imageFileController != null
-                                ? Image.file(
-                                    File(
-                                      imageFileController.path,
-                                    ),
-                                    width: 150.h,
-                                    height: 150.h,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Container(
-                                    width: 150.h,
-                                    height: 150.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                    ),
-                                    alignment: Alignment.center,
+
+                                // ❌ Error state
+                                errorWidget: (context, url, error) => Container(
+                                  width: 150.h,
+                                  height: 150.h,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey,
+                                  ),
+                                  child: const Center(
                                     child: Icon(
-                                      Icons.add_a_photo,
-                                      size: 60.sp,
+                                      Icons.image_not_supported,
+                                      size: 90,
+                                      color: Color.fromARGB(255, 53, 53, 53),
                                     ),
                                   ),
+                                ),
+                              )
+                            : imageFileController != null
+                            ? Image.file(
+                                File(imageFileController.path),
+                                width: 150.h,
+                                height: 150.h,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                width: 150.h,
+                                height: 150.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[400],
+                                ),
+                                alignment: Alignment.center,
+                                child: Icon(Icons.add_a_photo, size: 60.sp),
+                              ),
                       ),
                 // const Align(
                 //   alignment: Alignment.bottomRight,
