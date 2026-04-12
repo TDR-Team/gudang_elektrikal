@@ -161,7 +161,9 @@ class GetToolsView extends GetView<GetToolsController> {
                           top: 12.h,
                           left: 16.w,
                           right: 16.w,
-                          bottom: 0.h,
+                          bottom:
+                              MediaQuery.of(context).viewInsets.bottom +
+                              kBottomNavigationBarHeight,
                         ),
                         children: controller.categorizedTools.entries.map((
                           entry,
