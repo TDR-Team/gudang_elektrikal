@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:gudang_elektrikal/app/common/styles/colors.dart';
 import 'package:gudang_elektrikal/app/common/theme/font.dart';
 import 'package:gudang_elektrikal/app/modules/history/controllers/detail_activity_controller.dart';
+import 'package:intl/intl.dart';
 
 class DetailActivityView extends GetView<DetailActivityController> {
   final String? user;
@@ -35,11 +35,10 @@ class DetailActivityView extends GetView<DetailActivityController> {
       init: DetailActivityController(),
       builder: (controller) {
         return Scaffold(
+          backgroundColor: kColorScheme.surface,
           appBar: AppBar(
-            title: Text(
-              "Detail Aktivitas",
-              style: semiBoldText20,
-            ),
+            backgroundColor: kColorScheme.surface,
+            title: Text("Detail Aktivitas", style: semiBoldText20),
             leading: IconButton(
               padding: const EdgeInsets.all(16),
               onPressed: () {
@@ -59,9 +58,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
               children: [
                 Text(
                   'Username',
-                  style: boldText14.copyWith(
-                    color: AppColors.neutralColors[1],
-                  ),
+                  style: boldText14.copyWith(color: AppColors.neutralColors[1]),
                 ),
                 Text(
                   controller.formatUser(user ?? 'hallo'),
@@ -72,9 +69,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
                 const SizedBox(height: 16),
                 Text(
                   'Nama ${controller.formatItemType(itemType!)}',
-                  style: boldText14.copyWith(
-                    color: AppColors.neutralColors[1],
-                  ),
+                  style: boldText14.copyWith(color: AppColors.neutralColors[1]),
                 ),
                 Text(
                   xName ?? '',
@@ -85,9 +80,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
                 const SizedBox(height: 16),
                 Text(
                   'Banyaknya',
-                  style: boldText14.copyWith(
-                    color: AppColors.neutralColors[1],
-                  ),
+                  style: boldText14.copyWith(color: AppColors.neutralColors[1]),
                 ),
                 RichText(
                   overflow: TextOverflow.clip,
@@ -109,9 +102,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
                 const SizedBox(height: 16),
                 Text(
                   'Lokasi',
-                  style: boldText14.copyWith(
-                    color: AppColors.neutralColors[1],
-                  ),
+                  style: boldText14.copyWith(color: AppColors.neutralColors[1]),
                 ),
                 RichText(
                   overflow: TextOverflow.clip,
@@ -134,9 +125,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
                 const SizedBox(height: 16),
                 Text(
                   'Keterangan',
-                  style: boldText14.copyWith(
-                    color: AppColors.neutralColors[1],
-                  ),
+                  style: boldText14.copyWith(color: AppColors.neutralColors[1]),
                 ),
                 RichText(
                   overflow: TextOverflow.clip,
@@ -217,7 +206,7 @@ class DetailActivityView extends GetView<DetailActivityController> {
                   ),
                 ),
                 Text(
-                  timestamp!.toDate().toString(),
+                  '${DateFormat('d MMMM yyyy - HH:mm', 'id_ID').format(timestamp!.toDate())} WIB',
                   style: regularText14.copyWith(
                     color: AppColors.neutralColors[2],
                   ),
